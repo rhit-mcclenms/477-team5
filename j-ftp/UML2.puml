@@ -1,0 +1,2480 @@
+@startuml
+class net.sf.jftp.event.FtpEvent {
+- int code
+- String message
++ String eventMsg()
++ int eventCode()
+}
+class net.sf.jftp.gui.hostchooser.SftpHostChooser {
++ HTextField host
++ HTextField user
++ HTextField port
++ HPasswordField pass
++ JComboBox enc
++ JComboBox cs
++ JComboBox keys
++ JLabel encL
++ JLabel csL
++ JLabel keysL
++ JLabel keyfileL
+- HButton ok
+- HButton keyfile
+- ComponentListener listener
+- boolean useLocal
+- String keyfileName
++ void init()
++ void stateChanged(ChangeEvent)
++ void update()
++ void update(String)
++ void actionPerformed(ActionEvent)
++ void windowClosing(WindowEvent)
++ void windowClosed(WindowEvent)
++ void windowActivated(WindowEvent)
++ void windowDeactivated(WindowEvent)
++ void windowIconified(WindowEvent)
++ void windowDeiconified(WindowEvent)
++ void windowOpened(WindowEvent)
++ void pause(int)
+}
+class net.sf.jftp.gui.tasks.ExternalDisplayer {
+- JTextArea info
+- JButton close
++ void actionPerformed(ActionEvent)
++ Insets getInsets()
+}
+class net.sf.jftp.gui.framework.ProgressBarList {
+- int index
++ void setListData(DirEntry[])
++ ProgressbarItem getSelectedValue()
++ int getSelectedIndex()
++ void setSelectedIndex(int)
++ void setTransferred(String,long,String,long)
+}
+class net.sf.jftp.gui.hostchooser.NfsHostChooser {
++ {static} HTextField host
++ {static} HTextField user
++ {static} HPasswordField pass
++ {static} HButton info
+- HPanel okP
+- HButton ok
+- ComponentListener listener
+- boolean useLocal
++ void init()
++ void update()
++ void actionPerformed(ActionEvent)
++ void windowClosing(WindowEvent)
++ void windowClosed(WindowEvent)
++ void windowActivated(WindowEvent)
++ void windowDeactivated(WindowEvent)
++ void windowIconified(WindowEvent)
++ void windowDeiconified(WindowEvent)
++ void windowOpened(WindowEvent)
++ void pause(int)
+}
+class net.sf.jftp.gui.framework.GUIDefaults {
++ {static} Color mainBack
++ {static} Color back
++ {static} Color sizeBack
++ {static} Color front
++ {static} Color white
++ {static} Color red
++ {static} Color blue
++ {static} Color green
++ {static} Color activeColor
++ {static} Color activatedColor
++ {static} Color cdColor
++ {static} Color deniedColor
++ {static} Color writableColor
++ {static} Color defaultColor
++ {static} Color light
++ {static} Color lightActive
++ {static} Font small
++ {static} Font font
++ {static} Font active
++ {static} Font menuFont
++ {static} Font status
++ {static} Font monospaced
+}
+class net.sf.jftp.gui.tasks.Remover {
+- HTextField text
+- HButton ok
+- HButton cancel
+- HPanel okP
+- String type
++ void actionPerformed(ActionEvent)
+}
+class net.sf.jftp.system.logging.SystemLogger {
++ void debug(String)
++ void debugRaw(String)
++ void debug(String,Throwable)
++ void warn(String)
++ void warn(String,Throwable)
++ void error(String)
++ void error(String,Throwable)
++ void info(String)
++ void info(String,Throwable)
++ void fatal(String)
++ void fatal(String,Throwable)
+}
+class net.sf.jftp.gui.tasks.HttpBrowser {
++ void hyperlinkUpdate(HyperlinkEvent)
+}
+class net.sf.jftp.net.FtpKeepAliveThread {
+- Thread runner
+- FtpConnection conn
++ void run()
+}
+class net.sf.jftp.gui.framework.Updater {
+}
+class net.sf.jftp.tools.FileSearch {
+- int currentDepth
+- Hashtable checked
++ {static} boolean quiet
++ {static} boolean ultraquiet
+~ String localDir
+~ int MAX
+~ int MIN_TERM
+~ int MIN_FACTOR
+~ boolean LOAD
+~ String[] typeArray
+~ String[] termArray
+~ String[] optArray
+~ String[] ignoreArray
+~ String[] scanArray
++ {static} void main(String[])
+}
+class net.sf.jftp.tools.Getter {
+- String localDir
++ String fetch(String)
++ void fetch(String,boolean)
++ {static} void chill(int)
+}
+class net.sf.jftp.util.JHostChooser {
+- JLabel hostL
+- JLabel portL
+- JTextField host
+- JTextField port
+- JPanel p1
+- JPanel okP
+- JButton ok
++ void actionPerformed(ActionEvent)
++ Insets getInsets()
+}
+class net.sf.jftp.gui.tasks.PathChanger {
+- HTextField text
+- HButton ok
+- String type
++ void actionPerformed(ActionEvent)
+}
+class net.sf.jftp.gui.tasks.ProxyChooser {
+- HTextField proxy
+- HTextField port
+- HButton ok
++ void actionPerformed(ActionEvent)
+}
+class net.sf.jftp.net.server.FtpServer {
+- int port
+- int dataPort
++ void run()
++ {static} void main(String[])
+}
+class net.sf.jftp.gui.base.UIUtils {
++ {static} String getPasswordFromUser(JComponent)
++ {static} void runCommand(String)
+}
+class net.sf.jftp.gui.base.Spawn {
+- Thread runner
+- String cmd
++ void run()
+}
+class net.sf.jftp.gui.base.dir.DirEntry {
++ {static} int R
++ {static} int W
++ {static} int DENIED
+~ {static} Hashtable extensionMap
+~ {static} Object[] extensions
++ String file
+- JLabel c
++ boolean selected
++ ActionListener who
+- Image img
++ boolean isFile
+- boolean isDirectory
+- long size
+- long transferred
+- boolean isLink
+- int accessible
+- boolean noRender
++ Date date
++ void setFile()
++ void setDirectory()
++ void setNoRender()
++ boolean getNoRender()
++ void setPermission(int)
++ int getPermission()
++ void setSelected(boolean)
++ boolean isDirectory()
++ boolean isFile()
++ boolean isSelected()
++ String toString()
++ Image getImage()
++ ImageIcon getImageIcon()
++ void setDate(Date)
++ String getDate()
++ void setFileSize(long)
++ String getFileSize()
++ long getRawSize()
++ void setLink()
++ boolean isLink()
++ long getTransferred()
++ void setTransferred(long)
+}
+class net.sf.jftp.net.wrappers.WebdavConnection {
++ {static} int webdavBuffer
+- String path
+- String pwd
+- Vector listeners
+- String[] files
+- String[] size
+- int[] perms
+- String baseFile
+- int fileCount
+- boolean shortProgress
+- String user
+- String pass
++ int removeFileOrDir(String)
++ void sendRawCommand(String)
++ void disconnect()
++ boolean isConnected()
++ String getPWD()
++ boolean cdup()
++ boolean mkdir(String)
++ void list()
++ boolean chdir(String)
++ boolean chdirNoRefresh(String)
++ String getLocalPath()
++ String processPath(String)
++ boolean setLocalPath(String)
++ String[] sortLs()
++ String[] sortSize()
++ int[] getPermissions()
++ int handleDownload(String)
++ int handleUpload(String)
++ int download(String)
++ int upload(String)
++ int upload(String,InputStream)
++ InputStream getDownloadInputStream(String)
++ void addConnectionListener(ConnectionListener)
++ void setConnectionListeners(Vector)
++ void fireDirectoryUpdate()
++ boolean login(String,String)
++ void fireProgressUpdate(String,String,int)
++ Date[] sortDates()
++ boolean rename(String,String)
+}
+class net.sf.jftp.gui.framework.HButton {
+}
+class net.sf.jftp.gui.base.Properties {
+- Label fileL
+- Label sizeL
+- HButton ok
+- HPanel okP
+- String type
+- String file
++ void actionPerformed(ActionEvent)
+}
+class net.sf.jftp.net.wrappers.StartConnection {
++ {static} FtpConnection con
++ {static} String keyfile
++ {static} void setSshKeyfile(String)
++ {static} boolean startCon(String,String,String,String,int,String,boolean)
++ {static} int startFtpCon(String,String,String,int,String,boolean)
++ {static} int startFtpCon(String,String,String,int,String,boolean,String)
+}
+class net.sf.jftp.net.DataConnection {
++ {static} String GET
++ {static} String PUT
++ {static} String FAILED
++ {static} String FINISHED
++ {static} String DFINISHED
++ {static} String GETDIR
++ {static} String PUTDIR
+- BufferedInputStream in
+- BufferedOutputStream out
+- Thread reciever
+- int port
++ Socket sock
+- ServerSocket ssock
+- String type
+- String file
+- String host
+- boolean resume
++ boolean finished
+- boolean isThere
+- long start
+- FtpConnection con
+- int skiplen
+- boolean justStream
+- boolean ok
+- String localfile
+- String newLine
+- String LINEEND
++ void run()
++ InputStream getInputStream()
++ FtpConnection getCon()
++ void reset()
++ boolean isThere()
++ void setType(String)
++ boolean isOK()
++ void interrupt()
+}
+class net.sf.jftp.net.server.FtpServerSocket {
++ {static} int port
++ {static} int dataPort
+- {static} ArrayList commands
+- Socket socket
+- BufferedReader in
+- PrintWriter out
+- Hashtable methods
+- File directory
+- ResourceBundle bundle
+- ServerSocket pasvSocket
+- boolean passive
+- int activePort
+- String structure
+- String transferMode
+- String type
+- String rootDir
+- String currentDir
++ void motd()
++ void user(String)
++ void pass(String)
++ void syst(String)
++ void type(String)
++ void stru(String)
++ void mode(String)
++ void rein(String)
++ void smnt(String)
++ void quit(String)
++ void pwd(String)
++ void cwd(String)
++ void cdup(String)
++ void noop(String)
++ void help(String)
++ void stat(String)
++ void mkd(String)
++ void feat(String)
++ void pasv(String)
++ void list(String)
++ void nlst(String)
++ void port(String)
++ void opts(String)
++ void lang(String)
++ void auth(String)
++ void setRoot(String)
++ void run()
++ {static} void main(String[])
+}
+class net.sf.jftp.JFtpApplet {
++ void init()
+}
+class net.sf.jftp.gui.base.dir.DirPanel {
++ int length
++ String[] files
++ DirEntry[] dirEntry
++ String type
++ long oldtime
++ DownloadList dList
++ BasicConnection con
++ String path
++ JList jl
++ boolean setPath(String)
++ void setType(String)
++ String getPath()
++ String getType()
++ void setDownloadList(DownloadList)
++ BasicConnection getCon()
++ void setCon(BasicConnection)
++ void fresh()
++ void actionPerformed(Object,String)
++ void lock(boolean)
++ void unlock(boolean)
+}
+class net.sf.jftp.event.EventProcessor {
+- {static} Hashtable table
+- Vector buffer
+- boolean done
++ void accept(Event)
++ {static} void addHandler(int,EventHandler)
++ boolean handle(Event)
++ void run()
+}
+class net.sf.jftp.gui.framework.HImage {
++ {static} Image getImage(Component,String)
++ {static} ImageIcon getImageIcon(String,String)
+}
+class net.sf.jftp.gui.base.LogFlusher {
+- Thread runner
++ void run()
+}
+class net.sf.jftp.gui.tasks.NativeHttpBrowser {
++ {static} void main(String[])
+}
+class net.sf.jftp.gui.framework.ProgressbarItem {
+- DirEntry d
+- JProgressBar bar
++ void update(long,long,String)
++ DirEntry getDirEntry()
++ void deselect()
++ void select()
++ Insets getInsets()
+}
+class net.sf.jftp.net.JConnection {
+- int timeout
+- String host
+- int port
+- PrintStream out
+- BufferedReader in
+- Socket s
+- boolean isOk
+- boolean established
+- Thread runner
+- int localPort
++ void run()
++ boolean isThere()
++ void send(String)
++ PrintStream getInetOutputStream()
++ BufferedReader getReader()
++ int getLocalPort()
++ InetAddress getLocalAddress()
++ BufferedReader getIn()
++ void setIn(BufferedReader)
++ PrintStream getOut()
++ void setOut(PrintStream)
+}
+class net.sf.jftp.net.wrappers.HttpTransfer {
+- String url
+- String localPath
+- String file
++ boolean work
++ boolean pause
++ Thread runner
+- Vector listeners
+- int stat
+- ConnectionHandler handler
++ void prepare()
++ void run()
++ void fireProgressUpdate(String,String,int)
++ int getStatus()
++ boolean hasStarted()
++ FtpConnection getFtpConnection()
++ DataConnection getDataConnection()
+}
+abstract class net.sf.jftp.net.Transfer {
++ {static} String PAUSED
++ {static} String QUEUED
++ {static} String REMOVED
++ {static} String UPLOAD
++ {static} String DOWNLOAD
++ boolean work
++ boolean pause
++ {abstract}void prepare()
++ {abstract}int getStatus()
++ {abstract}boolean hasStarted()
++ {abstract}FtpConnection getFtpConnection()
++ {abstract}DataConnection getDataConnection()
+}
+class net.sf.jftp.gui.tasks.HostList {
+- String promptHost
+- String promptUser
+- String promptPass
+- String promptName
+- String promptPort
+- String promptButtonCancel
+- String promptButtonOk
+- String promptButtonSave
+- String promptButtonNew
+- String promptButtonDelete
+- String promptDialogTitle
+- JPanel jpHostInfo
+- JTextField jtfHost
+- JTextField jtfUser
+- JPasswordField jtfPass
+- JTextField jtfName
+- JTextField jtfPort
+- JLabel jlHost
+- JLabel jlUser
+- JLabel jlPass
+- JLabel jlName
+- JLabel jlPort
+- JSplitPane jsplitpane
+- JScrollPane jscrollpane
+- JPanel jpbuttons
+- JButton jbsave
+- JButton jbcancel
+- JButton jbok
+- JButton jbnew
+- JButton jbdelete
+- JList hostList
+- DefaultListModel hostListModel
+- FtpHost selectedHostInfo
++ FtpHost getFtpHost()
++ void onSelectHost()
++ void onDelete()
++ void onSave()
++ void onOk()
++ void onCancel()
++ void onNew()
+}
+class net.sf.jftp.event.EventCollector {
+# Vector buffer
++ void accept(Event)
+}
+class net.sf.jftp.net.wrappers.SmbConnection {
++ {static} int smbBuffer
+- String path
+- String pwd
+- Vector listeners
+- String[] files
+- String[] size
+- int[] perms
+- String user
+- String pass
+- String host
+- String domain
+- String baseFile
+- int fileCount
+- boolean isDirUpload
+- boolean shortProgress
+- boolean dummy
+- boolean connected
++ int removeFileOrDir(String)
++ void sendRawCommand(String)
++ void disconnect()
++ boolean isConnected()
++ String getPWD()
++ boolean cdup()
++ boolean mkdir(String)
++ void list()
++ boolean chdir(String)
++ boolean chdir(String,boolean)
++ boolean chdirNoRefresh(String)
++ String getLocalPath()
++ boolean setLocalPath(String)
++ String[] sortLs()
++ String[] sortSize()
++ int[] getPermissions()
++ int handleUpload(String)
++ int handleDownload(String)
++ int upload(String)
++ int download(String)
++ void addConnectionListener(ConnectionListener)
++ void setConnectionListeners(Vector)
++ void fireDirectoryUpdate()
++ boolean login(String,String)
++ void fireProgressUpdate(String,String,int)
++ void fireActionFinished(SmbConnection)
++ int upload(String,InputStream)
++ InputStream getDownloadInputStream(String)
++ Date[] sortDates()
++ boolean rename(String,String)
+}
+class net.sf.jftp.system.CommandLine {
+- EventCollector eventCollector
++ boolean handle(Event)
++ void run()
++ {static} void main(String[])
+}
+class net.sf.jftp.JFtp {
++ {static} boolean mainUsed
++ {static} StatusPanel statusP
++ {static} JLabel statusL
++ {static} JFrame mainFrame
++ {static} Dir localDir
++ {static} Dir remoteDir
++ {static} DownloadList dList
++ {static} DownloadQueue dQueue
++ {static} boolean uiBlocked
++ {static} HostInfo hostinfo
+- {static} ConnectionHandler defaultConnectionHandler
++ {static} JDesktopPane desktop
+- {static} JScrollPane logSp
++ {static} JTextArea log
++ {static} boolean doScroll
++ {static} AppMenuBar menuBar
++ {static} int CAPACITY
++ {static} int CONNECTION_DATA_LENGTH
++ {static} DropTarget dropTarget
++ {static} DropTargetListener dtListener
++ {static} int acceptableActions
+- LogFlusher flusher
+- boolean initSize
++ JTabbedPane remoteConnectionPanel
++ JTabbedPane localConnectionPanel
+- String oldText
+- HDesktopBackground background
+- JToolBar bottomBar
+- JSplitPane workP
+- JSplitPane logP
+- JInternalFrame j1
+- JInternalFrame j2
+- JInternalFrame j3
+- JInternalFrame j4
+- JInternalFrame j5
+- {static} Hashtable<String,JInternalFrame> internalFrames
++ HostChooser hc
+- String buffer
+- long oldtime
+- UpdateDaemon daemon
++ RSSFeeder feeder
++ void init()
++ void addRSS()
++ {static} String getHost()
++ {static} void setHost(String)
++ {static} void localUpdate()
++ {static} void remoteUpdate()
++ void windowClosing(WindowEvent)
++ {static} void safeDisconnect()
++ void windowClosed(WindowEvent)
++ void windowActivated(WindowEvent)
++ void windowDeactivated(WindowEvent)
++ void windowIconified(WindowEvent)
++ void windowDeiconified(WindowEvent)
++ void windowOpened(WindowEvent)
++ void componentHidden(ComponentEvent)
++ void componentMoved(ComponentEvent)
++ void componentShown(ComponentEvent)
++ void componentResized(ComponentEvent)
++ void addBackgroundImage()
++ {static} void main(String[])
++ {static} void clearLog()
++ void debug(String)
++ void debugRaw(String)
++ void debug(String,Throwable)
++ void warn(String)
++ void warn(String,Throwable)
++ void error(String)
++ void error(String,Throwable)
++ void info(String)
++ void info(String,Throwable)
++ void fatal(String)
++ void fatal(String,Throwable)
++ void debugSize(int,boolean,boolean,String)
++ {static} String getVersion()
++ {static} ConnectionHandler getConnectionHandler()
++ void fireUpdate()
++ void ensureLogging()
++ void setLookAndFeel(String)
++ void addConnection(String,BasicConnection)
++ void addLocalConnection(String,BasicConnection)
++ void stateChanged(ChangeEvent)
++ void closeCurrentTab()
++ void closeCurrentLocalTab()
++ void addToDesktop(String,Component,int,int)
++ void removeFromDesktop(int)
++ {static} void setAppCursor(Cursor)
++ void setClosable(int,boolean)
++ void setLocation(int,int,int)
++ {static} void updateMenuBar()
++ void internalFrameClosing(InternalFrameEvent)
++ void internalFrameActivated(InternalFrameEvent)
++ void internalFrameClosed(InternalFrameEvent)
++ void internalFrameDeactivated(InternalFrameEvent)
++ void internalFrameDeiconified(InternalFrameEvent)
++ void internalFrameIconified(InternalFrameEvent)
++ void internalFrameOpened(InternalFrameEvent)
++ void drop()
++ void handleDrop(DropTargetDropEvent,Transferable)
+}
+class net.sf.jftp.JFtp$DTListener {
++ void dragEnter(DropTargetDragEvent)
++ void dragOver(DropTargetDragEvent)
++ void dropActionChanged(DropTargetDragEvent)
++ void dragExit(DropTargetEvent)
++ void drop(DropTargetDropEvent)
+}
+class net.sf.jftp.gui.framework.TransferComponent {
+}
+class net.sf.jftp.net.FtpURLStreamHandler {
++ URLConnection openConnection(URL)
+}
+interface net.sf.jftp.event.FtpEventConstants {
++ {static} int FTPCommand
++ {static} int FTPPrompt
++ {static} int FTPShutdown
+}
+class net.sf.jftp.gui.base.dir.DirCellRenderer {
+~ {static} ImageIcon longIcon
+~ {static} ImageIcon shortIcon
+- Object value
++ Component getListCellRendererComponent(JList,Object,int,boolean,boolean)
+}
+class net.sf.jftp.gui.base.LocalDir {
+~ {static} String deleteString
+~ {static} String mkdirString
+~ {static} String refreshString
+~ {static} String cdString
+~ {static} String cmdString
+~ {static} String downloadString
+~ {static} String uploadString
+~ {static} String zipString
+~ {static} String cpString
+~ {static} String rnString
+~ {static} String cdUpString
+~ HImageButton deleteButton
+~ HImageButton mkdirButton
+~ HImageButton cmdButton
+~ HImageButton refreshButton
+~ HImageButton cdButton
+~ HImageButton uploadButton
+~ HImageButton zipButton
+~ HImageButton cpButton
+~ HImageButton rnButton
+- DirCanvas label
+- boolean pathChanged
+- boolean firstGui
+- int pos
+- JPanel p
+- JToolBar buttonPanel
+- JToolBar currDirPanel
+- DefaultListModel jlm
+- JScrollPane jsp
+- int tmpindex
+- Hashtable dummy
+- JPopupMenu popupMenu
+- JMenuItem runFile
+- JMenuItem viewFile
+- JMenuItem props
+- DirEntry currentPopup
+- String sortMode
+~ String[] sortTypes
+- JComboBox sorter
+~ HImageButton cdUpButton
+- boolean dateEnabled
++ void gui_init()
++ void doChdir(String)
++ void setViewPort()
++ void gui(boolean)
++ void setDirList(boolean)
++ boolean chdir(String)
++ void actionPerformed(ActionEvent)
++ void blockedTransfer(int)
++ void lock(boolean)
++ void unlock(boolean)
++ void fresh()
++ void transfer()
++ void startTransfer(DirEntry)
++ void transfer(int)
++ void safeUpdate()
++ void actionPerformed(Object,String)
++ void updateProgress(String,String,long)
++ void connectionInitialized(BasicConnection)
++ void actionFinished(BasicConnection)
++ void connectionFailed(BasicConnection,String)
++ void updateRemoteDirectory(BasicConnection)
++ void showContentWindow(String,DirEntry)
++ void keyPressed(KeyEvent)
++ void keyReleased(KeyEvent)
++ void keyTyped(KeyEvent)
+}
+class net.sf.jftp.system.UpdateDaemon {
+- {static} int rem
+- {static} int loc
+- {static} int log
+- {static} int reg
+- {static} int cal
+- Thread runner
+- JFtp jftp
++ {static} void updateRemoteDirGUI()
++ {static} void updateRemoteDir()
++ {static} void updateLocalDir()
++ {static} void updateLog()
++ {static} void updateCall()
++ void run()
+}
+class net.sf.jftp.net.ConnectionHandler {
+- Hashtable<String,Transfer> connections
++ void addConnection(String,Transfer)
++ void removeConnection(String)
++ Hashtable<String,Transfer> getConnections()
++ int getConnectionSize()
+}
+class net.sf.jftp.gui.tasks.Renamer {
++ HTextField text
+- HButton ok
+- HPanel okP
+- String oldName
+- String path
++ void actionPerformed(ActionEvent)
+}
+abstract class net.sf.jftp.event.Event {
++ {abstract}int eventCode()
+}
+class net.sf.jftp.net.FilesystemConnection {
++ {static} int filesystemBuffer
+- String path
+- String pwd
+- Vector<ConnectionListener> listeners
+- String[] files
+- String[] size
+- int[] perms
+- String baseFile
+- int fileCount
+- boolean shortProgress
++ Vector<Date> dateVector
++ int removeFileOrDir(String)
++ void sendRawCommand(String)
++ void disconnect()
++ boolean isConnected()
++ String getPWD()
++ boolean cdup()
++ boolean mkdir(String)
++ void list()
++ boolean chdir(String)
++ boolean chdirNoRefresh(String)
++ String getLocalPath()
++ String processPath(String)
++ boolean setLocalPath(String)
++ String[] sortLs()
++ String[] sortSize()
++ int[] getPermissions()
++ int handleDownload(String)
++ int handleUpload(String)
++ int download(String)
++ int upload(String)
++ int upload(String,InputStream)
++ InputStream getDownloadInputStream(String)
++ void addConnectionListener(ConnectionListener)
++ void setConnectionListeners(Vector<ConnectionListener>)
++ void fireDirectoryUpdate()
++ boolean login(String,String)
++ void fireProgressUpdate(String,String,int)
++ Date[] sortDates()
++ boolean rename(String,String)
+}
+class net.sf.jftp.gui.framework.LoadPanel {
+}
+class net.sf.jftp.net.FtpURLConnection {
+- FtpConnection connection
+- String username
+- String password
+- int loginFlag
++ void connect()
++ FtpConnection getFtpConnection()
++ InputStream getInputStream()
++ OutputStream getOutputStream()
++ String getUser()
++ String getPass()
++ String getHost()
++ int getPort()
++ int getLoginResponse()
++ boolean loginSucceeded()
++ {static} void main(String[])
+}
+class net.sf.jftp.net.FtpTransfer {
+- String host
+- int port
+- String localPath
+- String remotePath
+- String file
+- String user
+- String pass
+- FtpConnection con
+- String type
++ Thread runner
+- int stat
+- boolean started
+- ConnectionHandler handler
+- Vector<ConnectionListener> listeners
+- String newName
+- int transferStatus
+- String crlf
++ void prepare()
++ void run()
++ int getStatus()
++ int getTransferStatus()
++ boolean hasStarted()
++ FtpConnection getFtpConnection()
++ DataConnection getDataConnection()
+}
+class net.sf.jftp.gui.framework.HFrame {
++ void fixLocation()
++ {static} void fixLocation(Window)
+}
+class net.sf.jftp.gui.base.StatusCanvas {
+~ JLabel host
+~ JLabel separator
+~ JLabel text
+~ String drawText
+~ int pos
+~ Image image
+~ Graphics offg
+~ boolean slide
+~ int interval
+~ boolean fwd
++ void setInterval(int)
++ void forward()
++ void setText(String)
++ void scrollText(String)
++ void setHost(String)
++ String getHost()
++ void fresh()
++ void paintComponent(Graphics)
++ void update(Graphics)
+}
+class net.sf.jftp.net.FtpConnection {
+- {static} boolean TESTMODE
++ {static} String ASCII
++ {static} String BINARY
++ {static} String EBCDIC
++ {static} String L8
++ {static} String STREAM
++ {static} String BLOCKED
++ {static} String COMPRESSED
+- {static} String NEGATIVE
+- {static} String NEGATIVE2
+- {static} String POSITIVE
+- {static} String PROCEED
+- {static} char MORE_LINES_APPENDED
++ {static} String LIST_DEFAULT
++ {static} String LIST
+- {static} boolean useStream
+- {static} boolean useBlocked
+- {static} boolean useCompressed
+- {static} int porta
+- {static} int portb
++ boolean hasUploaded
++ boolean work
+- boolean msg
+- boolean ok
+- String pwd
+- String initCWD
+- String[] loginAck
+- String osType
+- String dataType
+- List<FtpTransfer> transfers
+- boolean modeStreamSet
+- DataConnection dcon
+- Vector<ConnectionListener> listeners
+- ConnectionHandler handler
+- FtpKeepAliveThread keepAliveThread
+- String localPath
+- String host
+- String username
+- String password
+- int port
+- BufferedReader in
+- JConnection jcon
+- boolean connected
+- boolean shortProgress
+- boolean isDirUpload
+- String baseFile
+- int fileCount
+- String typeNow
+- String crlf
++ Vector<Date> dateVector
++ Vector<String> currentListing
++ Vector<String> currentFiles
++ Vector<String> currentSizes
++ Vector<String> currentPerms
++ int login(String,String)
++ FtpKeepAliveThread getKeepAliveThread()
++ String[] sortSize()
++ int[] getPermissions()
++ String[] sortLs()
++ String getOsType()
++ int handleDownload(String)
++ int download(String)
++ InputStream getDownloadInputStream(String)
++ int handleUpload(String)
++ int handleUpload(String,String)
++ int upload(String)
++ int upload(String,String)
++ int upload(String,InputStream)
++ int upload(String,String,InputStream)
++ int removeFileOrDir(String)
++ void disconnect()
++ void sendRawCommand(String)
++ String getLine(String)
++ String getLine(String[])
++ boolean isConnected()
++ String getPWD()
++ String getCachedPWD()
++ boolean chdirRaw(String)
++ boolean cdup()
++ boolean mkdir(String)
++ void list()
++ boolean chdir(String)
++ boolean chdirNoRefresh(String)
++ void pause(int)
++ String getLocalPath()
++ boolean setLocalPath(String)
++ int exists(String)
++ boolean rename(String,String)
++ int getPort()
++ void binary()
++ void ascii()
++ boolean type(String)
++ String getTypeNow()
++ void noop()
++ void abort()
++ String system()
++ void modeStream()
++ void modeBlocked()
++ void modeCompressed()
++ String mode(String)
++ String getHost()
++ String getUsername()
++ String getPassword()
++ DataConnection getDataConnection()
++ void addConnectionListener(ConnectionListener)
++ void setConnectionListeners(Vector<ConnectionListener>)
++ void fireDirectoryUpdate(FtpConnection)
++ void fireProgressUpdate(String,String,long)
++ void fireConnectionInitialized(FtpConnection)
++ void fireConnectionFailed(FtpConnection,String)
++ void fireActionFinished(FtpConnection)
++ ConnectionHandler getConnectionHandler()
++ void setConnectionHandler(ConnectionHandler)
++ FtpTransfer getLastInitiatedTransfer()
++ void abortTransfer()
++ Date[] sortDates()
++ String getCRLF()
++ BufferedReader getIn()
++ void setIn(BufferedReader)
++ BufferedReader getCommandInputReader()
++ OutputStream getCommandOutputStream()
+}
+class net.sf.jftp.tools.HttpSpider {
+- HTextField host
+- HTextField type
+- HTextField depth
+- HTextField dir
+- JPanel p1
+- JPanel okP
+- JButton ok
+- int currentDepth
+- int MAX
+- String[] typeArray
+- String localDir
+- String[] argv
+- Thread runner
+- boolean stopflag
+- JButton stop
++ void actionPerformed(ActionEvent)
++ void run()
++ Insets getInsets()
+}
+class net.sf.jftp.tools.Holer {
+- String localDir
++ String holZeug(String)
++ void bringAnStart(String,boolean)
+}
+class net.sf.jftp.net.wrappers.Sftp2Connection {
++ {static} int smbBuffer
+- String path
+- String pwd
+- Vector listeners
+- String[] files
+- String[] size
+- int[] perms
+- String user
+- String pass
+- String host
+- String baseFile
+- int fileCount
+- boolean isDirUpload
+- boolean shortProgress
+- int port
+- boolean connected
+- String keyfile
+- Session session
+- ChannelSftp channel
++ int removeFileOrDir(String)
++ void sendRawCommand(String)
++ void disconnect()
++ boolean isConnected()
++ String getPWD()
++ boolean mkdir(String)
++ void list()
++ boolean chdir(String)
++ boolean chdir(String,boolean)
++ boolean cdup()
++ boolean chdirNoRefresh(String)
++ String getLocalPath()
++ boolean setLocalPath(String)
++ String[] sortLs()
++ String[] sortSize()
++ int[] getPermissions()
++ int handleUpload(String)
++ int handleDownload(String)
++ int upload(String)
++ int download(String)
++ boolean rename(String,String)
++ void addConnectionListener(ConnectionListener)
++ void setConnectionListeners(Vector)
++ void fireDirectoryUpdate()
++ boolean login(String,String)
++ void fireProgressUpdate(String,String,int)
++ void fireActionFinished(Sftp2Connection)
++ int upload(String,InputStream)
++ InputStream getDownloadInputStream(String)
++ Date[] sortDates()
+}
+class net.sf.jftp.net.wrappers.MyUserInfo {
+~ String password
++ String getPassword()
++ boolean promptYesNo(String)
++ String getPassphrase()
++ boolean promptPassphrase(String)
++ boolean promptPassword(String)
++ void showMessage(String)
+}
+interface net.sf.jftp.gui.base.dir.Dir {
++ void setDownloadList(DownloadList)
++ BasicConnection getCon()
++ void setCon(BasicConnection)
++ void actionPerformed(Object,String)
++ String getPath()
++ boolean setPath(String)
++ String getType()
++ void setType(String)
++ void fresh()
++ void lock(boolean)
++ void unlock(boolean)
+}
+class net.sf.jftp.gui.framework.FileTransferable {
++ {static} DataFlavor plainTextFlavor
++ {static} DataFlavor[] flavors
+- {static} List flavorList
++ DataFlavor[] getTransferDataFlavors()
++ boolean isDataFlavorSupported(DataFlavor)
++ Object getTransferData(DataFlavor)
+}
+class net.sf.jftp.gui.tasks.AutoRemover {
+}
+class net.sf.jftp.gui.tasks.AddBookmarks {
+- {static} JFtp jftp
+- HButton add
+- HButton addAndConnect
++ HComboBox protocols
++ HTextField host
++ HTextField user
++ HPasswordField pass
++ HTextField port
++ HTextField dirOrDom
++ HComboBox isLocal
++ void init()
++ void update()
++ void windowClosing(WindowEvent)
++ void windowClosed(WindowEvent)
++ void windowActivated(WindowEvent)
++ void windowDeactivated(WindowEvent)
++ void windowIconified(WindowEvent)
++ void windowDeiconified(WindowEvent)
++ void windowOpened(WindowEvent)
++ void actionPerformed(ActionEvent)
+}
+class net.sf.jftp.gui.base.AppMenuBar {
++ {static} JCheckBoxMenuItem fadeMenu
++ {static} JCheckBoxMenuItem askToDelete
++ {static} JCheckBoxMenuItem debug
++ {static} JCheckBoxMenuItem disableLog
++ {static} JMenuItem clearItems
+- JFtp jftp
+~ JMenu file
+~ JMenu opt
+~ JMenu view
+~ JMenu tools
+~ JMenu bookmarks
+~ JMenu info
+~ JMenu lf
+~ JMenu background
+~ JMenu ftp
+~ JMenu smb
+~ JMenu sftp
+~ JMenu security
+~ JMenu experimental
+~ JMenu rss
+~ JMenu cnn
+~ JMenuItem localFtpCon
+~ JMenuItem localSftpCon
+~ JMenuItem localSmbCon
+~ JMenuItem localNfsCon
+~ JMenuItem localWebdavCon
+~ JMenuItem closeLocalCon
+~ JMenuItem ftpCon
+~ JMenuItem sftpCon
+~ JMenuItem smbCon
+~ JMenuItem nfsCon
+~ JMenuItem webdavCon
+~ JMenuItem close
+~ JMenuItem exit
+~ JMenuItem readme
+~ JMenuItem changelog
+~ JMenuItem todo
+~ JMenuItem hp
+~ JMenuItem opts
+~ JMenuItem http
+~ JMenuItem raw
+~ JMenuItem spider
+~ JMenuItem shell
+~ JMenuItem loadAudio
+~ JCheckBoxMenuItem rssDisabled
+~ JCheckBoxMenuItem nl
+~ JMenuItem loadSlash
+~ JMenuItem loadCNN1
+~ JMenuItem loadCNN2
+~ JMenuItem loadCNN3
+~ JMenuItem loadRss
+~ JCheckBoxMenuItem stdback
+~ JCheckBoxMenuItem resuming
+~ JCheckBoxMenuItem ask
+~ JMenuItem proxy
+~ JCheckBoxMenuItem smbThreads
+~ JCheckBoxMenuItem sftpThreads
+~ JCheckBoxMenuItem sshKeys
+~ JCheckBoxMenuItem storePasswords
+~ JCheckBoxMenuItem useNewIcons
+~ JCheckBoxMenuItem hideHidden
+~ JMenuItem clear
+~ JMenuItem[] lastConnections
+~ String[][] cons
+~ String[] lastConData
+~ Character charTab
+~ String tab
+~ JMenuItem manage
+~ JMenuItem add
+~ Hashtable marks
+~ JMenu current
+~ JMenu last
++ void loadBookmarks()
++ void addBookmark(String,String,String,String,int,String,String)
++ void resetFileItems()
++ void actionPerformed(ActionEvent)
+}
+class net.sf.jftp.config.LoadSet {
++ {static} String[] loadSet(String,boolean)
++ {static} String[] loadSet(String)
+}
+class net.sf.jftp.gui.tasks.RemoteCommand {
+- HTextField text
+- HButton ok
++ void actionPerformed(ActionEvent)
+}
+class net.sf.jftp.gui.hostchooser.SmbHostChooser {
++ {static} HTextField host
++ {static} HTextField user
++ {static} HPasswordField pass
+~ JCheckBox lan
++ HTextField domain
++ HTextField broadcast
++ HTextField wins
++ JComboBox ip
+- HButton ok
+- ComponentListener listener
+- boolean useLocal
++ void init()
++ void update()
++ void actionPerformed(ActionEvent)
++ void windowClosing(WindowEvent)
++ void windowClosed(WindowEvent)
++ void windowActivated(WindowEvent)
++ void windowDeactivated(WindowEvent)
++ void windowIconified(WindowEvent)
++ void windowDeiconified(WindowEvent)
++ void windowOpened(WindowEvent)
++ void pause(int)
+}
+class net.sf.jftp.event.FtpEventHandler {
+- {static} ArrayList commands
+- FtpClient client
+- Hashtable methods
++ void open(Vector)
++ void disconnect(Vector)
++ void cd(Vector)
++ void pwd(Vector)
++ void get(Vector)
++ void put(Vector)
++ void quit(Vector)
++ boolean handle(Event)
+}
+class net.sf.jftp.config.Settings {
+- {static} Properties p
++ {static} String propertyFilename
++ {static} boolean IS_JAVA_1_6
++ {static} String sshHostKeyVerificationFile
++ {static} String defaultWidth
++ {static} String defaultHeight
++ {static} String defaultX
++ {static} String defaultY
++ {static} int maxConnections
++ {static} boolean enableResuming
++ {static} boolean enableUploadResuming
++ {static} boolean noUploadResumingQuestion
++ {static} boolean askToResume
++ {static} boolean reconnect
++ {static} int uiRefresh
++ {static} int logFlushInterval
++ {static} boolean useLogFlusher
++ {static} int ftpTransferThreadPause
++ {static} int smallSize
++ {static} int smallSizeUp
++ {static} boolean shortProgress
+- {static} String defaultFtpPasvMode
+- {static} String defaultEnableDebug
+- {static} String enableMultiThreading
+- {static} String enableSmbMultiThreading
+- {static} String enableSftpMultiThreading
+- {static} String noUploadMultiThreading
+- {static} String storePasswords
++ {static} boolean useFixedTableWidths
++ {static} boolean enableWebDav
++ {static} boolean ftpKeepAlive
++ {static} int ftpKeepAliveInterval
++ {static} int runtimeCommands
++ {static} boolean askToRun
++ {static} boolean showDateNoSize
++ {static} boolean showLocalDateNoSize
++ {static} boolean hideStatus
++ {static} boolean showNewlineOption
++ {static} int bufferSize
++ {static} boolean safeMode
++ {static} boolean enableFtpDelays
++ {static} String title
++ {static} String insomniacTitle
++ {static} boolean isInsomniacClient
++ {static} int refreshDelay
++ {static} boolean useDefaultDir
++ {static} boolean resize
++ {static} boolean showFileSize
++ {static} boolean sortDir
++ {static} int visibleFileRows
++ {static} int scrollSpeed
++ {static} int numFiles
++ {static} int connectionTimeout
++ {static} int testTimeout
++ {static} int statusMessageAfterMillis
++ {static} String defaultDir
++ {static} String defaultWorkDir
++ {static} String userHomeDir
++ {static} String appHomeDir
++ {static} String greeting
++ {static} String bookmarks
++ {static} String ls_out
++ {static} String login_def
++ {static} String login
++ {static} String last_cons
++ {static} String login_def_sftp
++ {static} String login_def_smb
++ {static} String login_def_nfs
++ {static} String adv_settings
++ {static} String readme
++ {static} String changelog
++ {static} String todo
++ {static} String nfsinfo
++ {static} String iconImage
++ {static} String hostImage
++ {static} String closeImage
++ {static} String infoImage
++ {static} String listImage
++ {static} String rmdirImage
++ {static} String mkdirImage
++ {static} String refreshImage
++ {static} String refreshImage2
++ {static} String cdImage
++ {static} String cmdImage
++ {static} String downloadImage
++ {static} String queueImage
++ {static} String uploadImage
++ {static} String fileImage
++ {static} String dirImage
++ {static} String codeFileImage
++ {static} String textFileImage
++ {static} String execFileImage
++ {static} String audioFileImage
++ {static} String videoFileImage
++ {static} String htmlFileImage
++ {static} String zipFileImage
++ {static} String imageFileImage
++ {static} String presentationFileImage
++ {static} String spreadsheetFileImage
++ {static} String bookFileImage
++ {static} String copyImage
++ {static} String openImage
++ {static} String sftpImage
++ {static} String nfsImage
++ {static} String webdavImage
++ {static} String linkImage
++ {static} String typeImage
++ {static} String deleteImage
++ {static} String deleteImage2
++ {static} String clearImage
++ {static} String clearImage2
++ {static} String resumeImage
++ {static} String resumeImage2
++ {static} String pauseImage
++ {static} String pauseImage2
++ {static} String saveImage
++ {static} String cdUpImage
++ {static} String nextRSSImage
++ {static} String helpImage
++ {static} String scrollLockImage
++ {static} String clearLogImage
++ {static} String background
++ {static} boolean isStandalone
++ {static} String hiddenPassword
++ {static} Object setProperty(String,String)
++ {static} String getProperty(String)
++ {static} Object setProperty(String,int)
++ {static} Object setProperty(String,boolean)
++ {static} void save()
++ {static} boolean getHideLocalDotNames()
++ {static} int getMaxConnections()
++ {static} String getSocksProxyHost()
++ {static} String getSocksProxyPort()
++ {static} boolean getUseBackground()
++ {static} boolean getEnableSshKeys()
++ {static} boolean getEnableResuming()
++ {static} boolean getEnableDebug()
++ {static} boolean getDisableLog()
++ {static} boolean getEnableStatusAnimation()
++ {static} boolean getAskToDelete()
++ {static} String getLookAndFeel()
++ {static} boolean getUseNewIcons()
++ {static} boolean getEnableMultiThreading()
++ {static} boolean getEnableSmbMultiThreading()
++ {static} boolean getEnableSftpMultiThreading()
++ {static} boolean getNoUploadMultiThreading()
++ {static} boolean getFtpPasvMode()
++ {static} boolean getUseDefaultDir()
++ {static} boolean getEnableRSS()
++ {static} String getRSSFeed()
++ {static} java.awt.Dimension getWindowSize()
++ {static} java.awt.Point getWindowLocation()
++ {static} int getSocketTimeout()
++ {static} boolean getStorePasswords()
+}
+class net.sf.jftp.gui.base.dir.TableUtils {
++ {static} void calcColumnWidths(JTable)
++ {static} void setFixedWidths(JTable)
++ {static} void copyTableSelectionsToJList(JList,JTable)
++ {static} void layoutTable(JList,JTable)
++ {static} void layoutTable(JList,JTable,Vector)
++ {static} void tryToEnableRowSorting(JTable)
++ {static} void modifyTableHeader(JTableHeader,Vector)
++ {static} JComponent makeTable(JTable,JComponent)
+}
+class net.sf.jftp.gui.base.DownloadList {
++ Hashtable sizeCache
+- ProgressBarList list
+- Hashtable downloads
+- long oldtime
+- HImageButton resume
+- HImageButton pause
+- HImageButton cancel
+- HImageButton clear
+- JScrollPane scroll
++ void fresh()
++ void actionPerformed(ActionEvent)
++ void updateList(String,String,long,long)
+}
+class net.sf.jftp.config.SaveSet {
+- PrintStream out
+}
+class net.sf.jftp.gui.framework.HComboBox {
+- JLabel label
++ JComboBox comboBox
++ String getLabel()
++ void setLabel(String)
++ Object getSelectedItem()
++ void addItem(Object)
++ void addActionListener(java.awt.event.ActionListener)
++ void setEditable(boolean)
+}
+class net.sf.jftp.gui.tasks.ImageViewer {
+}
+class net.sf.jftp.gui.tasks.ImagePanel {
+- Image img
++ void paintComponent(Graphics)
++ void update(Graphics)
+}
+class net.sf.jftp.gui.tasks.HttpDownloader {
+- HTextField text
+- HButton ok
++ void actionPerformed(ActionEvent)
+}
+class net.sf.jftp.gui.base.dir.DirLister {
+- int length
+- String[] files
+- String[] sizes
+- int[] perms
+- boolean isDirectory
++ boolean finished
+- BasicConnection con
+- String sortMode
+- Date[] dates
++ void init()
++ void sortFirst()
++ void actionPerformed(ActionEvent)
++ boolean isOk()
++ int getLength()
++ String[] list()
++ String[] sList()
++ int[] getPermissions()
++ Date[] getDates()
+}
+class net.sf.jftp.tools.RSSFeeder {
++ {static} String urlstring
+~ Thread runner
+~ URL url
+~ RSSParser parser
+~ StatusCanvas can
+~ HImageButton next
+~ boolean header
+~ boolean breakHeader
+~ int HEADER_IVAL
+~ int LOAD_IVAL
++ void switchTo(String)
++ void run()
++ void actionPerformed(ActionEvent)
+}
+class net.sf.jftp.gui.framework.HDesktopBackground {
++ ActionListener who
+- Image img
+- String image
+- String cmd
++ void paintComponent(Graphics)
++ void update(Graphics)
++ void mouseClicked(MouseEvent)
++ void mousePressed(MouseEvent)
++ void mouseReleased(MouseEvent)
++ void mouseEntered(MouseEvent)
++ void mouseExited(MouseEvent)
++ boolean imageUpdate(Image,int,int,int,int,int)
+}
+class net.sf.jftp.gui.tasks.BookmarkItem {
+- String host
+- String user
+- String pass
+- String protocol
+- int port
+- String dirOrDom
+- boolean useLocal
++ void setProtocol(String)
++ void setDirectory(String)
++ void setPort(int)
++ void setLocal(boolean)
++ void setUserdata(String,String)
++ void connect()
+}
+class net.sf.jftp.system.logging.Log {
+- {static} Logger logger
+- {static} Log log
+- {static} StringBuffer cache
++ {static} void setLogger(Logger)
++ {static} void debug(String)
++ {static} void debugRaw(String)
++ {static} void out(String)
++ {static} void devnull(Object)
++ {static} String getCache()
++ {static} void clearCache()
+}
+class net.sf.jftp.gui.framework.HPanel {
+}
+class net.sf.jftp.util.ZipFileCreator {
+- ZipOutputStream z
+}
+class net.sf.jftp.net.wrappers.SmbTransfer {
+- String url
+- String domain
+- String localPath
+- String file
+- String user
+- String pass
+- SmbConnection con
+- String type
++ Thread runner
+- Vector listeners
++ void prepare()
++ void run()
++ SmbConnection getSmbConnection()
+}
+class net.sf.jftp.gui.base.StatusPanel {
++ {static} StatusCanvas status
+- HImageButton newcon
+- HImageButton smbcon
+- HImageButton sftpcon
+- HImageButton nfscon
+- HImageButton webdavcon
++ HImageButton close
+- HImageButton go
+- JTextField address
++ JFtp jftp
++ void status(String)
++ String getHost()
++ void setHost(String)
++ void actionPerformed(ActionEvent)
++ void startTransfer(String,String,Vector,ConnectionHandler)
++ Insets getInsets()
+}
+interface net.sf.jftp.system.logging.Logger {
++ void debug(String)
++ void debugRaw(String)
++ void debug(String,Throwable)
++ void warn(String)
++ void warn(String,Throwable)
++ void error(String)
++ void error(String,Throwable)
++ void info(String)
++ void info(String,Throwable)
++ void fatal(String)
++ void fatal(String,Throwable)
+}
+class net.sf.jftp.net.FtpClient {
+- String name
+- String password
+- FtpConnection connection
++ void login(String)
++ void setUsername(String)
++ void setPassword(String)
++ void disconnect()
++ void cd(String)
++ String pwd()
++ void get(String)
++ void put(String)
+}
+class net.sf.jftp.gui.base.ResumeDialog {
+- JButton resume
+- JButton skip
+- JButton over
+- DirEntry dirEntry
++ void actionPerformed(ActionEvent)
+}
+class net.sf.jftp.gui.tasks.LastConnections {
++ {static} String SENTINEL
+- {static} JFtp jftp
++ {static} void writeToFile(String[][],int)
++ {static} String[][] readFromFile(int)
++ {static} String[][] prepend(String[],int,boolean)
++ {static} String[][] moveToFront(int,int)
++ {static} int findString(String[],int)
+}
+class net.sf.jftp.util.JReciever {
+- DataInputStream in
+- Thread reciever
+- byte[] buf
++ void run()
++ void reset(DataInputStream)
+}
+interface net.sf.jftp.net.BasicConnection {
++ boolean hasUploaded
++ void sendRawCommand(String)
++ void disconnect()
++ boolean isConnected()
++ String getPWD()
++ boolean cdup()
++ boolean mkdir(String)
++ void list()
++ boolean chdir(String)
++ boolean chdirNoRefresh(String)
++ String getLocalPath()
++ boolean setLocalPath(String)
++ String[] sortLs()
++ String[] sortSize()
++ Date[] sortDates()
++ int[] getPermissions()
++ int handleDownload(String)
++ int handleUpload(String)
++ int download(String)
++ int upload(String)
++ int upload(String,InputStream)
++ InputStream getDownloadInputStream(String)
++ int removeFileOrDir(String)
++ void addConnectionListener(ConnectionListener)
++ void setConnectionListeners(Vector<ConnectionListener>)
++ boolean rename(String,String)
+}
+interface net.sf.jftp.event.EventHandler {
++ boolean handle(Event)
+}
+class net.sf.jftp.gui.framework.HPasswordField {
++ String getText()
+}
+class net.sf.jftp.gui.framework.HInsetPanel {
++ Insets getInsets()
+}
+class net.sf.jftp.util.JRawConnection {
+- int timeout
+- String host
+- int port
+- PrintStream out
+- DataInputStream in
+- Socket s
+- JReciever jrcv
+- boolean isOk
+- boolean established
+- boolean reciever
+- Thread runner
++ void run()
++ boolean isThere()
++ void send(String)
++ PrintStream getInetOutputStream()
++ DataInputStream getInetInputStream()
+}
+class net.sf.jftp.gui.base.dir.DirCanvas {
+~ JLabel text
+- Dir target
+~ boolean active
++ void mouseClicked(MouseEvent)
++ void mousePressed(MouseEvent)
++ void mouseReleased(MouseEvent)
++ void mouseEntered(MouseEvent)
++ void mouseExited(MouseEvent)
++ void setText(String)
++ void paintComponent(Graphics)
++ Insets getInsets()
+}
+class net.sf.jftp.gui.base.dir.ColoredCellRenderer {
++ Component getTableCellRendererComponent(JTable,Object,boolean,boolean,int,int)
+}
+class net.sf.jftp.gui.base.DownloadQueue {
+- {static} String SEP
+~ int NumRetry
+- DefaultListModel liststr
+- JList list
+- ArrayList queue
+- queueDownloader thread
+- QueueRecord lastDownload
+- BasicConnection con
+- HImageButton start
+- HImageButton stop
+- HImageButton save
+- HImageButton load
+- HImageButton up
+- HImageButton down
+- HImageButton delete
+- boolean isThere
+- boolean downloading
+- ConnectionHandler handler
+- JLabel statuslabel
++ void addFtp(String)
++ void actionPerformed(ActionEvent)
++ void debug(String)
++ void debugRaw(String)
++ void debug(String,Throwable)
++ void warn(String)
++ void warn(String,Throwable)
++ void error(String)
++ void error(String,Throwable)
++ void info(String)
++ void info(String,Throwable)
++ void fatal(String)
++ void fatal(String,Throwable)
+}
+class net.sf.jftp.gui.base.DownloadQueue$QueueRecord {
++ String type
++ String hostname
++ String username
++ String password
++ String port
++ String file
++ String local
++ String remote
++ String localip
++ String domain
+}
+class net.sf.jftp.gui.base.DownloadQueue$queueDownloader {
++ boolean block
++ boolean connected
++ QueueRecord last
+- FtpConnection conFtp
++ void run()
++ void updateRemoteDirectory(BasicConnection)
++ void connectionInitialized(BasicConnection)
++ void updateProgress(String,String,long)
++ void connectionFailed(BasicConnection,String)
++ void actionFinished(BasicConnection)
+}
+interface net.sf.jftp.net.FtpConstants {
++ {static} int TRANSFER_FAILED
++ {static} int TRANSFER_STOPPED
++ {static} int MKDIR_FAILED
++ {static} int PERMISSION_DENIED
++ {static} int CHDIR_FAILED
++ {static} int WRONG_LOGIN_DATA
++ {static} int OFFLINE
++ {static} int GENERIC_FAILED
++ {static} int REMOVE_FAILED
++ {static} int RENAME_FAILED
++ {static} int FILE_NOT_FOUND
++ {static} int DATACONNECTION_FAILED
++ {static} int NEW_TRANSFER_SPAWNED
++ {static} int TRANSFER_SUCCESSFUL
++ {static} int LOGIN_OK
++ {static} int REMOVE_SUCCESSFUL
++ {static} int R
++ {static} int W
++ {static} int DENIED
++ {static} String USER
++ {static} String PASS
++ {static} String ACCT
++ {static} String CWD
++ {static} String CDUP
++ {static} String SMNT
++ {static} String REIN
++ {static} String QUIT
++ {static} String PORT
++ {static} String PASV
++ {static} String TYPE
++ {static} String STRU
++ {static} String MODE
++ {static} String RETR
++ {static} String STOR
++ {static} String STOU
++ {static} String APPE
++ {static} String ALLO
++ {static} String REST
++ {static} String RNFR
++ {static} String RNTO
++ {static} String ABOR
++ {static} String DELE
++ {static} String RMD
++ {static} String MKD
++ {static} String PWD
++ {static} String NLST
++ {static} String SITE
++ {static} String SYST
++ {static} String STAT
++ {static} String HELP
++ {static} String NOOP
++ {static} String AUTH
++ {static} String ADAT
++ {static} String PROT
++ {static} String PBSZ
++ {static} String CCC
++ {static} String MIC
++ {static} String CONF
++ {static} String ENC
++ {static} String RC110
++ {static} String RC120
++ {static} String RC125
++ {static} String RC150
++ {static} String FTP200_OK
++ {static} String RC202
++ {static} String RC211
++ {static} String RC212
++ {static} String RC213
++ {static} String RC214
++ {static} String FTP215_SYSTEM_TYPE
++ {static} String FTP220_SERVICE_READY
++ {static} String FTP221_SERVICE_CLOSING
++ {static} String RC225
++ {static} String FTP226_CLOSING_DATA_REQUEST_SUCCESSFUL
++ {static} String FTP227_ENTERING_PASSIVE_MODE
++ {static} String FTP230_LOGGED_IN
++ {static} String FTP250_COMPLETED
++ {static} String FTP257_PATH_CREATED
++ {static} String FTP331_USER_OK_NEED_PASSWORD
++ {static} String RC332
++ {static} String RC350
++ {static} String RC421
++ {static} String RC425
++ {static} String RC426
++ {static} String RC450
++ {static} String RC451
++ {static} String RC452
++ {static} String RC500
++ {static} String RC501
++ {static} String RC502
++ {static} String RC503
++ {static} String RC504
++ {static} String RC530
++ {static} String RC532
++ {static} String RC550
++ {static} String RC551
++ {static} String RC552
++ {static} String RC553
+}
+class net.sf.jftp.gui.framework.BorderPanel {
++ boolean left
++ void paintComponent(Graphics)
+}
+interface net.sf.jftp.net.ConnectionListener {
++ void updateRemoteDirectory(BasicConnection)
++ void updateProgress(String,String,long)
++ void connectionInitialized(BasicConnection)
++ void connectionFailed(BasicConnection,String)
++ void actionFinished(BasicConnection)
+}
+class net.sf.jftp.system.logging.Log4JLogger {
+- Category cat
++ void debug(String)
++ void debugRaw(String)
++ void debug(String,Throwable)
++ void warn(String)
++ void warn(String,Throwable)
++ void error(String)
++ void error(String,Throwable)
++ void info(String)
++ void info(String,Throwable)
++ void fatal(String)
++ void fatal(String,Throwable)
+}
+class net.sf.jftp.gui.tasks.RemoverQuery {
+- String file
+- String type
+- HButton ok
+- HButton cancel
++ void actionPerformed(ActionEvent)
+}
+class net.sf.jftp.gui.tasks.Displayer {
++ {static} boolean showCloseButton
+- JTextArea info
+- JButton close
++ void actionPerformed(ActionEvent)
++ Insets getInsets()
+}
+class net.sf.jftp.gui.framework.HImageButton {
++ String label
++ ActionListener who
+- String cmd
++ void update(Graphics)
++ void mouseClicked(MouseEvent)
++ void mousePressed(MouseEvent)
++ void mouseReleased(MouseEvent)
++ void mouseEntered(MouseEvent)
++ void mouseExited(MouseEvent)
+}
+class net.sf.jftp.gui.base.dir.DirComponent {
++ JTable table
+~ DirPanel target
++ void update()
++ void valueChanged(ListSelectionEvent)
+}
+class net.sf.jftp.net.wrappers.Sftp2URLConnection {
+- Sftp2Connection connection
+- String username
+- String password
+- boolean loginFlag
++ void connect()
++ Sftp2Connection getSftp2Connection()
++ String getUser()
++ String getPass()
++ String getHost()
++ int getPort()
++ boolean loginSucceeded()
+}
+class net.sf.jftp.gui.base.FtpHost {
++ String name
++ String hostname
++ String username
++ String password
++ String port
++ String toString()
+}
+class net.sf.jftp.gui.hostchooser.WebdavHostChooser {
++ {static} HTextField host
++ {static} HTextField user
++ {static} HPasswordField pass
+- HPanel okP
+- HButton ok
+- ComponentListener listener
+- boolean useLocal
++ void init()
++ void update()
++ void actionPerformed(ActionEvent)
++ void windowClosing(WindowEvent)
++ void windowClosed(WindowEvent)
++ void windowActivated(WindowEvent)
++ void windowDeactivated(WindowEvent)
++ void windowIconified(WindowEvent)
++ void windowDeiconified(WindowEvent)
++ void windowOpened(WindowEvent)
++ void pause(int)
+}
+class net.sf.jftp.gui.framework.HTextField {
+- JLabel label
++ JTextField text
++ void init(String,String,int,boolean)
++ String getLabel()
++ void setLabel(String)
++ String getText()
++ void setText(String)
++ void requestFocus()
++ void setEnabled(boolean)
+}
+class net.sf.jftp.tools.Shell {
+~ BufferedOutputStream out
+~ BufferedReader in
+~ BufferedOutputStream err
+~ JTextArea text
+~ long off
+~ Thread runner
+~ JScrollPane textP
+~ String input
+~ Vector commands
+~ int currCmd
++ void init()
++ void run()
++ {static} void main(String[])
+}
+class net.sf.jftp.net.wrappers.SmbTest {
++ {static} String readLine()
++ {static} void main(String[])
+}
+class net.sf.jftp.config.Crypto {
+- {static} char[] PASSWORD
+- {static} byte[] SALT
++ {static} String Encrypt(String)
++ {static} String Decrypt(String)
+}
+class net.sf.jftp.gui.tasks.AdvancedOptions {
++ {static} boolean listOptionSet
+- HTextField listCommand
+- JButton setListCommand
+- JButton saveCommand
+- JLabel text
+- JLabel statusText
+- String listOptionText
++ void actionPerformed(ActionEvent)
++ Insets getInsets()
+}
+class net.sf.jftp.net.wrappers.Sftp2Transfer {
+- String host
+- String localPath
+- String remotePath
+- String file
+- String user
+- String pass
+- Sftp2Connection con
+- String type
++ Thread runner
+- Vector listeners
+- String keyfile
+- String port
++ void prepare()
++ void run()
++ Sftp2Connection getSftpConnection()
+}
+class net.sf.jftp.util.RawConnection {
++ {static} HTextField host
++ {static} HTextField port
++ {static} JTextArea output
++ {static} boolean established
++ {static} boolean mayDispose
++ {static} JScrollPane outputPane
+- JPanel p1
+- HTextField com
+- JPanel p2
+- JButton send
+- JRawConnection c
+- JButton clear
+~ JMenuBar mb
+~ JMenu file
+~ JMenu about
+~ JMenu session
+~ JMenuItem close
+~ JMenuItem changeHost
+~ JMenuItem info
++ void actionPerformed(ActionEvent)
++ void windowClosing(WindowEvent)
++ void windowIconified(WindowEvent)
++ void windowDeiconified(WindowEvent)
++ void windowClosed(WindowEvent)
++ void windowActivated(WindowEvent)
++ void windowDeactivated(WindowEvent)
++ void windowOpened(WindowEvent)
+}
+class net.sf.jftp.gui.tasks.BookmarkManager {
+- JTextArea info
+- JButton save
+- JButton close
++ void actionPerformed(ActionEvent)
++ Insets getInsets()
+}
+class net.sf.jftp.gui.base.RemoteDir {
+~ {static} String deleteString
+~ {static} String mkdirString
+~ {static} String refreshString
+~ {static} String cdString
+~ {static} String cmdString
+~ {static} String downloadString
+~ {static} String uploadString
+~ {static} String queueString
+~ {static} String cdUpString
+~ {static} String rnString
+~ HImageButton deleteButton
+~ HImageButton mkdirButton
+~ HImageButton cmdButton
+~ HImageButton refreshButton
+~ HImageButton cdButton
+~ HImageButton uploadButton
+~ HImageButton downloadButton
+~ HImageButton queueButton
+~ HImageButton cdUpButton
+~ HImageButton rnButton
+- DirCanvas label
+- boolean pathChanged
+- boolean firstGui
+- int pos
+- JPanel p
+- JToolBar buttonPanel
+- JToolBar currDirPanel
+- DefaultListModel jlm
+- JScrollPane jsp
+- int tmpindex
+- HImageButton list
+- HImageButton transferType
+- JPopupMenu popupMenu
+- JMenuItem props
+- DirEntry currentPopup
+- String sortMode
+~ String[] sortTypes
+- JComboBox sorter
+- boolean dateEnabled
++ void gui_init()
++ void doChdir(String)
++ void setViewPort()
++ void gui(boolean)
++ void setDirList(boolean)
++ void actionPerformed(ActionEvent)
++ void blockedTransfer(int)
++ void lock(boolean)
++ void unlock(boolean)
++ void fresh()
++ void updateProgress(String,String,long)
++ void connectionInitialized(BasicConnection)
++ void connectionFailed(BasicConnection,String)
++ void updateRemoteDirectory(BasicConnection)
++ void transfer()
++ void startTransfer(DirEntry)
++ void transfer(int)
++ void actionFinished(BasicConnection)
++ void actionPerformed(Object,String)
++ void showContentWindow(String,DirEntry)
++ void keyPressed(KeyEvent)
++ void keyReleased(KeyEvent)
++ void keyTyped(KeyEvent)
+}
+class net.sf.jftp.tools.RSSParser {
+~ URL file
+~ Vector titles
+~ Vector descs
+~ Vector links
+~ Vector content
+}
+class net.sf.jftp.gui.tasks.HostInfo {
++ String type
++ String hostname
++ String username
++ String password
++ String port
++ String localip
++ String domain
+}
+class net.sf.jftp.gui.framework.Template {
++ void actionPerformed(ActionEvent)
++ Insets getInsets()
+}
+abstract class net.sf.jftp.gui.base.dir.MaterializedTableModel {
+# JList list
+}
+class net.sf.jftp.system.StringUtils {
++ {static} String cutPath(String)
++ {static} String removeStart(String,String)
++ {static} String cutAfter(String,char)
++ {static} String contains(String[],String[])
++ {static} boolean strstr(String,char)
++ {static} String string(char)
++ {static} String getFile(String)
++ {static} String getDir(String)
++ {static} boolean isRelative(String)
++ {static} void main(String[])
++ {static} String cut(String,String)
+}
+interface net.sf.jftp.event.Acceptor {
++ void accept(Event)
+}
+class net.sf.jftp.gui.tasks.NameChooser {
++ HTextField text
+- HButton ok
+- HPanel okP
++ void actionPerformed(ActionEvent)
+}
+class net.sf.jftp.gui.hostchooser.HostChooser {
++ HTextField host
++ HTextField user
++ HPasswordField pass
++ HTextField port
++ HTextField cwd
++ HTextField lcwd
++ HTextField dl
++ HTextField crlf
+- JCheckBox anonBox
+- JCheckBox listBox
+- JCheckBox dirBox
+- JCheckBox modeBox
+- JCheckBox threadBox
+- HPanel okP
+- HButton ok
+- HButton backMode
+- HButton frontMode
+- HFrame h
+- HPanel listP
+- HButton list
+- ComponentListener listener
+- int mode
+- boolean useLocal
+- boolean ext
++ void init()
++ void update()
++ void update(String)
++ void actionPerformed(ActionEvent)
++ void windowClosing(WindowEvent)
++ void windowClosed(WindowEvent)
++ void windowActivated(WindowEvent)
++ void windowDeactivated(WindowEvent)
++ void windowIconified(WindowEvent)
++ void windowDeiconified(WindowEvent)
++ void windowOpened(WindowEvent)
++ void pause(int)
+}
+class net.sf.jftp.net.wrappers.NfsConnection {
++ {static} int buffer
+- String url
+- String host
+- String path
+- String pwd
+- Vector listeners
+- String[] files
+- String[] size
+- int[] perms
+- String baseFile
+- int fileCount
+- boolean isDirUpload
+- boolean shortProgress
+- boolean dummy
++ boolean login(String,String)
++ String[] getExports()
++ int removeFileOrDir(String)
++ void sendRawCommand(String)
++ void disconnect()
++ boolean isConnected()
++ String getPWD()
++ boolean cdup()
++ boolean mkdir(String)
++ void list()
++ boolean chdir(String)
++ boolean chdir(String,boolean)
++ boolean chdirNoRefresh(String)
++ String getLocalPath()
++ boolean setLocalPath(String)
++ String[] sortLs()
++ String[] sortSize()
++ int[] getPermissions()
++ int handleUpload(String)
++ int handleDownload(String)
++ int upload(String)
++ int download(String)
++ void addConnectionListener(ConnectionListener)
++ void setConnectionListeners(Vector)
++ void fireDirectoryUpdate()
++ void fireProgressUpdate(String,String,int)
++ void fireActionFinished(NfsConnection)
++ int upload(String,InputStream)
++ InputStream getDownloadInputStream(String)
++ Date[] sortDates()
++ boolean rename(String,String)
+}
+class net.sf.jftp.gui.tasks.Creator {
+- HTextField text
+- HButton ok
+- BasicConnection con
++ void actionPerformed(ActionEvent)
+}
+class net.sf.jftp.gui.base.UITool {
++ {static} boolean askToDelete(JComponent)
++ {static} boolean askToRun(JComponent)
++ {static} String getPathFromDialog(String)
+}
+class net.sf.jftp.system.LocalIO {
++ {static} String[] sortStrings(String[])
++ {static} void cleanLocalDir(String,String)
++ {static} void pause(int)
+}
+
+
+net.sf.jftp.event.Event <|-- net.sf.jftp.event.FtpEvent
+java.awt.event.ActionListener <|.. net.sf.jftp.gui.hostchooser.SftpHostChooser
+java.awt.event.WindowListener <|.. net.sf.jftp.gui.hostchooser.SftpHostChooser
+javax.swing.event.ChangeListener <|.. net.sf.jftp.gui.hostchooser.SftpHostChooser
+net.sf.jftp.gui.framework.HFrame <|-- net.sf.jftp.gui.hostchooser.SftpHostChooser
+net.sf.jftp.gui.tasks.ActionListener <|.. net.sf.jftp.gui.tasks.ExternalDisplayer
+net.sf.jftp.gui.tasks.HFrame <|-- net.sf.jftp.gui.tasks.ExternalDisplayer
+javax.swing.JPanel <|-- net.sf.jftp.gui.framework.ProgressBarList
+net.sf.jftp.gui.hostchooser.ActionListener <|.. net.sf.jftp.gui.hostchooser.NfsHostChooser
+net.sf.jftp.gui.hostchooser.WindowListener <|.. net.sf.jftp.gui.hostchooser.NfsHostChooser
+net.sf.jftp.gui.hostchooser.HFrame <|-- net.sf.jftp.gui.hostchooser.NfsHostChooser
+net.sf.jftp.gui.tasks.ActionListener <|.. net.sf.jftp.gui.tasks.Remover
+net.sf.jftp.gui.tasks.HFrame <|-- net.sf.jftp.gui.tasks.Remover
+net.sf.jftp.system.logging.Logger <|.. net.sf.jftp.system.logging.SystemLogger
+net.sf.jftp.gui.tasks.HyperlinkListener <|.. net.sf.jftp.gui.tasks.HttpBrowser
+net.sf.jftp.gui.tasks.JInternalFrame <|-- net.sf.jftp.gui.tasks.HttpBrowser
+net.sf.jftp.net.Runnable <|.. net.sf.jftp.net.FtpKeepAliveThread
+net.sf.jftp.util.ActionListener <|.. net.sf.jftp.util.JHostChooser
+net.sf.jftp.util.HFrame <|-- net.sf.jftp.util.JHostChooser
+net.sf.jftp.gui.tasks.ActionListener <|.. net.sf.jftp.gui.tasks.PathChanger
+net.sf.jftp.gui.tasks.HFrame <|-- net.sf.jftp.gui.tasks.PathChanger
+java.awt.event.ActionListener <|.. net.sf.jftp.gui.tasks.ProxyChooser
+net.sf.jftp.gui.framework.HPanel <|-- net.sf.jftp.gui.tasks.ProxyChooser
+net.sf.jftp.net.server.Thread <|-- net.sf.jftp.net.server.FtpServer
+net.sf.jftp.gui.base.Runnable <|.. net.sf.jftp.gui.base.Spawn
+net.sf.jftp.net.BasicConnection <|.. net.sf.jftp.net.wrappers.WebdavConnection
+net.sf.jftp.gui.framework.JButton <|-- net.sf.jftp.gui.framework.HButton
+net.sf.jftp.gui.base.ActionListener <|.. net.sf.jftp.gui.base.Properties
+net.sf.jftp.gui.base.HFrame <|-- net.sf.jftp.gui.base.Properties
+net.sf.jftp.net.Runnable <|.. net.sf.jftp.net.DataConnection
+net.sf.jftp.net.server.Thread <|-- net.sf.jftp.net.server.FtpServerSocket
+java.applet.Applet <|-- net.sf.jftp.JFtpApplet
+net.sf.jftp.gui.base.dir.Dir <|.. net.sf.jftp.gui.base.dir.DirPanel
+net.sf.jftp.gui.base.dir.HPanel <|-- net.sf.jftp.gui.base.dir.DirPanel
+net.sf.jftp.event.Runnable <|.. net.sf.jftp.event.EventProcessor
+net.sf.jftp.event.Acceptor <|.. net.sf.jftp.event.EventProcessor
+net.sf.jftp.event.FtpEventConstants <|.. net.sf.jftp.event.EventProcessor
+net.sf.jftp.event.EventHandler <|.. net.sf.jftp.event.EventProcessor
+net.sf.jftp.gui.base.Runnable <|.. net.sf.jftp.gui.base.LogFlusher
+org.eclipse.swt.widgets.Composite <|-- net.sf.jftp.gui.tasks.NativeHttpBrowser
+javax.swing.JPanel <|-- net.sf.jftp.gui.framework.ProgressbarItem
+net.sf.jftp.net.Runnable <|.. net.sf.jftp.net.JConnection
+net.sf.jftp.net.wrappers.Runnable <|.. net.sf.jftp.net.wrappers.HttpTransfer
+net.sf.jftp.net.Transfer <|-- net.sf.jftp.net.wrappers.HttpTransfer
+net.sf.jftp.gui.tasks.JDialog <|-- net.sf.jftp.gui.tasks.HostList
+net.sf.jftp.event.Acceptor <|.. net.sf.jftp.event.EventCollector
+net.sf.jftp.net.BasicConnection <|.. net.sf.jftp.net.wrappers.SmbConnection
+jcifs.smb.NtlmAuthenticator <|-- net.sf.jftp.net.wrappers.SmbConnection
+net.sf.jftp.system.Runnable <|.. net.sf.jftp.system.CommandLine
+net.sf.jftp.system.EventHandler <|.. net.sf.jftp.system.CommandLine
+net.sf.jftp.system.FtpEventConstants <|.. net.sf.jftp.system.CommandLine
+java.awt.event.WindowListener <|.. net.sf.jftp.JFtp
+java.awt.event.ComponentListener <|.. net.sf.jftp.JFtp
+net.sf.jftp.system.logging.Logger <|.. net.sf.jftp.JFtp
+javax.swing.event.ChangeListener <|.. net.sf.jftp.JFtp
+javax.swing.event.InternalFrameListener <|.. net.sf.jftp.JFtp
+javax.swing.JPanel <|-- net.sf.jftp.JFtp
+net.sf.jftp.JFtp +.. net.sf.jftp.JFtp$DTListener
+net.sf.jftp.DropTargetListener <|.. net.sf.jftp.JFtp$DTListener
+net.sf.jftp.gui.framework.HPanel <|-- net.sf.jftp.gui.framework.TransferComponent
+java.net.URLStreamHandler <|-- net.sf.jftp.net.FtpURLStreamHandler
+net.sf.jftp.gui.base.dir.DefaultListCellRenderer <|-- net.sf.jftp.gui.base.dir.DirCellRenderer
+javax.swing.event.ListSelectionListener <|.. net.sf.jftp.gui.base.LocalDir
+net.sf.jftp.gui.base.ActionListener <|.. net.sf.jftp.gui.base.LocalDir
+net.sf.jftp.net.ConnectionListener <|.. net.sf.jftp.gui.base.LocalDir
+net.sf.jftp.gui.base.KeyListener <|.. net.sf.jftp.gui.base.LocalDir
+net.sf.jftp.gui.base.dir.DirComponent <|-- net.sf.jftp.gui.base.LocalDir
+net.sf.jftp.system.Runnable <|.. net.sf.jftp.system.UpdateDaemon
+net.sf.jftp.gui.tasks.ActionListener <|.. net.sf.jftp.gui.tasks.Renamer
+net.sf.jftp.gui.tasks.HFrame <|-- net.sf.jftp.gui.tasks.Renamer
+net.sf.jftp.net.BasicConnection <|.. net.sf.jftp.net.FilesystemConnection
+net.sf.jftp.gui.framework.HPanel <|-- net.sf.jftp.gui.framework.LoadPanel
+java.net.URLConnection <|-- net.sf.jftp.net.FtpURLConnection
+net.sf.jftp.net.Runnable <|.. net.sf.jftp.net.FtpTransfer
+net.sf.jftp.net.Transfer <|-- net.sf.jftp.net.FtpTransfer
+net.sf.jftp.gui.framework.JDialog <|-- net.sf.jftp.gui.framework.HFrame
+net.sf.jftp.gui.base.JPanel <|-- net.sf.jftp.gui.base.StatusCanvas
+net.sf.jftp.net.BasicConnection <|.. net.sf.jftp.net.FtpConnection
+net.sf.jftp.net.FtpConstants <|.. net.sf.jftp.net.FtpConnection
+net.sf.jftp.tools.Runnable <|.. net.sf.jftp.tools.HttpSpider
+net.sf.jftp.tools.ActionListener <|.. net.sf.jftp.tools.HttpSpider
+net.sf.jftp.tools.HPanel <|-- net.sf.jftp.tools.HttpSpider
+net.sf.jftp.net.BasicConnection <|.. net.sf.jftp.net.wrappers.Sftp2Connection
+com.jcraft.jsch.UserInfo <|.. net.sf.jftp.net.wrappers.MyUserInfo
+net.sf.jftp.gui.framework.Transferable <|.. net.sf.jftp.gui.framework.FileTransferable
+net.sf.jftp.gui.tasks.ActionListener <|.. net.sf.jftp.gui.tasks.AddBookmarks
+net.sf.jftp.gui.tasks.WindowListener <|.. net.sf.jftp.gui.tasks.AddBookmarks
+net.sf.jftp.gui.tasks.HFrame <|-- net.sf.jftp.gui.tasks.AddBookmarks
+net.sf.jftp.gui.base.ActionListener <|.. net.sf.jftp.gui.base.AppMenuBar
+net.sf.jftp.gui.base.JMenuBar <|-- net.sf.jftp.gui.base.AppMenuBar
+net.sf.jftp.gui.tasks.ActionListener <|.. net.sf.jftp.gui.tasks.RemoteCommand
+net.sf.jftp.gui.tasks.HFrame <|-- net.sf.jftp.gui.tasks.RemoteCommand
+net.sf.jftp.gui.hostchooser.ActionListener <|.. net.sf.jftp.gui.hostchooser.SmbHostChooser
+net.sf.jftp.gui.hostchooser.WindowListener <|.. net.sf.jftp.gui.hostchooser.SmbHostChooser
+net.sf.jftp.gui.hostchooser.HFrame <|-- net.sf.jftp.gui.hostchooser.SmbHostChooser
+net.sf.jftp.event.EventHandler <|.. net.sf.jftp.event.FtpEventHandler
+java.awt.event.ActionListener <|.. net.sf.jftp.gui.base.DownloadList
+net.sf.jftp.gui.framework.HPanel <|-- net.sf.jftp.gui.base.DownloadList
+net.sf.jftp.gui.framework.JPanel <|-- net.sf.jftp.gui.framework.HComboBox
+net.sf.jftp.gui.tasks.JInternalFrame <|-- net.sf.jftp.gui.tasks.ImageViewer
+net.sf.jftp.gui.tasks.JPanel <|-- net.sf.jftp.gui.tasks.ImagePanel
+net.sf.jftp.gui.tasks.ActionListener <|.. net.sf.jftp.gui.tasks.HttpDownloader
+net.sf.jftp.gui.tasks.HPanel <|-- net.sf.jftp.gui.tasks.HttpDownloader
+net.sf.jftp.gui.base.dir.ActionListener <|.. net.sf.jftp.gui.base.dir.DirLister
+net.sf.jftp.tools.Runnable <|.. net.sf.jftp.tools.RSSFeeder
+net.sf.jftp.tools.ActionListener <|.. net.sf.jftp.tools.RSSFeeder
+net.sf.jftp.tools.JPanel <|-- net.sf.jftp.tools.RSSFeeder
+net.sf.jftp.gui.framework.MouseListener <|.. net.sf.jftp.gui.framework.HDesktopBackground
+net.sf.jftp.gui.framework.ImageObserver <|.. net.sf.jftp.gui.framework.HDesktopBackground
+net.sf.jftp.gui.framework.JPanel <|-- net.sf.jftp.gui.framework.HDesktopBackground
+net.sf.jftp.gui.tasks.JMenuItem <|-- net.sf.jftp.gui.tasks.BookmarkItem
+javax.swing.JPanel <|-- net.sf.jftp.gui.framework.HPanel
+net.sf.jftp.net.wrappers.Runnable <|.. net.sf.jftp.net.wrappers.SmbTransfer
+net.sf.jftp.gui.base.ActionListener <|.. net.sf.jftp.gui.base.StatusPanel
+net.sf.jftp.gui.base.HPanel <|-- net.sf.jftp.gui.base.StatusPanel
+net.sf.jftp.gui.base.ActionListener <|.. net.sf.jftp.gui.base.ResumeDialog
+net.sf.jftp.gui.base.HFrame <|-- net.sf.jftp.gui.base.ResumeDialog
+net.sf.jftp.util.Runnable <|.. net.sf.jftp.util.JReciever
+net.sf.jftp.gui.framework.HTextField <|-- net.sf.jftp.gui.framework.HPasswordField
+net.sf.jftp.gui.framework.HPanel <|-- net.sf.jftp.gui.framework.HInsetPanel
+net.sf.jftp.util.Runnable <|.. net.sf.jftp.util.JRawConnection
+net.sf.jftp.gui.base.dir.MouseListener <|.. net.sf.jftp.gui.base.dir.DirCanvas
+net.sf.jftp.gui.base.dir.JPanel <|-- net.sf.jftp.gui.base.dir.DirCanvas
+javax.swing.table.DefaultTableCellRenderer <|-- net.sf.jftp.gui.base.dir.ColoredCellRenderer
+net.sf.jftp.gui.base.ActionListener <|.. net.sf.jftp.gui.base.DownloadQueue
+net.sf.jftp.gui.base.HPanel <|-- net.sf.jftp.gui.base.DownloadQueue
+net.sf.jftp.gui.base.DownloadQueue +.. net.sf.jftp.gui.base.DownloadQueue$QueueRecord
+net.sf.jftp.gui.base.DownloadQueue +.. net.sf.jftp.gui.base.DownloadQueue$queueDownloader
+net.sf.jftp.gui.base.ConnectionListener <|.. net.sf.jftp.gui.base.DownloadQueue$queueDownloader
+net.sf.jftp.gui.base.Thread <|-- net.sf.jftp.gui.base.DownloadQueue$queueDownloader
+net.sf.jftp.gui.framework.JPanel <|-- net.sf.jftp.gui.framework.BorderPanel
+net.sf.jftp.system.logging.Logger <|.. net.sf.jftp.system.logging.Log4JLogger
+net.sf.jftp.gui.tasks.ActionListener <|.. net.sf.jftp.gui.tasks.RemoverQuery
+net.sf.jftp.gui.tasks.HFrame <|-- net.sf.jftp.gui.tasks.RemoverQuery
+net.sf.jftp.gui.tasks.ActionListener <|.. net.sf.jftp.gui.tasks.Displayer
+net.sf.jftp.gui.tasks.JInternalFrame <|-- net.sf.jftp.gui.tasks.Displayer
+net.sf.jftp.gui.framework.MouseListener <|.. net.sf.jftp.gui.framework.HImageButton
+net.sf.jftp.gui.framework.JButton <|-- net.sf.jftp.gui.framework.HImageButton
+javax.swing.event.ListSelectionListener <|.. net.sf.jftp.gui.base.dir.DirComponent
+net.sf.jftp.gui.base.dir.DirPanel <|-- net.sf.jftp.gui.base.dir.DirComponent
+java.net.URLConnection <|-- net.sf.jftp.net.wrappers.Sftp2URLConnection
+java.awt.event.ActionListener <|.. net.sf.jftp.gui.hostchooser.WebdavHostChooser
+java.awt.event.WindowListener <|.. net.sf.jftp.gui.hostchooser.WebdavHostChooser
+net.sf.jftp.gui.framework.HFrame <|-- net.sf.jftp.gui.hostchooser.WebdavHostChooser
+net.sf.jftp.gui.framework.JPanel <|-- net.sf.jftp.gui.framework.HTextField
+net.sf.jftp.tools.Runnable <|.. net.sf.jftp.tools.Shell
+net.sf.jftp.gui.framework.HFrame <|-- net.sf.jftp.tools.Shell
+net.sf.jftp.net.wrappers.NtlmAuthenticator <|-- net.sf.jftp.net.wrappers.SmbTest
+net.sf.jftp.gui.tasks.ActionListener <|.. net.sf.jftp.gui.tasks.AdvancedOptions
+net.sf.jftp.gui.tasks.HPanel <|-- net.sf.jftp.gui.tasks.AdvancedOptions
+net.sf.jftp.net.wrappers.Runnable <|.. net.sf.jftp.net.wrappers.Sftp2Transfer
+net.sf.jftp.util.ActionListener <|.. net.sf.jftp.util.RawConnection
+net.sf.jftp.util.WindowListener <|.. net.sf.jftp.util.RawConnection
+net.sf.jftp.util.JFrame <|-- net.sf.jftp.util.RawConnection
+net.sf.jftp.gui.tasks.ActionListener <|.. net.sf.jftp.gui.tasks.BookmarkManager
+net.sf.jftp.gui.tasks.JInternalFrame <|-- net.sf.jftp.gui.tasks.BookmarkManager
+javax.swing.event.ListSelectionListener <|.. net.sf.jftp.gui.base.RemoteDir
+net.sf.jftp.gui.base.ActionListener <|.. net.sf.jftp.gui.base.RemoteDir
+net.sf.jftp.net.ConnectionListener <|.. net.sf.jftp.gui.base.RemoteDir
+net.sf.jftp.gui.base.KeyListener <|.. net.sf.jftp.gui.base.RemoteDir
+net.sf.jftp.gui.base.dir.DirComponent <|-- net.sf.jftp.gui.base.RemoteDir
+net.sf.jftp.gui.framework.ActionListener <|.. net.sf.jftp.gui.framework.Template
+net.sf.jftp.gui.framework.HPanel <|-- net.sf.jftp.gui.framework.Template
+javax.swing.table.AbstractTableModel <|-- net.sf.jftp.gui.base.dir.MaterializedTableModel
+net.sf.jftp.gui.tasks.ActionListener <|.. net.sf.jftp.gui.tasks.NameChooser
+net.sf.jftp.gui.tasks.HFrame <|-- net.sf.jftp.gui.tasks.NameChooser
+java.awt.event.ActionListener <|.. net.sf.jftp.gui.hostchooser.HostChooser
+java.awt.event.WindowListener <|.. net.sf.jftp.gui.hostchooser.HostChooser
+net.sf.jftp.gui.framework.HFrame <|-- net.sf.jftp.gui.hostchooser.HostChooser
+net.sf.jftp.net.BasicConnection <|.. net.sf.jftp.net.wrappers.NfsConnection
+net.sf.jftp.gui.tasks.ActionListener <|.. net.sf.jftp.gui.tasks.Creator
+net.sf.jftp.gui.tasks.HFrame <|-- net.sf.jftp.gui.tasks.Creator
+@enduml

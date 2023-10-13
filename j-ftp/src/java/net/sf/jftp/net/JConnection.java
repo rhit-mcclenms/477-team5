@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 
@@ -129,18 +130,36 @@ public class JConnection implements Runnable
                 else
                 {
                 */
-            s = new Socket(host, port);
+            int retryLimit = 5;
+            while(retryLimit > 0) {
+                try {
+                    s = new Socket(host, port);
+                    break;
+                }catch (ConnectException e) {
+                    Log.error("Failed to connect to server " + host);
+                    Log.error("Retrying with " + retryLimit + " tries remaining...");
+                    System.out.println("Failed to connect to server " + host);
+                    System.out.println("Retrying with " + retryLimit + " tries remaining...");
+                }
 
-            localPort = s.getLocalPort();
+                retryLimit--;
+                Thread.sleep(1000);
+            }
 
-            //if(time > 0) s.setSoTimeout(time);
-            out = new PrintStream(new BufferedOutputStream(s.getOutputStream(),
-                                                           Settings.bufferSize));
-            in = new BufferedReader(new InputStreamReader(s.getInputStream()),
-                                    Settings.bufferSize);
-            isOk = true;
+            if(retryLimit == 0) {
+                Log.error("Unable to connect to server and out of retry attempts");
+                System.out.println("Unable to connect to server and out of retry attempts");
+            } else {
+                localPort = s.getLocalPort();
 
-            // }
+                //if(time > 0) s.setSoTimeout(time);
+                out = new PrintStream(new BufferedOutputStream(s.getOutputStream(),
+                        Settings.bufferSize));
+                in = new BufferedReader(new InputStreamReader(s.getInputStream()),
+                        Settings.bufferSize);
+                isOk = true;
+
+            }
         }
         catch(Exception ex)
         {
@@ -218,6 +237,10 @@ public class JConnection implements Runnable
     public PrintStream getInetOutputStream()
     {
         return out;
+    }
+
+    public InetAddress getInetAddress() {
+        return s.getInetAddress();
     }
 
     public BufferedReader getReader()

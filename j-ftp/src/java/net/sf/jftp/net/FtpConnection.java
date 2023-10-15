@@ -2115,11 +2115,13 @@ public class FtpConnection implements BasicConnection, FtpConstants
 
 	/**
 	 * Check if login() was successful.
+	 * Check if we are still connected to the server using a ping/pong approach
 	 *
 	 * @return True if connected, false otherwise
 	 */
 	public boolean isConnected()
 	{
+		jcon.ping();
 		return connected;
 	}
 

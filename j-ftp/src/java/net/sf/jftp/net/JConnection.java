@@ -23,7 +23,9 @@ import java.io.PrintStream;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.*;
 
+import net.sf.jftp.JFtp;
 import net.sf.jftp.config.Settings;
 import net.sf.jftp.system.logging.Log;
 
@@ -46,6 +48,7 @@ public class JConnection implements Runnable
     //private boolean reciever = false;
     private Thread runner;
     private int localPort = -1;
+    private int pingAttempts = 0;
     //private int time = 0;
 
     /*
@@ -284,4 +287,20 @@ public class JConnection implements Runnable
 	public void setOut(PrintStream out) {
 		this.out = out;
 	}
+
+    public boolean ping() {
+        pingAttempts++;
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress(host, port), timeout);
+            socket.close();
+
+            pingAttempts = 0;
+            return true;
+        } catch (IOException e) {
+            if(pingAttempts == 3) {
+                JFtp.showRemoteUnavailable();
+            }
+            return false; // Either timeout or unreachable.
+        }
+    }
 }

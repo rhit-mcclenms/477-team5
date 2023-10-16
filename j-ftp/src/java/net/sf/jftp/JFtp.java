@@ -445,6 +445,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
     
     public void windowClosing(WindowEvent e)
     {
+    	try {
     	saveInternalPositions();
     	
         Settings.setProperty("jftp.window.width", this.getWidth());
@@ -467,6 +468,11 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
 
         Settings.save();
         safeDisconnect();
+    	}
+    	catch (Exception ex) 
+    	{
+    		log("Error closing window");
+    	}
 
         if(Settings.isStandalone)
         {

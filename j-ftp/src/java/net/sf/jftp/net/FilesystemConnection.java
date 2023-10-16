@@ -503,7 +503,12 @@ public class FilesystemConnection implements BasicConnection
         }
         else
         {
-            work(file, getLocalPath() + outfile);
+        	try {
+        		work(file, getLocalPath() + outfile);
+        	}
+        	catch (Exception ex) {
+        		Log.error("Error: " + ex.toString());
+        	}
         }
     }
 

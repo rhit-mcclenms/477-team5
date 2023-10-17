@@ -394,6 +394,16 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
                 "Check to ensure the remote server is avaiable and currently accepting connections before reconnecting.");
     }
 
+    public static void showWatchdogWarning() {
+        // Close the remote tab
+        JOptionPane.showMessageDialog(mainFrame, "ERROR: Remote connection took too long to respond\n" +
+                        "Check to ensure your server is currently accepting connections and is responsive",
+                "Long Response", JOptionPane.WARNING_MESSAGE);
+
+        Log.debug("ERROR: Remote connection took too long to respond\n" +
+                "Check to ensure your server is currently accepting connections and is responsive");
+    }
+
     private void saveInternalPositions() {
     	saveInternalPosition(j1, "local");
     	saveInternalPosition(j2, "remote");

@@ -15,29 +15,14 @@
  */
 package net.sf.jftp.gui.hostchooser;
 
-import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-
 import net.sf.jftp.JFtp;
-import net.sf.jftp.gui.framework.HButton;
-import net.sf.jftp.gui.framework.HFrame;
-import net.sf.jftp.gui.framework.HPanel;
-import net.sf.jftp.gui.framework.HPasswordField;
-import net.sf.jftp.gui.framework.HTextField;
+import net.sf.jftp.gui.framework.*;
 import net.sf.jftp.net.ConnectionListener;
 import net.sf.jftp.net.wrappers.WebdavConnection;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 
 public class WebdavHostChooser extends HFrame implements ActionListener,
@@ -45,13 +30,13 @@ public class WebdavHostChooser extends HFrame implements ActionListener,
 {
     public static HTextField host = new HTextField("URL:", "http://localhost",
                                                    35);
-    public static HTextField user = new HTextField("Username:", "guest");
+    public static HTextField user = new HTextField(JFtp.getMessage("HostChooser", "user"), "guest");
 
     //public static HTextField port = new HTextField("Port:","22");
-    public static HPasswordField pass = new HPasswordField("Password:",
+    public static HPasswordField pass = new HPasswordField(JFtp.getMessage("HostChooser", "pass"),
                                                            "nopasswd");
     private HPanel okP = new HPanel();
-    private HButton ok = new HButton("Connect");
+    private HButton ok = new HButton(JFtp.getMessage("HostChooser", "ok"));
     private ComponentListener listener = null;
     private boolean useLocal = false;
 
@@ -77,7 +62,7 @@ public class WebdavHostChooser extends HFrame implements ActionListener,
     {
         //setSize(500, 200);
         setLocation(100, 150);
-        setTitle("WebDAV Connection... (ALPHA STATE)");
+        setTitle("WebDAV " + JFtp.getMessage("HostChooser", "connection") + "... (ALPHA STATE)");
         setBackground(okP.getBackground());
 
         host.setMinimumSize(new Dimension(500, 50));

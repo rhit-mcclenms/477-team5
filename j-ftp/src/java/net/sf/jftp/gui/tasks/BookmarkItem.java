@@ -18,18 +18,7 @@ package net.sf.jftp.gui.tasks;
 import net.sf.jftp.JFtp;
 import net.sf.jftp.config.Settings;
 import net.sf.jftp.gui.base.UIUtils;
-import net.sf.jftp.gui.framework.*;
-import net.sf.jftp.net.*;
 import net.sf.jftp.net.wrappers.StartConnection;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
-
-import java.lang.Integer;
-
-import java.util.*;
 
 import javax.swing.*;
 

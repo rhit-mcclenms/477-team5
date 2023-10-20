@@ -15,61 +15,41 @@
  */
 package net.sf.jftp.gui.hostchooser;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.File;
-import java.io.IOException;
-
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import net.miginfocom.swing.MigLayout;
 import net.sf.jftp.JFtp;
 import net.sf.jftp.config.LoadSet;
 import net.sf.jftp.config.SaveSet;
 import net.sf.jftp.config.Settings;
-import net.sf.jftp.gui.framework.HButton;
-import net.sf.jftp.gui.framework.HFrame;
-import net.sf.jftp.gui.framework.HInsetPanel;
-import net.sf.jftp.gui.framework.HPanel;
-import net.sf.jftp.gui.framework.HPasswordField;
-import net.sf.jftp.gui.framework.HTextField;
-import net.sf.jftp.net.FtpConnection;
-import net.sf.jftp.net.FtpURLConnection;
+import net.sf.jftp.gui.framework.*;
 import net.sf.jftp.net.wrappers.Sftp2Connection;
 import net.sf.jftp.net.wrappers.Sftp2URLConnection;
-import net.sf.jftp.net.wrappers.StartConnection;
 import net.sf.jftp.system.logging.Log;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 
 public class SftpHostChooser extends HFrame implements ActionListener,
                                                        WindowListener, ChangeListener
 {
-    public HTextField host = new HTextField("Host:", "localhost");
-    public HTextField user = new HTextField("Username:", "guest");
-    public HTextField port = new HTextField("Port:", "22");
-    public HPasswordField pass = new HPasswordField("Password/Phrase:",
+    public HTextField host = new HTextField(JFtp.getMessage("HostChooser", "host"), "localhost");
+    public HTextField user = new HTextField(JFtp.getMessage("HostChooser", "user"), "guest");
+    public HTextField port = new HTextField(JFtp.getMessage("HostChooser", "port"), "22");
+    public HPasswordField pass = new HPasswordField(JFtp.getMessage("HostChooser", "pass"),
                                                     "nopasswd");
     public JComboBox enc = new JComboBox();
     public JComboBox cs = new JComboBox();
     public JComboBox keys = new JComboBox();
-    public JLabel encL = new JLabel("Preferred Encryption");
-    public JLabel csL = new JLabel("Preferred Message Authentication");
-    public JLabel keysL = new JLabel("Preferred Public Key");
-    public JLabel keyfileL = new JLabel("None, maybe look in ~/.ssh");
-    private HButton ok = new HButton("Connect");
-    private HButton keyfile = new HButton("Choose Key File");
+    public JLabel encL = new JLabel(JFtp.getMessage("HostChooser", "encL"));
+    public JLabel csL = new JLabel(JFtp.getMessage("HostChooser", "csL"));
+    public JLabel keysL = new JLabel(JFtp.getMessage("HostChooser", "keysL"));
+    public JLabel keyfileL = new JLabel(JFtp.getMessage("HostChooser", "keyfileL"));
+    private HButton ok = new HButton(JFtp.getMessage("HostChooser", "ok"));
+    private HButton keyfile = new HButton(JFtp.getMessage("HostChooser", "keyfile"));
     private ComponentListener listener = null;
     private boolean useLocal = false;
     private String keyfileName = null;
@@ -95,7 +75,7 @@ public class SftpHostChooser extends HFrame implements ActionListener,
     public void init()
     {
         setLocation(100, 150);
-        setTitle("Sftp Connection...");
+        setTitle("Sftp " + JFtp.getMessage("HostChooser", "connection") + "...");
         setBackground(new HPanel().getBackground()); 
 
         try
@@ -221,7 +201,7 @@ public class SftpHostChooser extends HFrame implements ActionListener,
 
             if(!uc.loginSucceeded())
             {
-                setTitle("Wrong password!");
+                setTitle(JFtp.getMessage("HostChooser", "wrongPass"));
                 host.setText(uc.getHost());
                 port.setText(Integer.toString(uc.getPort()));
                 user.setText(uc.getUser());

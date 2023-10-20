@@ -17,40 +17,36 @@
 //NOTE TO SELF: use setModal here somewhere?
 package net.sf.jftp.gui.tasks;
 
-import net.sf.jftp.*;
-import net.sf.jftp.config.*;
+import net.sf.jftp.JFtp;
+import net.sf.jftp.config.Settings;
 import net.sf.jftp.gui.framework.*;
-import net.sf.jftp.net.*;
 import net.sf.jftp.net.wrappers.StartConnection;
 import net.sf.jftp.system.StringUtils;
-import net.sf.jftp.util.*;
 
 import java.awt.*;
 import java.awt.event.*;
-
-import java.io.*;
-
-import javax.swing.*;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 
 
 public class AddBookmarks extends HFrame implements ActionListener,
                                                     WindowListener
 {
     private static JFtp jftp;
-    private HButton add = new HButton("Add Bookmark");
-    private HButton addAndConnect = new HButton("Add Bookmark and Connect to Server");
+    private HButton add = new HButton(JFtp.getMessage("tasks", "add"));
+    private HButton addAndConnect = new HButton(JFtp.getMessage("tasks", "addAndConnect"));
 
     //public JComboBox protocols = new JComboBox();
-    public HComboBox protocols = new HComboBox("Protocol:");
-    public HTextField host = new HTextField("Hostname:", "localhost");
-    public HTextField user = new HTextField("Username:", "anonymous");
-    public HPasswordField pass = new HPasswordField("Password:",
+    public HComboBox protocols = new HComboBox(JFtp.getMessage("tasks", "protocols"));
+    public HTextField host = new HTextField(JFtp.getMessage("tasks", "host"), "localhost");
+    public HTextField user = new HTextField(JFtp.getMessage("tasks", "user"), "anonymous");
+    public HPasswordField pass = new HPasswordField(JFtp.getMessage("tasks", "pass"),
                                                     "none@nowhere.no");
-    public HTextField port = new HTextField("Port:    ", "21");
-    public HTextField dirOrDom = new HTextField("Directory/Domain:    ", "");
+    public HTextField port = new HTextField(JFtp.getMessage("tasks", "port"), "21");
+    public HTextField dirOrDom = new HTextField(JFtp.getMessage("tasks", "dirOrDom"), "");
 
     //public JComboBox isLocal = new JComboBox();
-    public HComboBox isLocal = new HComboBox("Local Connection:");
+    public HComboBox isLocal = new HComboBox(JFtp.getMessage("tasks", "isLocal"));
 
     //private ActionListener protocolListener = new ActionListener();
     //private FlowLayout fl = new FlowLayout(FlowLayout.RIGHT, 10, 5);

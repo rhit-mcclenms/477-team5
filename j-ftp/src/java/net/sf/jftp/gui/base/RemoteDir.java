@@ -15,46 +15,10 @@
  */
 package net.sf.jftp.gui.base;
 
-import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.event.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
-import java.lang.reflect.Array;
-import java.util.Date;
-
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
-import javax.swing.JEditorPane;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ListSelectionListener;
-
 import net.sf.jftp.JFtp;
 import net.sf.jftp.config.SaveSet;
 import net.sf.jftp.config.Settings;
-import net.sf.jftp.gui.base.dir.DirCanvas;
-import net.sf.jftp.gui.base.dir.DirCellRenderer;
-import net.sf.jftp.gui.base.dir.DirComponent;
-import net.sf.jftp.gui.base.dir.DirEntry;
-import net.sf.jftp.gui.base.dir.DirLister;
-import net.sf.jftp.gui.base.dir.DirPanel;
-import net.sf.jftp.gui.base.dir.TableUtils;
+import net.sf.jftp.gui.base.dir.*;
 import net.sf.jftp.gui.framework.HFrame;
 import net.sf.jftp.gui.framework.HImage;
 import net.sf.jftp.gui.framework.HImageButton;
@@ -73,6 +37,17 @@ import net.sf.jftp.system.StringUtils;
 import net.sf.jftp.system.UpdateDaemon;
 import net.sf.jftp.system.logging.Log;
 import net.sf.jftp.tools.Shell;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.lang.reflect.Array;
+import java.util.Date;
 
 
 public class RemoteDir extends DirComponent implements ListSelectionListener,
@@ -129,13 +104,13 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
     private JScrollPane jsp = new JScrollPane(jl);
     private int tmpindex = -1;
     private HImageButton list = new HImageButton(Settings.listImage, "list",
-                                                 "Show remote listing...", this);
+            JFtp.getMessage("base", "list"), this);
     private HImageButton transferType = new HImageButton(Settings.typeImage,
                                                          "type",
-                                                         "Toggle transfer type...",
+            JFtp.getMessage("base", "transferType"),
                                                          this);
     private JPopupMenu popupMenu = new JPopupMenu();
-    private JMenuItem props = new JMenuItem("Properties");
+    private JMenuItem props = new JMenuItem(JFtp.getMessage("base", "props"));
     private DirEntry currentPopup = null;
     private String sortMode = null;
     String[] sortTypes = new String[] { "Normal", "Reverse", "Size", "Size/Re" };
@@ -193,46 +168,46 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         popupMenu.add(props);
 
         rnButton = new HImageButton(Settings.textFileImage, rnString,
-                                    "Rename selected file or directory", this);
-        rnButton.setToolTipText("Rename selected");
+                JFtp.getMessage("base", "rnButton"), this);
+        rnButton.setToolTipText(JFtp.getMessage("base", "rnSelected"));
 
-        list.setToolTipText("Show remote listing...");
-        transferType.setToolTipText("Toggle transfer type...");
+        list.setToolTipText(JFtp.getMessage("base", "list"));
+        transferType.setToolTipText(JFtp.getMessage("base", "transferType"));
 
         deleteButton = new HImageButton(Settings.deleteImage, deleteString,
-                                        "Delete  selected", this);
-        deleteButton.setToolTipText("Delete selected");
+                JFtp.getMessage("base", "deleteSelected"), this);
+        deleteButton.setToolTipText(JFtp.getMessage("base", "deleteSelected"));
 
         mkdirButton = new HImageButton(Settings.mkdirImage, mkdirString,
-                                       "Create a new directory", this);
-        mkdirButton.setToolTipText("Create directory");
+                JFtp.getMessage("base", "mkdirButton"), this);
+        mkdirButton.setToolTipText(JFtp.getMessage("base", "mkdirButton"));
 
         refreshButton = new HImageButton(Settings.refreshImage, refreshString,
-                                         "Refresh current directory", this);
-        refreshButton.setToolTipText("Refresh directory");
+                JFtp.getMessage("base", "refreshButton"), this);
+        refreshButton.setToolTipText(JFtp.getMessage("base", "refreshButton"));
 		refreshButton.setRolloverIcon(new ImageIcon(HImage.getImage(this, Settings.refreshImage2)));
 		refreshButton.setRolloverEnabled(true);
 
         cdButton = new HImageButton(Settings.cdImage, cdString,
-                                    "Change directory", this);
-        cdButton.setToolTipText("Change directory");
+                JFtp.getMessage("base", "cdButton"), this);
+        cdButton.setToolTipText(JFtp.getMessage("base", "cdButton"));
 
         cmdButton = new HImageButton(Settings.cmdImage, cmdString,
-                                     "Execute remote command", this);
-        cmdButton.setToolTipText("Execute remote command");
+                JFtp.getMessage("base", "cmdButton"), this);
+        cmdButton.setToolTipText(JFtp.getMessage("base", "cmdButton"));
 
         downloadButton = new HImageButton(Settings.downloadImage,
-                                          downloadString, "Download selected",
+                                          downloadString, JFtp.getMessage("base", "downloadString"),
                                           this);
-        downloadButton.setToolTipText("Download selected");
+        downloadButton.setToolTipText(JFtp.getMessage("base", "downloadString"));
 
         queueButton = new HImageButton(Settings.queueImage, queueString,
-                                       "Queue selected", this);
-        queueButton.setToolTipText("Queue selected");
+                JFtp.getMessage("base", "queueButton"), this);
+        queueButton.setToolTipText(JFtp.getMessage("base", "queueButton"));
 
         cdUpButton = new HImageButton(Settings.cdUpImage, cdUpString,
-                                      "Go to Parent Directory", this);
-        cdUpButton.setToolTipText("Go to Parent Directory"); 
+                JFtp.getMessage("base", "cdUpButton"), this);
+        cdUpButton.setToolTipText(JFtp.getMessage("base", "cdUpButton"));
 
         //openButton = new HImageButton(Settings.openImage,openString,"Connect to server",this);
         //openButton.setToolTipText("Connect");   
@@ -432,7 +407,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
     {
         if(con instanceof FilesystemConnection)
         {
-            label.setText("Filesystem: " + StringUtils.cutPath(path));
+            label.setText( JFtp.getMessage("base", "filesystem") + StringUtils.cutPath(path));
         }
         else if(con instanceof FtpConnection)
         {
@@ -662,7 +637,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
             }
 
            
-            int opt = JOptionPane.showOptionDialog(this, "Would you like to type one command or to open a shell?","Question", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, 
+            int opt = JOptionPane.showOptionDialog(this,  JFtp.getMessage("base", "openShell"),"Question", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
             		new ImageIcon(HImage.getImage(this, Settings.helpImage)), new String[] {"Shell","Command", "Cancel"}, "Command");
             
             if(opt == 1) {
@@ -1081,7 +1056,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         //this.con = con;
         HFrame h = new HFrame();
         h.getContentPane().setLayout(new BorderLayout(10, 10));
-        h.setTitle("Connection failed!");
+        h.setTitle( JFtp.getMessage("base", "conFailed"));
         //h.setLocation(150, 200);
         h.setMinimumSize(new Dimension(400,250));
         h.setLocation((int)JFtp.mainFrame.getLocation().getX()+300, (int)JFtp.mainFrame.getLocation().getY()+300);

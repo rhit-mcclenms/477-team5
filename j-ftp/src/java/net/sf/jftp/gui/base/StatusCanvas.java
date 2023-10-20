@@ -15,13 +15,11 @@
  */
 package net.sf.jftp.gui.base;
 
-import net.sf.jftp.*;
 import net.sf.jftp.config.Settings;
-import net.sf.jftp.gui.framework.*;
-
-import java.awt.*;
+import net.sf.jftp.gui.framework.GUIDefaults;
 
 import javax.swing.*;
+import java.awt.*;
 
 
 public class StatusCanvas extends JPanel

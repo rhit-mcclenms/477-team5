@@ -15,17 +15,18 @@
  */
 package net.sf.jftp.gui.tasks;
 
-import net.sf.jftp.*;
-
-//***
-import net.sf.jftp.config.*;
-import net.sf.jftp.gui.framework.*;
-import net.sf.jftp.net.*;
-
-import java.awt.*;
-import java.awt.event.*;
+import net.sf.jftp.JFtp;
+import net.sf.jftp.config.LoadSet;
+import net.sf.jftp.config.SaveSet;
+import net.sf.jftp.config.Settings;
+import net.sf.jftp.gui.framework.HPanel;
+import net.sf.jftp.gui.framework.HTextField;
+import net.sf.jftp.net.FtpConnection;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 //***
@@ -33,12 +34,12 @@ public class AdvancedOptions extends HPanel implements ActionListener
 {
     //used this to see if it needs to look up file value
     public static boolean listOptionSet = false;
-    private HTextField listCommand = new HTextField("FTP LIST command:",
+    private HTextField listCommand = new HTextField(JFtp.getMessage("tasks", "listCommand"),
                                                     FtpConnection.LIST, 15);
-    private JButton setListCommand = new JButton("Set");
+    private JButton setListCommand = new JButton(JFtp.getMessage("tasks", "setListCommand"));
 
     //*** 
-    private JButton saveCommand = new JButton("Set and Save");
+    private JButton saveCommand = new JButton(JFtp.getMessage("tasks", "saveCommand"));
 
     //***
     //*** should it really be set up so that the original message here on top
@@ -62,8 +63,8 @@ public class AdvancedOptions extends HPanel implements ActionListener
 
         //text.setText("You can override the default values here, but note that " +
         //	     "the values are not saved\n and lost after closing the application.");
-        text.setText("Default values for commands can be overidden here.");
-        statusText.setText("Note: The FTP LIST command should be \"LIST\" when connecting to an OS/2 server.");
+        text.setText(JFtp.getMessage("tasks", "override"));
+        statusText.setText(JFtp.getMessage("tasks", "note"));
 
         text.setPreferredSize(new Dimension(400, 30));
 
@@ -126,7 +127,7 @@ public class AdvancedOptions extends HPanel implements ActionListener
 
             //text.setText("LIST command set.");
             //***
-            statusText.setText("LIST command set.");
+            statusText.setText(JFtp.getMessage("tasks", "confirmSet"));
             listOptionSet = true;
 
             //***
@@ -149,7 +150,7 @@ public class AdvancedOptions extends HPanel implements ActionListener
 
             //***
             //text.setText("LIST command set and saved");
-            statusText.setText("LIST command set and saved.");
+            statusText.setText(JFtp.getMessage("tasks", "confirmSaved"));
 
             //***
         }

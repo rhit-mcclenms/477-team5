@@ -15,20 +15,20 @@
  */
 package net.sf.jftp.gui.tasks;
 
-import net.sf.jftp.*;
-import net.sf.jftp.gui.framework.*;
-import net.sf.jftp.net.*;
+import net.sf.jftp.JFtp;
+import net.sf.jftp.gui.framework.HButton;
+import net.sf.jftp.gui.framework.HFrame;
+import net.sf.jftp.gui.framework.HTextField;
 
 import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class PathChanger extends HFrame implements ActionListener
 {
     private HTextField text;
-    private HButton ok = new HButton("Change Directory");
+    private HButton ok = new HButton(JFtp.getMessage("tasks", "chgDir"));
     private String type = "";
 
     public PathChanger(String type)
@@ -36,11 +36,11 @@ public class PathChanger extends HFrame implements ActionListener
         this.type = type;
 
         //setSize(400, 80);
-        setTitle("Choose path...");
+        setTitle(JFtp.getMessage("tasks", "choosePath"));
         //setLocation(150, 150);
         getContentPane().setLayout(new FlowLayout());
 
-        text = new HTextField("Path:", "");
+        text = new HTextField(JFtp.getMessage("tasks", "path") + ":", "");
         getContentPane().add(text);
         getContentPane().add(ok);
         ok.addActionListener(this);

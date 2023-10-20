@@ -15,27 +15,15 @@
  */
 package net.sf.jftp.gui.tasks;
 
-import net.sf.jftp.system.logging.Log;
-
-import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
-import javax.swing.*;
-
+import chrriis.dj.sweet.components.JWebBrowser;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
-
-import chrriis.dj.sweet.components.JWebBrowser;
 
 public class NativeHttpBrowser extends Composite {
 

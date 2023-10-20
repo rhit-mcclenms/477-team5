@@ -15,24 +15,20 @@
  */
 package net.sf.jftp.gui.hostchooser;
 
-import net.sf.jftp.*;
-import net.sf.jftp.config.*;
+import net.sf.jftp.JFtp;
+import net.sf.jftp.config.LoadSet;
+import net.sf.jftp.config.Settings;
 import net.sf.jftp.gui.framework.*;
 import net.sf.jftp.gui.tasks.ExternalDisplayer;
-import net.sf.jftp.net.*;
 import net.sf.jftp.net.wrappers.NfsConnection;
 import net.sf.jftp.net.wrappers.StartConnection;
 import net.sf.jftp.system.logging.Log;
-import net.sf.jftp.util.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
-
-import java.net.*;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 
 
 public class NfsHostChooser extends HFrame implements ActionListener,
@@ -44,11 +40,11 @@ public class NfsHostChooser extends HFrame implements ActionListener,
                                                    15);
 
     //public static HTextField pass = new HTextField("Password:","none@nowhere.no");
-    public static HPasswordField pass = new HPasswordField("Password:",
+    public static HPasswordField pass = new HPasswordField(JFtp.getMessage("HostChooser", "pass"),
                                                            "nopasswd");
     public static HButton info = new HButton("Read me!");
     private HPanel okP = new HPanel();
-    private HButton ok = new HButton("Connect");
+    private HButton ok = new HButton(JFtp.getMessage("HostChooser", "ok"));
     private ComponentListener listener = null;
     private boolean useLocal = false;
 
@@ -74,7 +70,7 @@ public class NfsHostChooser extends HFrame implements ActionListener,
     {
         //setSize(600, 220);
         setLocation(100, 150);
-        setTitle("NFS Connection...");
+        setTitle("NFS "+ JFtp.getMessage("HostChooser", "connection") +"...");
         setBackground(okP.getBackground());
 
         JPanel p = new JPanel();

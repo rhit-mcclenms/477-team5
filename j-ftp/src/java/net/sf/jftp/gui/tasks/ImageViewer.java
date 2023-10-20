@@ -15,20 +15,9 @@
  */
 package net.sf.jftp.gui.tasks;
 
-import net.sf.jftp.config.Settings;
-import net.sf.jftp.gui.*;
-import net.sf.jftp.gui.framework.*;
-import net.sf.jftp.util.*;
-
-import java.awt.*;
-
-import java.io.*;
-
-import java.net.*;
-
-import java.util.*;
-
 import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 
 
 public class ImageViewer extends JInternalFrame

@@ -15,57 +15,14 @@
  */
 package net.sf.jftp.gui.base;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Insets;
-import java.awt.event.*;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StreamTokenizer;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
-import javax.swing.JEditorPane;
-import javax.swing.JLabel;
-import javax.swing.JList; 
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
 import net.sf.jftp.JFtp;
 import net.sf.jftp.config.SaveSet;
 import net.sf.jftp.config.Settings;
-import net.sf.jftp.gui.base.dir.DirCanvas;
-import net.sf.jftp.gui.base.dir.DirCellRenderer;
-import net.sf.jftp.gui.base.dir.DirComponent;
-import net.sf.jftp.gui.base.dir.DirEntry;
-import net.sf.jftp.gui.base.dir.DirLister;
-import net.sf.jftp.gui.base.dir.DirPanel;
-import net.sf.jftp.gui.base.dir.TableUtils;
+import net.sf.jftp.gui.base.dir.*;
 import net.sf.jftp.gui.framework.HImage;
 import net.sf.jftp.gui.framework.HImageButton;
 import net.sf.jftp.gui.framework.HPanel;
 import net.sf.jftp.gui.tasks.Creator;
-import net.sf.jftp.gui.tasks.ImageViewer;
 import net.sf.jftp.gui.tasks.NameChooser;
 import net.sf.jftp.gui.tasks.RemoteCommand;
 import net.sf.jftp.net.BasicConnection;
@@ -78,6 +35,17 @@ import net.sf.jftp.system.StringUtils;
 import net.sf.jftp.system.UpdateDaemon;
 import net.sf.jftp.system.logging.Log;
 import net.sf.jftp.util.ZipFileCreator;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 
 public class LocalDir extends DirComponent implements ListSelectionListener,
@@ -131,9 +99,9 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
     private int tmpindex = -1;
     private Hashtable dummy = new Hashtable();
     private JPopupMenu popupMenu = new JPopupMenu();
-    private JMenuItem runFile = new JMenuItem("Launch file");
-    private JMenuItem viewFile = new JMenuItem("View file");
-    private JMenuItem props = new JMenuItem("Properties");
+    private JMenuItem runFile = new JMenuItem(JFtp.getMessage("base", "runFile"));
+    private JMenuItem viewFile = new JMenuItem(JFtp.getMessage("base", "viewFile"));
+    private JMenuItem props = new JMenuItem(JFtp.getMessage("base", "props"));
     private DirEntry currentPopup = null;
     private String sortMode = null;
     String[] sortTypes = new String[] { "Normal", "Reverse", "Size", "Size/Re" };
@@ -189,46 +157,48 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         popupMenu.add(props);
 
         deleteButton = new HImageButton(Settings.deleteImage, deleteString,
-                                        "Delete selected", this);
-        deleteButton.setToolTipText("Delete selected");
+                                        JFtp.getMessage("base", "deleteSelected"), this);
+        deleteButton.setToolTipText(JFtp.getMessage("base", "deleteSelected"));
 
         mkdirButton = new HImageButton(Settings.mkdirImage, mkdirString,
-                                       "Create a new directory", this);
-        mkdirButton.setToolTipText("Create directory");
+                JFtp.getMessage("base", "mkdirButton"), this);
+        mkdirButton.setToolTipText(JFtp.getMessage("base", "mkdirButton"));
 
         refreshButton = new HImageButton(Settings.refreshImage, refreshString,
-                                         "Refresh current directory", this);
-        refreshButton.setToolTipText("Refresh directory");    
+                                         JFtp.getMessage("base", "refreshButton"),
+                this);
+        refreshButton.setToolTipText(JFtp.getMessage("base", "refreshButton"));
 		refreshButton.setRolloverIcon(new ImageIcon(HImage.getImage(this, Settings.refreshImage2)));
 		refreshButton.setRolloverEnabled(true);
 
         cdButton = new HImageButton(Settings.cdImage, cdString,
-                                    "Change directory", this);
-        cdButton.setToolTipText("Change directory");
+                JFtp.getMessage("base", "cdButton"),
+                this);
+        cdButton.setToolTipText(JFtp.getMessage("base", "cdButton"));
 
         uploadButton = new HImageButton(Settings.uploadImage, uploadString,
-                                        "Upload selected", this);
-        uploadButton.setToolTipText("Upload selected");               
+                JFtp.getMessage("base", "uploadButton"), this);
+        uploadButton.setToolTipText(JFtp.getMessage("base", "uploadButton"));
         //uploadButton.setBackground(new Color(192,192,192));
 
         zipButton = new HImageButton(Settings.zipFileImage, zipString,
-                                     "Add selected to new zip file", this);
-        zipButton.setToolTipText("Create zip");
+                JFtp.getMessage("base", "zipButton"), this);
+        zipButton.setToolTipText(JFtp.getMessage("base", "createZip"));
 
         cpButton = new HImageButton(Settings.copyImage, cpString,
-                                    "Copy selected files to another local dir",
+                JFtp.getMessage("base", "cpButton"),
                                     this);
-        cpButton.setToolTipText("Local copy selected");
+        cpButton.setToolTipText(JFtp.getMessage("base", "localCopy"));
 
         rnButton = new HImageButton(Settings.textFileImage, rnString,
-                                    "Rename selected file or directory", this);
-        rnButton.setToolTipText("Rename selected");
+                JFtp.getMessage("base", "rnButton"), this);
+        rnButton.setToolTipText(JFtp.getMessage("base", "rnSelected"));
 
         cdUpButton = new HImageButton(Settings.cdUpImage, cdUpString,
-                                      "Go to Parent Directory", this);
-        cdUpButton.setToolTipText("Go to Parent Directory");
+                JFtp.getMessage("base", "cdUpButton"), this);
+        cdUpButton.setToolTipText(JFtp.getMessage("base", "cdUpButton"));
 
-        label.setText("Filesystem: " + StringUtils.cutPath(path));
+        label.setText(JFtp.getMessage("base", "filesystem") + StringUtils.cutPath(path));
         label.setSize(getSize().width - 10, 24);
         currDirPanel.add(label);
         currDirPanel.setSize(getSize().width - 10, 32);

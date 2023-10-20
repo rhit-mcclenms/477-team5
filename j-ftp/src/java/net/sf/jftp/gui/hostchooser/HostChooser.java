@@ -15,40 +15,13 @@
  */
 package net.sf.jftp.gui.hostchooser;
 
-import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.IOException;
-
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-
 import net.miginfocom.swing.MigLayout;
 import net.sf.jftp.JFtp;
 import net.sf.jftp.config.LoadSet;
 import net.sf.jftp.config.SaveSet;
 import net.sf.jftp.config.Settings;
 import net.sf.jftp.gui.base.FtpHost;
-import net.sf.jftp.gui.framework.HButton;
-import net.sf.jftp.gui.framework.HFrame;
-import net.sf.jftp.gui.framework.HInsetPanel;
-import net.sf.jftp.gui.framework.HPanel;
-import net.sf.jftp.gui.framework.HPasswordField;
-import net.sf.jftp.gui.framework.HTextField;
+import net.sf.jftp.gui.framework.*;
 import net.sf.jftp.gui.tasks.HostList;
 import net.sf.jftp.net.FilesystemConnection;
 import net.sf.jftp.net.FtpConnection;
@@ -57,35 +30,40 @@ import net.sf.jftp.net.wrappers.StartConnection;
 import net.sf.jftp.system.StringUtils;
 import net.sf.jftp.system.logging.Log;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
+
 
 public class HostChooser extends HFrame implements ActionListener,
                                                    WindowListener
 {
-    public HTextField host = new HTextField("Hostname:", "localhost        ");
-    public HTextField user = new HTextField("Username:", "anonymous        ");
+    public HTextField host = new HTextField(JFtp.getMessage("HostChooser", "host"), "localhost        ");
+    public HTextField user = new HTextField(JFtp.getMessage("HostChooser", "user"), "anonymous        ");
 
     //public static HTextField pass = new HTextField("Password:","none@nowhere.no");
-    public HPasswordField pass = new HPasswordField("Password:",
+    public HPasswordField pass = new HPasswordField(JFtp.getMessage("HostChooser", "pass"),
                                                     "none@nowhere.no");
-    public HTextField port = new HTextField("Port:    ", "21");
-    public HTextField cwd = new HTextField("Remote:  ", Settings.defaultDir);
-    public HTextField lcwd = new HTextField("Local:   ", Settings.defaultWorkDir);
-    public HTextField dl = new HTextField("Max. connections:    ", "3");
-    public HTextField crlf = new HTextField("Override server newline:    ", "<default>");
-    private JCheckBox anonBox = new JCheckBox("Use anonymous login", false);
-    private JCheckBox listBox = new JCheckBox("LIST compatibility mode", false);
-    private JCheckBox dirBox = new JCheckBox("Use default directories",
+    public HTextField port = new HTextField(JFtp.getMessage("HostChooser", "port"), "21");
+    public HTextField cwd = new HTextField(JFtp.getMessage("HostChooser", "cwd"), Settings.defaultDir);
+    public HTextField lcwd = new HTextField(JFtp.getMessage("HostChooser", "lcwd"), Settings.defaultWorkDir);
+    public HTextField dl = new HTextField(JFtp.getMessage("HostChooser", "dl"), "3");
+    public HTextField crlf = new HTextField(JFtp.getMessage("HostChooser", "crlf"), "<default>");
+    private JCheckBox anonBox = new JCheckBox(JFtp.getMessage("HostChooser", "anonBox"), false);
+    private JCheckBox listBox = new JCheckBox(JFtp.getMessage("HostChooser", "listBox"), false);
+    private JCheckBox dirBox = new JCheckBox(JFtp.getMessage("HostChooser", "dirBox"),
                                              Settings.getUseDefaultDir());
-    private JCheckBox modeBox = new JCheckBox("Use active Ftp (no need to)",
+    private JCheckBox modeBox = new JCheckBox(JFtp.getMessage("HostChooser", "modeBox"),
                                               false);
-    private JCheckBox threadBox = new JCheckBox("Multiple connections", false);
+    private JCheckBox threadBox = new JCheckBox(JFtp.getMessage("HostChooser", "threadBox"), false);
     private HPanel okP = new HPanel();
-    private HButton ok = new HButton("Connect");
-    private HButton backMode = new HButton("Yes");
-    private HButton frontMode = new HButton("No");
+    private HButton ok = new HButton(JFtp.getMessage("HostChooser", "ok"));
+    private HButton backMode = new HButton(JFtp.getMessage("HostChooser", "backMode"));
+    private HButton frontMode = new HButton(JFtp.getMessage("HostChooser", "frontMode"));
     private HFrame h = new HFrame();
     private HPanel listP = new HPanel();
-    private HButton list = new HButton("Choose from or edit list...");
+    private HButton list = new HButton(JFtp.getMessage("HostChooser", "list"));
     private ComponentListener listener = null;
     private int mode = 0;
     private boolean useLocal = false;
@@ -111,7 +89,7 @@ public class HostChooser extends HFrame implements ActionListener,
 
     public void init()
     {
-        setTitle("Ftp Connection...");
+        setTitle("Ftp "+ JFtp.getMessage("HostChooser", "connection") +"...");
         setBackground(okP.getBackground());
 
         anonBox.setSelected(false);
@@ -191,7 +169,7 @@ public class HostChooser extends HFrame implements ActionListener,
         	x1.setLayout(new BorderLayout(2,2));
         	JLabel l1 = new JLabel("Unix: LF, Mac/MVS: CR, Win: CRLF");
         	l1.setFont(new Font("Dialog", Font.PLAIN, 10));
-        	JLabel l2 = new JLabel("Don't change this unless you transfer text only");
+        	JLabel l2 = new JLabel(JFtp.getMessage("HostChooser", "l2"));
         	l2.setFont(new Font("Dialog", Font.PLAIN, 10));
         	x1.add("North", l1);
         	x1.add("South", l2);
@@ -459,11 +437,7 @@ public class HostChooser extends HFrame implements ActionListener,
         JTextArea text = new JTextArea();
         h.getContentPane().add("Center", text);
         h.getContentPane().add("South", p);
-        text.setText(" ---------------- Output -----------------\n\n" +
-                     "The server is busy at the moment.\n\n" +
-                     "Do you want JFtp to go to disappear and try to login\n" +
-                     "continuously?\n\n" +
-                     "(It will show up again when it has initiated a connection)\n\n");
+        text.setText(JFtp.getMessage("HostChooser", "output"));
         JFtp.log.setText("");
         text.setEditable(false);
         h.pack();

@@ -322,7 +322,7 @@ public class HostChooser extends HFrame implements ActionListener,
             boolean threads = Settings.getEnableMultiThreading();
 
             int x = Integer.parseInt(dl.getText().trim());
-            Settings.maxConnections = x;
+            Settings.saveSetting("maxConnecitons", x + "");
 
             Settings.save();
 
@@ -518,7 +518,7 @@ public class HostChooser extends HFrame implements ActionListener,
         //System.out.println(htmp + " " + ptmp + " " + utmp);
         //System.out.println(potmp + " " + dtmp);
         //***
-        if((response == FtpConnection.OFFLINE) && Settings.reconnect)
+        if((response == FtpConnection.OFFLINE) && Settings.loadSetting("reconnect").equals("true"))
         {
             //FtpConnection con;
             setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -574,7 +574,7 @@ public class HostChooser extends HFrame implements ActionListener,
         }
         else if((response != FtpConnection.LOGIN_OK) ||
                     ((response == FtpConnection.OFFLINE) &&
-                    (!Settings.reconnect)))
+                    (!Settings.loadSetting("reconnect").equals("true"))))
         {
             setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 

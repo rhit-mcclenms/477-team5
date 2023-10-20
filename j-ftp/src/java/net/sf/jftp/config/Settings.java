@@ -20,8 +20,9 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-
+import java.io.PrintWriter;
 import java.util.Properties;
+import java.util.Scanner;
 
 
 public class Settings
@@ -43,16 +44,16 @@ public class Settings
     public static final String defaultHeight = "740";
     public static final String defaultX = "20";
     public static final String defaultY = "20";
-    public static int maxConnections = 3;
-    public static boolean enableResuming = false; // overridden by JFtp
-    public static boolean enableUploadResuming = false;
-    public static boolean noUploadResumingQuestion = true;
-    public static boolean askToResume = true;
-    public static boolean reconnect = true;
+//    public static int maxConnections = 3;
+//    public static boolean enableResuming = false; // overridden by JFtp
+//    public static boolean enableUploadResuming = false;
+//    public static boolean noUploadResumingQuestion = true;
+//    public static boolean askToResume = true;
+//    public static boolean reconnect = true;
     public static int uiRefresh = 500;
     public static int logFlushInterval = 2000; // obsolete
     public static boolean useLogFlusher = false; // obsolete
-    public static int ftpTransferThreadPause = 2000;
+//    public static int ftpTransferThreadPause = 2000;
     public static int smallSize = 0; //100000;
     public static int smallSizeUp = 0; //50000;
     public static boolean shortProgress = true;
@@ -67,8 +68,8 @@ public class Settings
     public static boolean useFixedTableWidths = true;
     public static boolean enableWebDav = false;
     
-    public static boolean ftpKeepAlive = true;
-    public static int ftpKeepAliveInterval = 29000;
+//    public static boolean ftpKeepAlive = true;
+//    public static int ftpKeepAliveInterval = 29000;
 
     
     // 1: manual, 2: onclick, 0: off
@@ -246,6 +247,42 @@ public class Settings
 
         return p.setProperty(key, val);
     }
+    
+    public static void saveSetting(String name, String value) {
+    	 try
+         {
+             new File(System.getProperty("user.home") + File.separator +
+                      ".jftp").mkdir();
+             PrintWriter pw = new PrintWriter(new File(System.getProperty("user.home") + File.separator +
+                     ".jftp" + File.separator + name));
+             pw.write(value);
+             pw.close();
+         }
+         catch(Exception e)
+         {
+             System.out.println("Cannot save setting...");
+
+             //e.printStackTrace();
+         }
+    }
+    
+    public static String loadSetting(String name) {
+	    String temp = "";
+	   	try
+	        {
+	            Scanner sc = new Scanner(new File(System.getProperty("user.home") + File.separator +
+	                    ".jftp" + File.separator + name));
+	            temp = sc.nextLine();
+	            sc.close();
+	        }
+	        catch(Exception e)
+	        {
+	            System.out.println("Cannot load setting...");
+	
+	            //e.printStackTrace();
+	        }
+	     return temp;
+   }
 
     public static void save()
     {
@@ -276,10 +313,10 @@ public class Settings
         }
     }
     
-    public static int getMaxConnections()
-    {
-        return maxConnections;
-    }
+//    public static int getMaxConnections()
+//    {
+//        return maxConnections;
+//    }
 
     public static String getSocksProxyHost()
     {

@@ -1109,7 +1109,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         Log.out("remote connection failed");
 
         if((Integer.parseInt(reason) == FtpConnection.OFFLINE) &&
-               Settings.reconnect)
+               Settings.loadSetting("reconnect").equals("true"))
         {
             return;
         }
@@ -1417,7 +1417,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
     {
         File f = new File(JFtp.localDir.getPath() + dirEntry.file);
 
-        if(f.exists() && Settings.enableResuming && Settings.askToResume)
+        if(f.exists() && Settings.loadSetting("enableResuming").equals("true") && Settings.loadSetting("askToResume").equals("true"))
         {
             ResumeDialog r = new ResumeDialog(dirEntry); // ResumeDialog handels the rest
 

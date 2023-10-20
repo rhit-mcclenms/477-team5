@@ -590,9 +590,15 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
     		Log.out("starting up jftp...");
     		System.setProperty("sshtools.logfile", Settings.appHomeDir + "log4.txt");
 
-    		Settings.enableResuming = true;
-    		Settings.enableUploadResuming = true;
-    		Settings.noUploadResumingQuestion = false;
+    		Settings.saveSetting("enableResuming", "true");
+    		Settings.saveSetting("enableUploadResuming", "true");
+    		Settings.saveSetting("noUploadResumingQuestion", "true");
+    		Settings.saveSetting("maxConnections", "3");
+    		Settings.saveSetting("askToResume", "true");
+    		Settings.saveSetting("reconnect", "true");
+    		Settings.saveSetting("ftpTransferThreadPause", "2000");
+    		Settings.saveSetting("ftpKeepAlive", "true");
+    		Settings.saveSetting("ftpKeepAliveInterval", "29000");
 
     		setSocksProxyOptions(Settings.getSocksProxyHost(),
     				Settings.getSocksProxyPort());

@@ -143,7 +143,7 @@ public class FtpTransfer extends Transfer implements Runnable
             hasPaused = true;
         }
 
-        while((handler.getConnectionSize() >= Settings.getMaxConnections()) &&
+        while((handler.getConnectionSize() >= Integer.parseInt(Settings.loadSetting("maxConnections"))) &&
                   (handler.getConnectionSize() > 0) && work)
         {
             try
@@ -193,7 +193,7 @@ public class FtpTransfer extends Transfer implements Runnable
 
         try
         {
-        	Thread.sleep(Settings.ftpTransferThreadPause);
+        	Thread.sleep(Integer.parseInt(Settings.loadSetting("ftpTransferThreadPause")));
         }
         catch(Exception ex)
         {

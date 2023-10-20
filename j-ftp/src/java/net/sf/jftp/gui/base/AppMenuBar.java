@@ -117,9 +117,9 @@ public class AppMenuBar extends JMenuBar implements ActionListener
     JCheckBoxMenuItem stdback = new JCheckBoxMenuItem("Background Image",
                                                       Settings.getUseBackground());
     JCheckBoxMenuItem resuming = new JCheckBoxMenuItem("Enable Resuming",
-                                                       Settings.enableResuming);
+    		Settings.loadSetting("enableResuming").equals("true"));
     JCheckBoxMenuItem ask = new JCheckBoxMenuItem("Always Ask to Resume",
-                                                  Settings.askToResume);
+                                                  Settings.loadSetting("askToResume").equals("true"));
     JMenuItem proxy = new JMenuItem("Proxy Settings...");
     JCheckBoxMenuItem smbThreads = new JCheckBoxMenuItem("Multiple Connections",
                                                          Settings.getEnableSmbMultiThreading());
@@ -731,9 +731,9 @@ public class AppMenuBar extends JMenuBar implements ActionListener
 	        else if(e.getSource() == resuming)
 	        {
 	            boolean res = resuming.getState();
-	            Settings.enableResuming = res;
+	            Settings.saveSetting("enableResuming", res + "");
 	            Settings.setProperty("jftp.enableResuming", res);
-	            ask.setEnabled(Settings.enableResuming);
+	            ask.setEnabled(Settings.loadSetting("enableResuming").equals("true"));
 	            Settings.save();
 	        }
 	        else if(e.getSource() == useNewIcons)
@@ -833,7 +833,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
 	        }
 	        else if(e.getSource() == ask)
 	        {
-	            Settings.askToResume = ask.getState();
+	        	Settings.saveSetting("askToResume", ask.getState() + "");
 	        }
 	        else if(e.getSource() == http)
 	        {

@@ -295,7 +295,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 				updatePWD();
 			}
 
-			if(Settings.ftpKeepAlive) {
+			if(Settings.loadSetting("ftpKeepAlive").equals("true")) {
 				keepAliveThread = new FtpKeepAliveThread(this);
 			}
 
@@ -1301,7 +1301,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 			//System.out.println("path: "+path);
 			boolean resume = false;
 
-			if(f.exists() && Settings.enableResuming)
+			if(f.exists() && Settings.loadSetting("enableResuming").equals("true"))
 			{
 				jcon.send(REST + " " + f.length());
 
@@ -1656,7 +1656,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 			boolean resume = false;
 			String size = "0";
 
-			if(Settings.enableUploadResuming && (in == null))
+			if(Settings.loadSetting("enableUploadResuming").equals("true") && (in == null))
 			{
 				list();
 
@@ -1701,7 +1701,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 					}
 					else if(f.exists() && Integer.parseInt(size) > 0)
 					{
-						if(!Settings.noUploadResumingQuestion) {
+						if(!Settings.loadSetting("noUploadResumingQuestion").equals("true")) {
 							if(JOptionPane.showConfirmDialog(new JLabel(), "A file smaller than the one to be uploaded already exists on the server,\n do you want to resume the upload?", "Resume upload?", JOptionPane.YES_NO_OPTION)
 									!= JOptionPane.OK_OPTION) {
 								resume = false;
@@ -1720,7 +1720,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 			//binary();
 			p = negotiatePort();
 
-			if(resume && Settings.enableUploadResuming)
+			if(resume && Settings.loadSetting("enableUploadResuming").equals("true"))
 			{
 				jcon.send(REST + " " + size);
 

@@ -17,7 +17,7 @@ public class FtpKeepAliveThread implements Runnable {
 	public void run() {
 		while(conn.isConnected()) {
 			try {
-				Thread.sleep(Settings.ftpKeepAliveInterval);
+				Thread.sleep(Integer.parseInt(Settings.loadSetting("ftpKeepAliveInterval")));
 				
 				conn.noop();
 			}

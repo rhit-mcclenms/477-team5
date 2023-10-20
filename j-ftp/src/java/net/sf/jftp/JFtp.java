@@ -381,8 +381,28 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
     {
         remoteDir.fresh();
     }
-    
-    
+
+    public static void showRemoteUnavailable() {
+        // Close the remote tab
+        statusP.jftp.closeCurrentTab();
+        JOptionPane.showMessageDialog(mainFrame, "ERROR: Remote connection no longer available\n" +
+                "Check to ensure your server is currently accepting connections and reconnect",
+                "Remote Unavailable", JOptionPane.ERROR_MESSAGE);
+
+        Log.debug("Remote server has been identified as no longer being available.\n" +
+                "It has been removed from service to prevent any further errors.\n" +
+                "Check to ensure the remote server is avaiable and currently accepting connections before reconnecting.");
+    }
+
+    public static void showWatchdogWarning() {
+        // Close the remote tab
+        JOptionPane.showMessageDialog(mainFrame, "ERROR: Remote connection took too long to respond\n" +
+                        "Check to ensure your server is currently accepting connections and is responsive",
+                "Long Response", JOptionPane.WARNING_MESSAGE);
+
+        Log.debug("ERROR: Remote connection took too long to respond\n" +
+                "Check to ensure your server is currently accepting connections and is responsive");
+    }
 
     private void saveInternalPositions() {
     	saveInternalPosition(j1, "local");
@@ -435,6 +455,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
     
     public void windowClosing(WindowEvent e)
     {
+    	try {
     	saveInternalPositions();
     	
         Settings.setProperty("jftp.window.width", this.getWidth());
@@ -457,6 +478,11 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
 
         Settings.save();
         safeDisconnect();
+    	}
+    	catch (Exception ex) 
+    	{
+    		log("Error closing window");
+    	}
 
         if(Settings.isStandalone)
         {

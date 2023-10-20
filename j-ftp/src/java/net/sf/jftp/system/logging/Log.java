@@ -51,6 +51,9 @@ public class Log
         }
 
         //System.out.println(msg);
+        if(null != fileOutputStream)
+            writeErrorToLogFile(msg);
+
         logger.debug(msg);
         cache.append(msg + "\n");
 

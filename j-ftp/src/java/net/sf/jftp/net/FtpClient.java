@@ -15,7 +15,7 @@
  */
 package net.sf.jftp.net;
 
-
+import net.sf.jftp.system.logging.Log;
 
 public class FtpClient
 {
@@ -30,7 +30,12 @@ public class FtpClient
     public void login(String host)
     {
         connection = new FtpConnection(host);
+        try {
         connection.login(name, password);
+        } 
+        catch (Exception ex) {
+        	Log.error(ex.toString());
+        }
     }
 
     public void setUsername(String s)
@@ -55,7 +60,14 @@ public class FtpClient
     {
         if(connection != null)
         {
-            connection.chdir(s);
+        	try 
+        	{
+        		connection.chdir(s);
+        	}
+        	catch (Exception ex)
+        	{
+        		Log.error(ex.toString());
+        	}
         }
     }
 
@@ -63,7 +75,16 @@ public class FtpClient
     {
         if(connection != null)
         {
-            return connection.getPWD();
+        	try 
+        	{
+        		return connection.getPWD();
+        	}
+        	catch (Exception ex)
+        	{
+        		Log.error("Error:" + ex.toString());
+        		return "";
+        	}
+           
         }
         else
         {
@@ -75,7 +96,15 @@ public class FtpClient
     {
         if(connection != null)
         {
-            connection.handleDownload(file);
+        	try 
+        	{
+        		connection.handleDownload(file);
+        	}
+        	catch (Exception ex)
+        	{
+        		Log.error("Error:" + ex.toString());
+        	}
+            
         }
     }
 
@@ -83,7 +112,14 @@ public class FtpClient
     {
         if(connection != null)
         {
-            connection.handleUpload(file);
+        	try 
+        	{
+        		connection.handleUpload(file);
+        	}
+        	catch (Exception ex)
+        	{
+        		Log.error("Error:" + ex.toString());
+        	}
         }
     }
 }

@@ -15,24 +15,24 @@
  */
 package net.sf.jftp.gui.tasks;
 
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JLabel;
-
+import net.sf.jftp.JFtp;
 import net.sf.jftp.config.Settings;
 import net.sf.jftp.gui.framework.HButton;
 import net.sf.jftp.gui.framework.HPanel;
 import net.sf.jftp.gui.framework.HTextField;
 import net.sf.jftp.system.logging.Log;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 
 public class ProxyChooser extends HPanel implements ActionListener
 {
     private HTextField proxy;
     private HTextField port;
-    private HButton ok = new HButton("Ok");
+    private HButton ok = new HButton(JFtp.getMessage("tasks", "okSimle"));
 
     public ProxyChooser()
     {
@@ -42,8 +42,8 @@ public class ProxyChooser extends HPanel implements ActionListener
         //getContentPane().
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        proxy = new HTextField("Socks proxy:", "");
-        port = new HTextField("Port:", "");
+        proxy = new HTextField(JFtp.getMessage("tasks", "socksProxy"), "");
+        port = new HTextField(JFtp.getMessage("tasks", "Port") + ":", "");
 
         proxy.setText(Settings.getSocksProxyHost());
         port.setText(Settings.getSocksProxyPort());
@@ -58,7 +58,7 @@ public class ProxyChooser extends HPanel implements ActionListener
         add(ok);
 
         //getContentPane().
-        add(new JLabel("Please note that you have to restart JFtp to apply the changes!"));
+        add(new JLabel(JFtp.getMessage("tasks", "restart")));
         ok.addActionListener(this);
 
         //setVisible(true);

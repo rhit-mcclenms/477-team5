@@ -15,24 +15,20 @@
  */
 package net.sf.jftp.gui.base;
 
-import net.sf.jftp.*;
-import net.sf.jftp.config.*;
-import net.sf.jftp.gui.framework.*;
+import net.sf.jftp.JFtp;
+import net.sf.jftp.config.Settings;
+import net.sf.jftp.gui.framework.HImageButton;
+import net.sf.jftp.gui.framework.HPanel;
 import net.sf.jftp.net.*;
 import net.sf.jftp.system.StringUtils;
 import net.sf.jftp.system.logging.Log;
-import net.sf.jftp.util.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
-
-import java.util.*;
 
 import javax.swing.*;
-import javax.swing.JComponent.*;
-import javax.swing.event.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.ArrayList;
 
 
 public class DownloadQueue extends HPanel implements ActionListener
@@ -53,21 +49,26 @@ public class DownloadQueue extends HPanel implements ActionListener
     // private Vector listeners = new Vector();
     private HImageButton start = new HImageButton(Settings.resumeImage,
                                                   "start",
-                                                  "Start queue download...",
+            JFtp.getMessage("base", "start"),
                                                   this);
     private HImageButton stop = new HImageButton(Settings.pauseImage, "stop",
-                                                 "Stop queue download...", this);
+            JFtp.getMessage("base", "stop"),
+            this);
     private HImageButton save = new HImageButton(Settings.saveImage, "save",
-                                                 "Save queue list to file...",
+            JFtp.getMessage("base", "save"),
                                                  this);
     private HImageButton load = new HImageButton(Settings.cdImage, "load",
-                                                 "Load queue list from...", this);
+            JFtp.getMessage("base", "load"),
+            this);
     private HImageButton up = new HImageButton(Settings.downloadImage, "up",
-                                               "Change order of queue", this);
+            JFtp.getMessage("base", "order"),
+            this);
     private HImageButton down = new HImageButton(Settings.uploadImage, "down",
-                                                 "Change order of queue", this);
+            JFtp.getMessage("base", "order"),
+            this);
     private HImageButton delete = new HImageButton(Settings.deleteImage, "del",
-                                                   "Delete item in queue", this);
+            JFtp.getMessage("base", "delete"),
+            this);
 
     //private HImageButton rotate = new HImageButton(Settings.cmdImage,"rotate","Toggle selected transfer...",this);
     // connection established?
@@ -124,13 +125,13 @@ public class DownloadQueue extends HPanel implements ActionListener
         add(status, BorderLayout.NORTH);
 
         //*** MY ADDITIONS
-        start.setToolTipText("Start queue download...");
-        stop.setToolTipText("Stop queue download...");
-        save.setToolTipText("Save queue list to file...");
-        load.setToolTipText("Load queue list from...");
-        up.setToolTipText("Change order of queue");
-        down.setToolTipText("Change order of queue");
-        delete.setToolTipText("Delete item in queue");
+        start.setToolTipText(JFtp.getMessage("base", "start"));
+        stop.setToolTipText(JFtp.getMessage("base", "stop"));
+        save.setToolTipText(JFtp.getMessage("base", "save"));
+        load.setToolTipText(JFtp.getMessage("base", "load"));
+        up.setToolTipText(JFtp.getMessage("base", "order"));
+        down.setToolTipText(JFtp.getMessage("base", "order"));
+        delete.setToolTipText(JFtp.getMessage("base", "delete"));
 
         //***
     }
@@ -255,7 +256,7 @@ public class DownloadQueue extends HPanel implements ActionListener
         else if(e.getActionCommand().equals("save"))
         {
             JFileChooser chooser = new JFileChooser();
-            chooser.setDialogTitle("Save file");
+            chooser.setDialogTitle(JFtp.getMessage("base", "chooserSave"));
             chooser.setDialogType(JFileChooser.SAVE_DIALOG);
 
             int returnVal = chooser.showSaveDialog(new JDialog());
@@ -270,7 +271,7 @@ public class DownloadQueue extends HPanel implements ActionListener
         else if(e.getActionCommand().equals("load"))
         {
             JFileChooser chooser = new JFileChooser();
-            chooser.setDialogTitle("Open file");
+            chooser.setDialogTitle(JFtp.getMessage("base", "chooserOpen"));
             chooser.setDialogType(JFileChooser.OPEN_DIALOG);
 
             int returnVal = chooser.showOpenDialog(new JDialog());
@@ -552,7 +553,7 @@ public class DownloadQueue extends HPanel implements ActionListener
                 strtmp = "file " + StringUtils.getFile(file);
             }
 
-            statuslabel.setText("Downloading " + strtmp + " - kbyte " +
+            statuslabel.setText(JFtp.getMessage("base", "downloading") + strtmp + " - kbyte " +
                                 (bytes / 1024));
 
             String tmp;

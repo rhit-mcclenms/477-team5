@@ -17,25 +17,21 @@ package net.sf.jftp.gui.base;
 
 import net.sf.jftp.JFtp;
 import net.sf.jftp.config.Settings;
-import net.sf.jftp.gui.framework.*;
-import net.sf.jftp.gui.hostchooser.HostChooser;
-import net.sf.jftp.gui.hostchooser.NfsHostChooser;
-import net.sf.jftp.gui.hostchooser.SftpHostChooser;
-import net.sf.jftp.gui.hostchooser.SmbHostChooser;
-import net.sf.jftp.gui.hostchooser.WebdavHostChooser;
+import net.sf.jftp.gui.framework.GUIDefaults;
+import net.sf.jftp.gui.framework.HImageButton;
+import net.sf.jftp.gui.framework.HPanel;
+import net.sf.jftp.gui.hostchooser.*;
 import net.sf.jftp.gui.tasks.HttpBrowser;
 import net.sf.jftp.gui.tasks.NativeHttpBrowser;
-import net.sf.jftp.net.*;
+import net.sf.jftp.net.ConnectionHandler;
 import net.sf.jftp.net.wrappers.HttpTransfer;
 import net.sf.jftp.system.logging.Log;
-import net.sf.jftp.util.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import java.util.*;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
 
 
 public class StatusPanel extends HPanel implements ActionListener
@@ -43,24 +39,24 @@ public class StatusPanel extends HPanel implements ActionListener
     public static StatusCanvas status = new StatusCanvas();
     private HImageButton newcon = new HImageButton(Settings.hostImage,
                                                    "newcon",
-                                                   "Add FTP Connection...", this);
+            JFtp.getMessage("base", "addcon"), this);
     private HImageButton smbcon = new HImageButton(Settings.openImage,
                                                    "smbcon",
-                                                   "Add SMB Connection...", this);
+            JFtp.getMessage("base", "addsmbcon"), this);
     private HImageButton sftpcon = new HImageButton(Settings.sftpImage,
                                                     "sftpcon",
-                                                    "Add SFTP Connection...",
+            JFtp.getMessage("base", "addsftpcon"),
                                                     this);
     private HImageButton nfscon = new HImageButton(Settings.nfsImage, "nfscon",
-                                                   "Add NFS Connection...", this);
+            JFtp.getMessage("base", "addnfscon"), this);
     private HImageButton webdavcon = new HImageButton(Settings.webdavImage,
                                                       "webdavcon",
-                                                      "Add WebDAV Connection...",
+            JFtp.getMessage("base", "addwebdavcon"),
                                                       this);
     public HImageButton close = new HImageButton(Settings.closeImage, "close",
-                                                 "Close active tab...", this);
+            JFtp.getMessage("base", "closeActiveTab"), this);
     private HImageButton go = new HImageButton(Settings.refreshImage, "go",
-                                               "Download URL now...", this);
+            JFtp.getMessage("base", "dwnld"), this);
     private JTextField address = new JTextField("http://www.xkcd.com", 30);
     public JFtp jftp;
 
@@ -84,32 +80,32 @@ public class StatusPanel extends HPanel implements ActionListener
 
         bar.add(newcon);
         newcon.setSize(24, 24);
-        newcon.setToolTipText("New FTP Connection...");
+        newcon.setToolTipText(JFtp.getMessage("base", "newcon"));
         bar.add(new JLabel(" "));
 
         bar.add(smbcon);
         smbcon.setSize(24, 24);
-        smbcon.setToolTipText("New SMB Connection...");
+        smbcon.setToolTipText(JFtp.getMessage("base", "smbcon"));
         bar.add(new JLabel(" "));
 
         bar.add(sftpcon);
         sftpcon.setSize(24, 24);
-        sftpcon.setToolTipText("New SFTP Connection...");
+        sftpcon.setToolTipText(JFtp.getMessage("base", "sftpcon"));
         bar.add(new JLabel(" "));
 
         bar.add(nfscon);
         nfscon.setSize(24, 24);
-        nfscon.setToolTipText("New NFS Connection...");
+        nfscon.setToolTipText(JFtp.getMessage("base", "nfscon"));
         bar.add(new JLabel(" "));
 
         if(Settings.enableWebDav) bar.add(webdavcon);
         webdavcon.setSize(24, 24);
-        webdavcon.setToolTipText("New WebDAV Connection...");
+        webdavcon.setToolTipText(JFtp.getMessage("base", "webdavcon"));
         bar.add(new JLabel("   "));
 
         bar.add(close);
         close.setSize(24, 24);
-        close.setToolTipText("Close Active Remote tab...");
+        close.setToolTipText(JFtp.getMessage("base", "closeRemoteTab"));
         bar.add(new JLabel("    "));
 
         address.addActionListener(this);
@@ -119,7 +115,7 @@ public class StatusPanel extends HPanel implements ActionListener
         bar.add(go);
 
         //***
-        go.setToolTipText("Download URL Now...");
+        go.setToolTipText(JFtp.getMessage("base", "dwnld"));
 
         //***
         bar.add(new JLabel("    "));

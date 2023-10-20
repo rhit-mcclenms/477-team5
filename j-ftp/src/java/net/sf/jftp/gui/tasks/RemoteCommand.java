@@ -15,33 +15,31 @@
  */
 package net.sf.jftp.gui.tasks;
 
-import net.sf.jftp.*;
-import net.sf.jftp.gui.framework.*;
-import net.sf.jftp.net.*;
+import net.sf.jftp.JFtp;
+import net.sf.jftp.gui.framework.HButton;
+import net.sf.jftp.gui.framework.HFrame;
+import net.sf.jftp.gui.framework.HTextField;
 import net.sf.jftp.system.logging.Log;
-import net.sf.jftp.util.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class RemoteCommand extends HFrame implements ActionListener
 {
     private HTextField text;
-    private HButton ok = new HButton("Execute");
+    private HButton ok = new HButton(JFtp.getMessage("tasks", "execute"));
 
     public RemoteCommand()
     {
         //setSize(400, 80);
-        setTitle("Choose command...");
+        setTitle(JFtp.getMessage("tasks", "chooseCommand"));
         setLocation(150, 150);
         getContentPane().setLayout(new FlowLayout());
 
-        text = new HTextField("Command:", "SITE CHMOD 755 file", 30);
+        text = new HTextField(JFtp.getMessage("tasks", "command"), "SITE CHMOD 755 file", 30);
         getContentPane().add(text);
         getContentPane().add(ok);
         ok.addActionListener(this);
@@ -70,7 +68,7 @@ public class RemoteCommand extends HFrame implements ActionListener
 
             JDialog j = new JDialog();
             j.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-            j.setTitle("Command response");
+            j.setTitle(JFtp.getMessage("tasks", "Command Response"));
             j.setLocation(150, 150);
 
             JTextArea t = new JTextArea();

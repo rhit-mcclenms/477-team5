@@ -15,21 +15,22 @@
  */
 package net.sf.jftp.gui.tasks;
 
-import net.sf.jftp.*;
-import net.sf.jftp.gui.framework.*;
-import net.sf.jftp.util.*;
+import net.sf.jftp.JFtp;
+import net.sf.jftp.gui.framework.HButton;
+import net.sf.jftp.gui.framework.HFrame;
+import net.sf.jftp.gui.framework.HPanel;
+import net.sf.jftp.gui.framework.HTextField;
 
 import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class Remover extends HFrame implements ActionListener
 {
     private HTextField text;
-    private HButton ok = new HButton("Remove file/directory...");
-    private HButton cancel = new HButton("Cancel");
+    private HButton ok = new HButton(JFtp.getMessage("tasks", "ok"));
+    private HButton cancel = new HButton(JFtp.getMessage("tasks", "cancel"));
     private HPanel okP = new HPanel();
     private String type = null;
 
@@ -38,7 +39,7 @@ public class Remover extends HFrame implements ActionListener
         this.type = type;
 
         setSize(350, 100);
-        setTitle("Choose...");
+        setTitle(JFtp.getMessage("tasks", "choose"));
         setLocation(150, 150);
         getContentPane().setLayout(new BorderLayout(10, 10));
 

@@ -15,12 +15,10 @@
  */
 package net.sf.jftp.gui.tasks;
 
-import net.sf.jftp.*;
-import net.sf.jftp.net.*;
+import net.sf.jftp.JFtp;
 import net.sf.jftp.system.LocalIO;
-import net.sf.jftp.util.*;
 
-import java.io.*;
+import java.io.File;
 
 
 public class AutoRemover

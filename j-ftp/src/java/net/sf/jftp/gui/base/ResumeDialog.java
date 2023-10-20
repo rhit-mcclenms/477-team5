@@ -15,26 +15,24 @@
  */
 package net.sf.jftp.gui.base;
 
-import net.sf.jftp.*;
-import net.sf.jftp.config.*;
+import net.sf.jftp.JFtp;
+import net.sf.jftp.config.Settings;
 import net.sf.jftp.gui.base.dir.DirEntry;
-import net.sf.jftp.gui.framework.*;
-import net.sf.jftp.net.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
+import net.sf.jftp.gui.framework.HFrame;
+import net.sf.jftp.gui.framework.HPanel;
 
 import javax.swing.*;
-import javax.swing.event.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 
 public class ResumeDialog extends HFrame implements ActionListener
 {
-    private JButton resume = new JButton("Resume");
-    private JButton skip = new JButton("Skip");
-    private JButton over = new JButton("Overwrite");
+    private JButton resume = new JButton( JFtp.getMessage("base", "resume"));
+    private JButton skip = new JButton( JFtp.getMessage("base", "skip"));
+    private JButton over = new JButton( JFtp.getMessage("base", "over"));
     private DirEntry dirEntry = null;
 
     public ResumeDialog(DirEntry dirEntry)
@@ -42,13 +40,13 @@ public class ResumeDialog extends HFrame implements ActionListener
         this.dirEntry = dirEntry;
 
         setLocation(150, 150);
-        setTitle("Question");
+        setTitle( JFtp.getMessage("base", "question"));
 
         resume.setEnabled(false);
 
         JTextArea text = new JTextArea();
-        text.append("A file named " + dirEntry.file +
-                    " already exists.                       \n\n");
+        text.append( JFtp.getMessage("base", "fileNamed") + " " + dirEntry.file +
+                JFtp.getMessage("base", "alreadyExists") + ".                       \n\n");
 
         File f = new File(JFtp.localDir.getPath() + dirEntry.file);
         long diff = 0;
@@ -57,15 +55,15 @@ public class ResumeDialog extends HFrame implements ActionListener
 
         if(diff == 0)
         {
-            text.append("It has exactly the same size as the remote file.\n\n");
+            text.append( JFtp.getMessage("base", "sameSize") + "\n\n");
         }
         else if(diff < 0)
         {
-            text.append("It is bigger than the remote file.\n\n");
+            text.append( JFtp.getMessage("base", "bigger") + "\n\n");
         }
         else
         {
-            text.append("It is smaller than the remote file.\n\n");
+            text.append( JFtp.getMessage("base", "smaller") + "\n\n");
             resume.setEnabled(true);
         }
 

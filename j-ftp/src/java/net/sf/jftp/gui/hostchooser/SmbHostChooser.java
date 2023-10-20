@@ -16,41 +16,39 @@
 package net.sf.jftp.gui.hostchooser;
 
 import net.miginfocom.swing.MigLayout;
-import net.sf.jftp.*;
-import net.sf.jftp.config.*;
+import net.sf.jftp.JFtp;
+import net.sf.jftp.config.LoadSet;
+import net.sf.jftp.config.SaveSet;
+import net.sf.jftp.config.Settings;
 import net.sf.jftp.gui.framework.*;
-import net.sf.jftp.net.*;
 import net.sf.jftp.net.wrappers.SmbConnection;
 import net.sf.jftp.net.wrappers.StartConnection;
 import net.sf.jftp.system.logging.Log;
-import net.sf.jftp.util.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
-
-import java.net.*;
-
-import java.util.*;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 
 
 public class SmbHostChooser extends HFrame implements ActionListener,
                                                       WindowListener
 {
     public static HTextField host = new HTextField("URL:", "smb://localhost/");
-    public static HTextField user = new HTextField("Username:", "guest");
-    public static HPasswordField pass = new HPasswordField("Password:",
+    public static HTextField user = new HTextField(JFtp.getMessage("HostChooser", "user"), "guest");
+    public static HPasswordField pass = new HPasswordField(JFtp.getMessage("HostChooser", "pass"),
                                                            "nopasswd");
-    JCheckBox lan = new JCheckBox("Browse LAN", true);
-    public HTextField domain = new HTextField("Domain:    ", "WORKGROUP");
-    public HTextField broadcast = new HTextField("Broadcast IP:    ", "AUTO");
-    public HTextField wins = new HTextField("WINS Server IP:    ", "NONE");
+    JCheckBox lan = new JCheckBox(JFtp.getMessage("HostChooser", "lan"), true);
+    public HTextField domain = new HTextField(JFtp.getMessage("HostChooser", "domain"), "WORKGROUP");
+    public HTextField broadcast = new HTextField(JFtp.getMessage("HostChooser", "broadcast"), "AUTO");
+    public HTextField wins = new HTextField(JFtp.getMessage("HostChooser", "wins"), "NONE");
 
     public JComboBox ip = new JComboBox();
-    private HButton ok = new HButton("Connect");
+    private HButton ok = new HButton(JFtp.getMessage("HostChooser", "ok"));
     private ComponentListener listener = null;
     private boolean useLocal = false;
 
@@ -76,7 +74,7 @@ public class SmbHostChooser extends HFrame implements ActionListener,
     {
         setPreferredSize(new Dimension(500, 320));
         setLocation(100, 150);
-        setTitle("Smb Connection...");
+        setTitle("Smb " + JFtp.getMessage("HostChooser", "connection") + "...");
         setBackground(new HPanel().getBackground());
 
         try
@@ -158,7 +156,7 @@ public class SmbHostChooser extends HFrame implements ActionListener,
         	}
     	};
         t.setLineWrap(true);
-        t.setText("Note: Please use URL format \"smb://host/\"");
+        t.setText(JFtp.getMessage("HostChooser", "urlFormat"));
 
         getContentPane().add("North", t);
         

@@ -15,29 +15,27 @@
  */
 package net.sf.jftp.gui.tasks;
 
-import net.sf.jftp.*;
-import net.sf.jftp.config.*;
-import net.sf.jftp.gui.framework.*;
+import net.sf.jftp.JFtp;
+import net.sf.jftp.config.Settings;
+import net.sf.jftp.gui.framework.HPanel;
 import net.sf.jftp.system.logging.Log;
-import net.sf.jftp.util.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
 
 
 public class BookmarkManager extends JInternalFrame implements ActionListener
 {
     private JTextArea info = new JTextArea(25, 50);
-    private JButton save = new JButton("Save and close");
-    private JButton close = new JButton("Close");
+    private JButton save = new JButton(JFtp.getMessage("tasks", "save"));
+    private JButton close = new JButton(JFtp.getMessage("tasks", "close"));
 
     public BookmarkManager()
     {
-        super("Manage Bookmarks", true, true, true, true);
+        super(JFtp.getMessage("tasks", "manage"), true, true, true, true);
         setLocation(50, 50);
         setSize(600, 540);
         getContentPane().setLayout(new BorderLayout());
@@ -80,22 +78,22 @@ public class BookmarkManager extends JInternalFrame implements ActionListener
     private void setDefaultText()
     {
         info.setText("");
-        info.append("# JFtp Bookmark Configuration file\n");
+        info.append("# " + JFtp.getMessage("tasks", "configHeader") + "\n");
         info.append("#\n");
-        info.append("# Syntax: protocol#host#user#password#port#dir/domain#local\n");
+        info.append("# " + JFtp.getMessage("tasks", "configLine1") + "\n");
         info.append("#\n");
-        info.append("# Note: not all values are used by every connection, but all fields must contain at least\n");
-        info.append("# one character.\n");
-        info.append("Use \"<%hidden%>\" for password fields you don't want to fill out.");
+        info.append("# " + JFtp.getMessage("tasks", "configLine2") + "\n");
+        info.append("# " + JFtp.getMessage("tasks", "configLine3") + "\n");
+        info.append(JFtp.getMessage("tasks", "configLine4"));
         info.append("#\n");
-        info.append("# protocol: FTP, SFTP, SMB or NFS (uppercase)\n");
-        info.append("# host: hostname or ip for ftp + sftp, valid url for smb + nfs  (\"(LAN)\" for smb lan browsing)\n");
-        info.append("# user, password: the login data\n");
-        info.append("# port: this must be a number (even if it is not used for smb+nfs, set it in the url for nfs)\n");
-        info.append("# dir/domain: inital directory for the connection, domainname for smb\n");
-        info.append("# local: \"true\" if connection should be opened in local tab, \"false\" otherwise\n");
-        info.append("# directories must be included in <dir></dir> tags and can be ended" +
-                    " using a single\n# <enddir> tag");
+        info.append("# " + JFtp.getMessage("tasks", "configLine5") + "\n");
+        info.append("# " + JFtp.getMessage("tasks", "configLine6") + "\n");
+        info.append("# " + JFtp.getMessage("tasks", "configLine7") + "\n");
+        info.append("# " + JFtp.getMessage("tasks", "configLine8") + "\n");
+        info.append("# " + JFtp.getMessage("tasks", "configLine9") + "\n");
+        info.append("# " + JFtp.getMessage("tasks", "configLine10") + "\n");
+        info.append("# " + JFtp.getMessage("tasks", "configLine11") +
+                        JFtp.getMessage("tasks", "configLine12"));
         info.append("#\n");
         info.append("#\n");
         info.append("\n<dir>JFtp</dir>\n");

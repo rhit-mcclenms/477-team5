@@ -15,22 +15,23 @@
  */
 package net.sf.jftp.gui.tasks;
 
-import net.sf.jftp.*;
-import net.sf.jftp.gui.framework.*;
-import net.sf.jftp.net.*;
+import net.sf.jftp.JFtp;
+import net.sf.jftp.gui.framework.HButton;
+import net.sf.jftp.gui.framework.HFrame;
+import net.sf.jftp.gui.framework.HPanel;
+import net.sf.jftp.gui.framework.HTextField;
 import net.sf.jftp.system.logging.Log;
-import net.sf.jftp.util.*;
 
 import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 
 public class Renamer extends HFrame implements ActionListener
 {
     public HTextField text;
-    private HButton ok = new HButton("Ok");
+    private HButton ok = new HButton(JFtp.getMessage("tasks", "okSimple"));
     private HPanel okP = new HPanel();
     private String oldName;
     private String path;
@@ -41,11 +42,11 @@ public class Renamer extends HFrame implements ActionListener
         this.path = path;
 
         setSize(400, 80);
-        setTitle("Enter new name...");
+        setTitle(JFtp.getMessage("tasks", "enterNewName"));
         setLocation(150, 150);
         getContentPane().setLayout(new FlowLayout());
 
-        text = new HTextField("Name: ", oldName);
+        text = new HTextField(JFtp.getMessage("tasks", "name") + ": ", oldName);
         getContentPane().add(text);
         getContentPane().add(ok);
         ok.addActionListener(this);

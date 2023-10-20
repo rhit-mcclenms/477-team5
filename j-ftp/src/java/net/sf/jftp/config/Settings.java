@@ -15,12 +15,13 @@
  */
 package net.sf.jftp.config;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import net.sf.jftp.JFtp;
+
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-
+import java.util.Locale;
 import java.util.Properties;
 
 
@@ -95,7 +96,7 @@ public class Settings
     public static boolean enableFtpDelays = false;
 
     // title of the app
-    public static final String title = "JFtp - The Java Network Browser";
+    public static final String title = "JFtp - " + JFtp.getMessage("jftp", "title") ;
 
     // overridden title for insomniac client
     public static final String insomniacTitle = ">>> Insomniac client BETA 1 <<< Based on JFtp ";
@@ -121,7 +122,7 @@ public class Settings
     public static final String appHomeDir = userHomeDir +
                                             "/.jftp/".replace('/',
                                                               File.separatorChar);
-    public static final String greeting = "Have a lot of fun...";
+    public static final String greeting = JFtp.getMessage("jftp", "greeting") ;
     public static final String bookmarks = appHomeDir +
                                            "bookmarks.txt".replace('/',
                                                                    File.separatorChar);
@@ -217,6 +218,8 @@ public class Settings
     
     //set to false if you want it to run as an applet
     public static boolean isStandalone = true;
+
+    public static Locale locale = Locale.ENGLISH;
     
     
     public static String hiddenPassword = "<%hidden%>";
@@ -308,6 +311,14 @@ public class Settings
             return true;
         }
     }
+
+    public static Locale getLocale()
+    {
+        String what = p.getProperty("jftp.useLocale", "en");
+
+        return Locale.forLanguageTag(what);
+    }
+
 
     public static boolean getEnableSshKeys()
     {

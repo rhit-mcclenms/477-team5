@@ -15,23 +15,22 @@
  */
 package net.sf.jftp.gui.tasks;
 
-import net.sf.jftp.*;
-import net.sf.jftp.gui.framework.*;
-import net.sf.jftp.net.*;
+import net.sf.jftp.JFtp;
+import net.sf.jftp.gui.framework.HButton;
+import net.sf.jftp.gui.framework.HPanel;
+import net.sf.jftp.gui.framework.HTextField;
 import net.sf.jftp.net.wrappers.HttpTransfer;
 
 import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
-
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Vector;
 
 
 public class HttpDownloader extends HPanel implements ActionListener
 {
     private HTextField text;
-    private HButton ok = new HButton("Start");
+    private HButton ok = new HButton(JFtp.getMessage("tasks", "start"));
 
     public HttpDownloader()
     {

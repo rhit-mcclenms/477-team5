@@ -15,25 +15,11 @@
  */
 package net.sf.jftp.gui.base;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Enumeration;
-import java.util.Hashtable;
-
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-
 import net.sf.jftp.JFtp;
 import net.sf.jftp.config.Settings;
 import net.sf.jftp.gui.base.dir.DirEntry;
 import net.sf.jftp.gui.base.dir.DirPanel;
-import net.sf.jftp.gui.framework.HImage;
-import net.sf.jftp.gui.framework.HImageButton;
-import net.sf.jftp.gui.framework.HPanel;
-import net.sf.jftp.gui.framework.ProgressBarList;
-import net.sf.jftp.gui.framework.ProgressbarItem;
+import net.sf.jftp.gui.framework.*;
 import net.sf.jftp.net.ConnectionHandler;
 import net.sf.jftp.net.DataConnection;
 import net.sf.jftp.net.Transfer;
@@ -41,6 +27,13 @@ import net.sf.jftp.net.wrappers.HttpTransfer;
 import net.sf.jftp.system.LocalIO;
 import net.sf.jftp.system.UpdateDaemon;
 import net.sf.jftp.system.logging.Log;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 
 public class DownloadList extends HPanel implements ActionListener
@@ -51,17 +44,17 @@ public class DownloadList extends HPanel implements ActionListener
     private long oldtime = 0;
     private HImageButton resume = new HImageButton(Settings.resumeImage,
                                                    "resume",
-                                                   "Resume selected transfer...",
+                                                    JFtp.getMessage("base", "resumeSelectedTransfer"),
                                                    this);
     private HImageButton pause = new HImageButton(Settings.pauseImage, "pause",
-                                                  "Pause selected transfer...",
+            JFtp.getMessage("base", "pauseSelectedTransfer"),
                                                   this);
     private HImageButton cancel = new HImageButton(Settings.deleteImage,
                                                    "delete",
-                                                   "Cancel selected transfer...",
+            JFtp.getMessage("base", "cancelSelectedTransfer"),
                                                    this);
     private HImageButton clear = new HImageButton(Settings.clearImage, "clear",
-                                                  "Remove old/stalled items from output...",
+            JFtp.getMessage("base", "clearSelectedTransfer"),
                                                   this);   
     private JScrollPane scroll;
 
@@ -96,11 +89,11 @@ public class DownloadList extends HPanel implements ActionListener
         resume.setSize(24, 24);
         pause.setSize(24, 24);
 
-        clear.setToolTipText("Remove old/stalled items from output...");
+        clear.setToolTipText(JFtp.getMessage("base", "clearSelectedTransfer"));
 
-        resume.setToolTipText("Resume selected transfer...");
-        pause.setToolTipText("Pause selected transfer...");
-        cancel.setToolTipText("Cancel selected transfer...");
+        resume.setToolTipText(JFtp.getMessage("base", "resumeSelectedTransfer"));
+        pause.setToolTipText(JFtp.getMessage("base", "pauseSelectedTransfer"));
+        cancel.setToolTipText(JFtp.getMessage("base", "cancelSelectedTransfer"));
 
         scroll = new JScrollPane(list);
         add("South", cmdP);

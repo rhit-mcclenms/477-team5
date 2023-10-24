@@ -1,0 +1,33 @@
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+resources = ["REST API GET Command received!"]
+
+@app.route('/resource', methods=['GET'])
+def get_resources():
+    return jsonify(resources)
+
+@app.route('/resource', methods=['POST'])
+def add_resource():
+    resource = request.json
+    resources.append(resource)
+    return jsonify(resource), 201
+
+@app.route('/resource/<int:resource_id>', methods=['PUT'])
+def update_resource(resource_id):
+    resource = next((r for r in resources if r['id'] == resource_id), None)
+    if resource is None:
+        return jsonify({'message': 'Not found'}), 404
+    data = request.json
+    resource.update(data)
+    return jsonify(resource)
+
+@app.route('/resource/<int:resource_id>', methods=['DELETE'])
+def delete_resource(resource_id):
+    global resources
+    resources = [r for r in resources if r['id'] != resource_id]
+    return jsonify({'message': 'Deleted successfully'}), 200
+
+if __name__ == '__main__':
+    app.run(debug=True)

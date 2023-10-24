@@ -16,6 +16,7 @@
 package net.sf.jftp.gui.base;
 
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -24,11 +25,15 @@ import java.awt.Insets;
 import java.awt.event.*;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StreamTokenizer;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -78,6 +83,11 @@ import net.sf.jftp.system.StringUtils;
 import net.sf.jftp.system.UpdateDaemon;
 import net.sf.jftp.system.logging.Log;
 import net.sf.jftp.util.ZipFileCreator;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class LocalDir extends DirComponent implements ListSelectionListener,
@@ -145,6 +155,11 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
     private JComboBox sorter = new JComboBox(sortTypes);
     HImageButton cdUpButton;
     private boolean dateEnabled = false;
+    
+    private JButton getButtonRest;
+    private JButton postButtonRest;
+    private JButton putButtonRest;
+    private JButton deleteButtonRest;
 
     /**
     * LocalDir constructor.
@@ -154,6 +169,9 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         type = "local";
         con = new FilesystemConnection();
         con.addConnectionListener(this);
+        
+
+
     }
 
     /**
@@ -202,6 +220,38 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         popupMenu.add(runFile);
         popupMenu.add(viewFile);
         popupMenu.add(props);
+        
+        getButtonRest = new JButton("GET");
+        postButtonRest = new JButton("POST");
+        putButtonRest = new JButton("PUT");
+        deleteButtonRest = new JButton("DELETE");
+        
+        getButtonRest.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		executeRestCommand("GET");
+        	}
+        });
+        postButtonRest.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        			executeRestCommand("POST");
+        	}
+        });
+        putButtonRest.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        			executeRestCommand("PUT");
+        	}
+        });
+        deleteButtonRest.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        			executeRestCommand("DELETE");
+        	}
+        });
+        
+        buttonPanel.add(getButtonRest);
+        buttonPanel.add(postButtonRest);
+        buttonPanel.add(putButtonRest);
+        buttonPanel.add(deleteButtonRest);
+        
 
         deleteButton = new HImageButton(Settings.deleteImage, deleteString,
                                         "Delete selected", this);
@@ -963,6 +1013,51 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
             }
         }
     }
+    
+    
+    // REST API Code
+    private void executeRestCommand(String method) {
+        if ("GET".equals(method)) {
+            try {
+                URL url = new URL("http://127.0.0.1:5000/resource");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Accept", "application/json");
+
+                if (connection.getResponseCode() != 200) {
+                    throw new RuntimeException("Failed : HTTP error code : " + connection.getResponseCode());
+                }
+
+                BufferedReader br = new BufferedReader(new InputStreamReader((connection.getInputStream())));
+                String output;
+                StringBuilder response = new StringBuilder();
+                while ((output = br.readLine()) != null) {
+                    response.append(output);
+                }
+                connection.disconnect();
+
+                //System.out.println("Response from server: " + response.toString());
+                Log.debug("Response from server: " + response.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+                //System.out.println("Failed to execute GET request.");
+                Log.debug("Failed to execute GET request.");
+                
+            }
+        } else {
+            //System.out.println(method + " executed.");
+            Log.debug(method + " executed.");
+        }
+    }
+
+
+
+
+
+
+
+    
+    
 
     private void copy(Object[] fRaw, String path, String offset, String target)
                throws Exception

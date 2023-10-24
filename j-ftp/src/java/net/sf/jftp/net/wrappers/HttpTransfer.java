@@ -101,7 +101,7 @@ public class HttpTransfer extends Transfer implements Runnable
         catch(Exception ex)
         {
             work = false;
-            Log.debug("Download failed: " + ex.toString());
+            Log.error("Download failed: " + ex.toString());
 
             File f = new File(localPath + file);
             f.delete();

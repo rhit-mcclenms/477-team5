@@ -15,128 +15,116 @@
  */
 package net.sf.jftp.gui.base;
 
+import javazoom.jl.player.Player;
 import net.sf.jftp.JFtp;
 import net.sf.jftp.config.Settings;
-import net.sf.jftp.gui.framework.*;
-import net.sf.jftp.gui.hostchooser.HostChooser;
-import net.sf.jftp.gui.hostchooser.NfsHostChooser;
-import net.sf.jftp.gui.hostchooser.SftpHostChooser;
-import net.sf.jftp.gui.hostchooser.SmbHostChooser;
-import net.sf.jftp.gui.hostchooser.WebdavHostChooser;
-import net.sf.jftp.gui.tasks.AddBookmarks;
-import net.sf.jftp.gui.tasks.AdvancedOptions;
-import net.sf.jftp.gui.tasks.BookmarkItem;
-import net.sf.jftp.gui.tasks.BookmarkManager;
-import net.sf.jftp.gui.tasks.Displayer;
-import net.sf.jftp.gui.tasks.HttpBrowser;
-import net.sf.jftp.gui.tasks.HttpDownloader;
-import net.sf.jftp.gui.tasks.LastConnections;
-import net.sf.jftp.gui.tasks.NativeHttpBrowser;
-import net.sf.jftp.gui.tasks.ProxyChooser;
-import net.sf.jftp.net.*;
+import net.sf.jftp.gui.framework.HImage;
+import net.sf.jftp.gui.hostchooser.*;
+import net.sf.jftp.gui.tasks.*;
 import net.sf.jftp.net.wrappers.StartConnection;
 import net.sf.jftp.system.logging.Log;
-import net.sf.jftp.tools.*;
-import net.sf.jftp.util.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
-
-import java.lang.Integer;
-
-import java.util.*;
+import net.sf.jftp.tools.HttpSpider;
+import net.sf.jftp.util.RawConnection;
 
 import javax.swing.*;
-
-import javazoom.jl.decoder.*;
-import javazoom.jl.player.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.*;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.StringTokenizer;
 
 
 //***
 public class AppMenuBar extends JMenuBar implements ActionListener
 {
-    public static JCheckBoxMenuItem fadeMenu = new JCheckBoxMenuItem("Enable Status Animation",
+    public static JCheckBoxMenuItem fadeMenu = new JCheckBoxMenuItem(JFtp.getMessage("base", "fadeMenu"),
                                                                      Settings.getEnableStatusAnimation());
-    public static JCheckBoxMenuItem askToDelete = new JCheckBoxMenuItem("Confirm Remove",
+    public static JCheckBoxMenuItem askToDelete = new JCheckBoxMenuItem(JFtp.getMessage("base", "askToDelete"),
                                                                         Settings.getAskToDelete());
-    public static JCheckBoxMenuItem debug = new JCheckBoxMenuItem("Verbose Console Debugging",
+    public static JCheckBoxMenuItem debug = new JCheckBoxMenuItem(JFtp.getMessage("base", "debug"),
                                                                   Settings.getEnableDebug());
-    public static JCheckBoxMenuItem disableLog = new JCheckBoxMenuItem("Disable Log",
+    public static JCheckBoxMenuItem disableLog = new JCheckBoxMenuItem(JFtp.getMessage("base", "disableLog"),
                                                                        Settings.getDisableLog());
-    public static JMenuItem clearItems = new JMenuItem("Clear Finished Items");
+    public static JMenuItem clearItems = new JMenuItem(JFtp.getMessage("base", "clearItems"));
     private JFtp jftp;
-    JMenu file = new JMenu("File");
-    JMenu opt = new JMenu("Options");
-    JMenu view = new JMenu("View");
-    JMenu tools = new JMenu("Tools");
-    JMenu bookmarks = new JMenu("Bookmarks");
-    JMenu info = new JMenu("Info");
-    JMenu lf = new JMenu("Switch Look & Feel to");
-    JMenu background = new JMenu("Desktop Background");
-    JMenu ftp = new JMenu(" FTP");
-    JMenu smb = new JMenu(" SMB");
-    JMenu sftp = new JMenu(" SFTP");
-    JMenu security = new JMenu("Security");
-    JMenu experimental = new JMenu("Experimental Features");
-    JMenu rss = new JMenu("RSS Feed");
-    JMenu cnn = new JMenu("CNN");
-    JMenuItem localFtpCon = new JMenuItem("Open FTP Connection in Local Tab...");
-    JMenuItem localSftpCon = new JMenuItem("Open SFTP Connection in Local Tab...");
-    JMenuItem localSmbCon = new JMenuItem("Open SMB/LAN Connection in Local Tab...");
-    JMenuItem localNfsCon = new JMenuItem("Open NFS Connection in Local Tab...");
-    JMenuItem localWebdavCon = new JMenuItem("Open WebDAV Connection in Local Tab... (ALPHA)");
-    JMenuItem closeLocalCon = new JMenuItem("Close Active Connection in Local Tab");
-    JMenuItem ftpCon = new JMenuItem("Connect to FTP Server...");
-    JMenuItem sftpCon = new JMenuItem("Connect to SFTP Server...");
-    JMenuItem smbCon = new JMenuItem("Connect to SMB Server / Browse LAN...");
-    JMenuItem nfsCon = new JMenuItem("Connect to NFS Server...");
-    JMenuItem webdavCon = new JMenuItem("Connect to WebDAV Server... (ALPHA)");
-    JMenuItem close = new JMenuItem("Disconnect and Connect to Filesystem");
-    JMenuItem exit = new JMenuItem("Exit");
-    JMenuItem readme = new JMenuItem("Show Readme...");
-    JMenuItem changelog = new JMenuItem("View Changelog...");
-    JMenuItem todo = new JMenuItem("What's Next...");
-    JMenuItem hp = new JMenuItem("Visit Project Homepage...");
-    JMenuItem opts = new JMenuItem("Advanced Options...");
-    JMenuItem http = new JMenuItem("Download File from URL...");
-    JMenuItem raw = new JMenuItem("Raw TCP/IP Connection...");
-    JMenuItem spider = new JMenuItem("Recursive HTTP Download...");
-    JMenuItem shell = new JMenuItem("Execute /bin/bash");
-    JMenuItem loadAudio = new JMenuItem("Play MP3");
-    JCheckBoxMenuItem rssDisabled = new JCheckBoxMenuItem("Enable RSS Feed",
+    JMenu file = new JMenu(JFtp.getMessage("base", "file"));
+    JMenu opt = new JMenu(JFtp.getMessage("base", "opt"));
+    JMenu view = new JMenu(JFtp.getMessage("base", "view"));
+    JMenu tools = new JMenu(JFtp.getMessage("base", "tools"));
+    JMenu bookmarks = new JMenu(JFtp.getMessage("base", "bookmarks"));
+    JMenu info = new JMenu(JFtp.getMessage("base", "info"));
+    JMenu lf = new JMenu(JFtp.getMessage("base", "lf"));
+    JMenu background = new JMenu(JFtp.getMessage("base", "background"));
+    JMenu locale = new JMenu(JFtp.getMessage("base", "language"));
+    JMenuItem en = new JMenuItem(JFtp.getMessage("base", "english"));
+    JMenuItem es = new JMenuItem(JFtp.getMessage("base", "spanish"));
+    JMenuItem fr = new JMenuItem(JFtp.getMessage("base", "french"));
+    JMenuItem de = new JMenuItem(JFtp.getMessage("base", "german"));
+    JMenuItem pt = new JMenuItem(JFtp.getMessage("base", "portuguese"));
+    JMenu ftp = new JMenu(JFtp.getMessage("base", "ftp"));
+    JMenu smb = new JMenu(JFtp.getMessage("base", "smb"));
+    JMenu sftp = new JMenu(JFtp.getMessage("base", "sftp"));
+    JMenu security = new JMenu(JFtp.getMessage("base", "security"));
+    JMenu experimental = new JMenu(JFtp.getMessage("base", "experimental"));
+    JMenu rss = new JMenu(JFtp.getMessage("base", "rss"));
+    JMenu cnn = new JMenu(JFtp.getMessage("base", "cnn"));
+    JMenuItem localFtpCon = new JMenuItem(JFtp.getMessage("base", "localFtpCon"));
+    JMenuItem localSftpCon = new JMenuItem(JFtp.getMessage("base", "localSftpCon"));
+    JMenuItem localSmbCon = new JMenuItem(JFtp.getMessage("base", "localSmbCon"));
+    JMenuItem localNfsCon = new JMenuItem(JFtp.getMessage("base", "localNfsCon"));
+    JMenuItem localWebdavCon = new JMenuItem(JFtp.getMessage("base", "localWebdavCon"));
+    JMenuItem closeLocalCon = new JMenuItem(JFtp.getMessage("base", "closeLocalCon"));
+    JMenuItem ftpCon = new JMenuItem(JFtp.getMessage("base", "ftpCon"));
+    JMenuItem sftpCon = new JMenuItem(JFtp.getMessage("base", "sftpCon"));
+    JMenuItem smbCon = new JMenuItem(JFtp.getMessage("base", "smbCon"));
+    JMenuItem nfsCon = new JMenuItem(JFtp.getMessage("base", "nfsCon"));
+    JMenuItem webdavCon = new JMenuItem(JFtp.getMessage("base", "webdavCon"));
+    JMenuItem close = new JMenuItem(JFtp.getMessage("base", "closeFs"));
+    JMenuItem exit = new JMenuItem(JFtp.getMessage("base", "exit"));
+    JMenuItem readme = new JMenuItem(JFtp.getMessage("base", "readme"));
+    JMenuItem changelog = new JMenuItem(JFtp.getMessage("base", "changelog"));
+    JMenuItem todo = new JMenuItem(JFtp.getMessage("base", "todo"));
+    JMenuItem hp = new JMenuItem(JFtp.getMessage("base", "hp"));
+    JMenuItem opts = new JMenuItem(JFtp.getMessage("base", "opts"));
+    JMenuItem http = new JMenuItem(JFtp.getMessage("base", "http"));
+    JMenuItem raw = new JMenuItem(JFtp.getMessage("base", "raw"));
+    JMenuItem spider = new JMenuItem(JFtp.getMessage("base", "spider"));
+    JMenuItem shell = new JMenuItem(JFtp.getMessage("base", "shell"));
+    JMenuItem loadAudio = new JMenuItem(JFtp.getMessage("base", "loadAudio"));
+    JCheckBoxMenuItem rssDisabled = new JCheckBoxMenuItem(JFtp.getMessage("base", "rssDisabled"),
                                                           Settings.getEnableRSS());
-    JCheckBoxMenuItem nl = new JCheckBoxMenuItem("Show Newline Option",
+    JCheckBoxMenuItem nl = new JCheckBoxMenuItem(JFtp.getMessage("base", "nl"),
                                                           Settings.showNewlineOption);
-    JMenuItem loadSlash = new JMenuItem("Slashdot");
-    JMenuItem loadCNN1 = new JMenuItem("CNN Top Stories");
-    JMenuItem loadCNN2 = new JMenuItem("CNN World");
-    JMenuItem loadCNN3 = new JMenuItem("CNN Tech");
-    JMenuItem loadRss = new JMenuItem("Custom RSS Feed");
-    JCheckBoxMenuItem stdback = new JCheckBoxMenuItem("Background Image",
+    JMenuItem loadSlash = new JMenuItem(JFtp.getMessage("base", "loadSlash"));
+    JMenuItem loadCNN1 = new JMenuItem(JFtp.getMessage("base", "loadCNN1"));
+    JMenuItem loadCNN2 = new JMenuItem(JFtp.getMessage("base", "loadCNN2"));
+    JMenuItem loadCNN3 = new JMenuItem(JFtp.getMessage("base", "loadCNN3"));
+    JMenuItem loadRss = new JMenuItem(JFtp.getMessage("base", "loadRss"));
+    JCheckBoxMenuItem stdback = new JCheckBoxMenuItem(JFtp.getMessage("base", "stdback"),
                                                       Settings.getUseBackground());
-    JCheckBoxMenuItem resuming = new JCheckBoxMenuItem("Enable Resuming",
+    JCheckBoxMenuItem resuming = new JCheckBoxMenuItem(JFtp.getMessage("base", "resuming"),
                                                        Settings.enableResuming);
-    JCheckBoxMenuItem ask = new JCheckBoxMenuItem("Always Ask to Resume",
+    JCheckBoxMenuItem ask = new JCheckBoxMenuItem(JFtp.getMessage("base", "ask"),
                                                   Settings.askToResume);
-    JMenuItem proxy = new JMenuItem("Proxy Settings...");
-    JCheckBoxMenuItem smbThreads = new JCheckBoxMenuItem("Multiple Connections",
+    JMenuItem proxy = new JMenuItem(JFtp.getMessage("base", "proxy"));
+    JCheckBoxMenuItem smbThreads = new JCheckBoxMenuItem(JFtp.getMessage("base", "smbThreads"),
                                                          Settings.getEnableSmbMultiThreading());
-    JCheckBoxMenuItem sftpThreads = new JCheckBoxMenuItem("Multiple Connections",
+    JCheckBoxMenuItem sftpThreads = new JCheckBoxMenuItem(JFtp.getMessage("base", "sftpThreads"),
                                                           Settings.getEnableSftpMultiThreading());
-    JCheckBoxMenuItem sshKeys = new JCheckBoxMenuItem("Enable Host Key check",
+    JCheckBoxMenuItem sshKeys = new JCheckBoxMenuItem(JFtp.getMessage("base", "sshKeys"),
                                                       Settings.getEnableSshKeys());
-    JCheckBoxMenuItem storePasswords = new JCheckBoxMenuItem("Store passwords (encrypted using internal password)",
+    JCheckBoxMenuItem storePasswords = new JCheckBoxMenuItem(JFtp.getMessage("base", "storePasswords"),
             Settings.getStorePasswords());
 
-    JCheckBoxMenuItem useNewIcons = new JCheckBoxMenuItem("Use Silk Icons",
+    JCheckBoxMenuItem useNewIcons = new JCheckBoxMenuItem(JFtp.getMessage("base", "useNewIcons"),
             Settings.getUseNewIcons());
     
-    JCheckBoxMenuItem hideHidden = new JCheckBoxMenuItem("Hide local hidden files (Unix only)",
+    JCheckBoxMenuItem hideHidden = new JCheckBoxMenuItem(JFtp.getMessage("base", "hideHidden"),
             Settings.getHideLocalDotNames());
     
-    JMenuItem clear = new JMenuItem("Clear Log");
+    JMenuItem clear = new JMenuItem(JFtp.getMessage("base", "clear"));
 
     //*** the menu items for the last connections
     JMenuItem[] lastConnections = new JMenuItem[jftp.CAPACITY];
@@ -147,8 +135,8 @@ public class AppMenuBar extends JMenuBar implements ActionListener
     String[] lastConData = new String[jftp.CAPACITY];
     Character charTab = new Character('\t');
     String tab = charTab.toString();
-    JMenuItem manage = new JMenuItem("Manage Bookmarks...");
-    JMenuItem add = new JMenuItem("Add Bookmark...");
+    JMenuItem manage = new JMenuItem(JFtp.getMessage("base", "manage"));
+    JMenuItem add = new JMenuItem(JFtp.getMessage("base", "add"));
     Hashtable marks;
     JMenu current = bookmarks;
     JMenu last = bookmarks;
@@ -208,6 +196,12 @@ public class AppMenuBar extends JMenuBar implements ActionListener
         loadAudio.addActionListener(this);
         useNewIcons.addActionListener(this);
         hideHidden.addActionListener(this);
+
+        en.addActionListener(this);
+        de.addActionListener(this);
+        es.addActionListener(this);
+        fr.addActionListener(this);
+        pt.addActionListener(this);
 
         clearItems.addActionListener(JFtp.dList);
 
@@ -309,6 +303,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
                     tmp.addActionListener(this);
                     lf.add(tmp);
                 }
+
             }
             catch(ClassNotFoundException cnfe)
             {
@@ -328,6 +323,14 @@ public class AppMenuBar extends JMenuBar implements ActionListener
 
         background.add(stdback);
         view.add(background);
+
+
+        locale.add(en);
+        locale.add(de);
+        locale.add(es);
+        locale.add(fr);
+        locale.add(pt);
+        view.add(locale);
 
         manage.addActionListener(this);
 
@@ -411,7 +414,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
         }
         catch(Exception ex)
         {
-            Log.debug("Broken line: " + tmp);
+            Log.error("Broken line: " + tmp);
             ex.printStackTrace();
         }
     }
@@ -533,7 +536,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
         }
         catch(Exception ex)
         {
-            Log.debug("WARNING: Remembered connections broken.");
+            Log.error("WARNING: Remembered connections broken.");
             ex.printStackTrace();
         }
 
@@ -551,10 +554,11 @@ public class AppMenuBar extends JMenuBar implements ActionListener
     public void actionPerformed(ActionEvent e)
     {
     	try {
+            System.out.println(e.getSource().getClass());
 	        if(e.getSource() == proxy)
 	        {
 	            //ProxyChooser p =
-	            JFtp.statusP.jftp.addToDesktop("Proxy Settings",
+	            JFtp.statusP.jftp.addToDesktop(JFtp.getMessage("base", "proxySettings"),
 	                                           new ProxyChooser(), 500, 110);
 	        }
 	        else if(e.getSource() == add)
@@ -620,7 +624,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
 	        }
 	        else if(e.getSource() == spider)
 	        {
-	            jftp.addToDesktop("Http recursive download",
+	            jftp.addToDesktop(JFtp.getMessage("base", "httpRecursive"),
 	                              new HttpSpider(jftp.localDir.getPath() +
 	                                             "_httpdownload/"), 440, 250);
 	        }
@@ -631,7 +635,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
 	            }
 	            catch(Throwable ex) {
 	                ex.printStackTrace();
-	                Log.debug("Native browser intialization failed, using JContentPane...");
+	                Log.error("Native browser intialization failed, using JContentPane...");
 	
 	                HttpBrowser h = new HttpBrowser("http://j-ftp.sourceforge.net");
 	                JFtp.desktop.add(h, new Integer(Integer.MAX_VALUE - 10));
@@ -673,7 +677,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
 	            catch(Exception ex)
 	            {
 	                ex.printStackTrace();
-	                Log.debug("Error: (" + ex + ")");
+	                Log.error("Error: (" + ex + ")");
 	            }
 	        }
 	        else if(e.getSource() == exit)
@@ -742,7 +746,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
 	            Settings.setProperty("jftp.gui.look.newIcons", res);
 	            Settings.save();
 	            
-	            JOptionPane.showMessageDialog(this, "Please restart JFtp to have the UI changed.");
+	            JOptionPane.showMessageDialog(this, JFtp.getMessage("base", "restart"));
 	        }
 	        else if(e.getSource() == hideHidden)
 	        {
@@ -763,6 +767,47 @@ public class AppMenuBar extends JMenuBar implements ActionListener
 	            Settings.save();
 	            JFtp.statusP.jftp.fireUpdate();
 	        }
+            else if(e.getSource() == en || e.getSource() == de || e.getSource() == es || e.getSource() == fr || e.getSource() == pt) {
+                String action = e.getActionCommand();
+                String localeCode;
+                switch (action) {
+                    case "German":
+                    case "Deutsch":
+                    case "Alemán":
+                    case "Allemand":
+                    case "Alemão":
+                        localeCode = "de";
+                        break;
+                    case "Spanish":
+                    case "Spanisch":
+                    case "Español":
+                    case "Espagnol":
+                    case "Espanhol":
+                        localeCode = "es";
+                        break;
+                    case "French":
+                    case "Französisch":
+                    case "Francés":
+                    case "Français":
+                    case "Francês":
+                        localeCode = "fr";
+                        break;
+                    case "Portuguese":
+                    case "Portugiesisch":
+                    case "Portugués":
+                    case "Portugais":
+                    case "Português":
+                        localeCode = "pt";
+                        break;
+                    default:
+                        localeCode = "en";
+                        break;
+                }
+
+                Settings.setProperty("jftp.useLocale", localeCode);
+                Settings.save();
+                JFtp.statusP.jftp.resetUI();
+            }
 	        else if(e.getSource() == sshKeys)
 	        {
 	            Settings.setProperty("jftp.useSshKeyVerification",
@@ -915,9 +960,8 @@ public class AppMenuBar extends JMenuBar implements ActionListener
 	            {
 	                JOptionPane j = new JOptionPane();
 	                int x = j.showConfirmDialog(storePasswords,
-	                                            "You chose not to Save passwords.\n" +
-	                                            "Do you want your old login data to be deleted?",
-	                                            "Delete old passwords?",
+                            JFtp.getMessage("base", "savePass"),
+                            JFtp.getMessage("base", "deleteOldPass"),
 	                                            JOptionPane.YES_NO_OPTION);
 	
 	                if(x == JOptionPane.YES_OPTION)
@@ -969,7 +1013,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
     	}
 	    catch(Exception ex) {
 	    	ex.printStackTrace();
-	    	Log.debug(ex.toString());
+	    	Log.error(ex.toString());
 	    }
     }
     

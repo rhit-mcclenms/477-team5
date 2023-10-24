@@ -15,22 +15,23 @@
  */
 package net.sf.jftp.gui.base;
 
-import net.sf.jftp.*;
-import net.sf.jftp.gui.framework.*;
+import net.sf.jftp.JFtp;
+import net.sf.jftp.gui.framework.HButton;
+import net.sf.jftp.gui.framework.HFrame;
+import net.sf.jftp.gui.framework.HPanel;
 import net.sf.jftp.system.logging.Log;
-import net.sf.jftp.util.*;
 
 import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 
 public class Properties extends HFrame implements ActionListener
 {
-    private Label fileL = new Label("File:                      ");
-    private Label sizeL = new Label("Size: ? bytes              ");
-    private HButton ok = new HButton("Dismiss");
+    private Label fileL = new Label(JFtp.getMessage("base", "fileL"));
+    private Label sizeL = new Label(JFtp.getMessage("base", "sizeL") + "? bytes              ");
+    private HButton ok = new HButton(JFtp.getMessage("base", "ok"));
     private HPanel okP = new HPanel();
     private String type = "";
     private String file = "";
@@ -41,7 +42,7 @@ public class Properties extends HFrame implements ActionListener
         this.type = type;
 
         setSize(300, 110);
-        setTitle("File properties...");
+        setTitle(JFtp.getMessage("base", "fileProps"));
         setLocation(150, 150);
         setLayout(new GridLayout(3, 1));
 
@@ -68,7 +69,7 @@ public class Properties extends HFrame implements ActionListener
             }
             catch(Exception ex)
             {
-                Log.debug(ex.toString());
+                Log.error(ex.toString());
             }
 
             sizeL.setText("Size: " + Long.toString(f.length()) + " bytes");

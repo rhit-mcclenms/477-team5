@@ -17,20 +17,30 @@ package net.sf.jftp.system.logging;
 
 import net.sf.jftp.config.Settings;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class Log
 {
     private static Logger logger = new SystemLogger();
     private static Log log = new Log();
+    private static String loggerName = "SystemLogger";
     private static StringBuffer cache = new StringBuffer();
+    private static FileOutputStream fileOutputStream = createLogFile();
 
     private Log()
     {
     }
 
-    public static void setLogger(Logger logger)
+    public static void setLogger(Logger logger, String name)
     {
         Log.logger = logger;
+        Log.loggerName = name;
     }
 
     public static void debug(String msg)
@@ -41,6 +51,9 @@ public class Log
         }
 
         //System.out.println(msg);
+        if(null != fileOutputStream)
+            writeErrorToLogFile(msg);
+
         logger.debug(msg);
         cache.append(msg + "\n");
 
@@ -74,6 +87,65 @@ public class Log
     {
     }
 
+    public static void error(String msg) {
+        if(Settings.getDisableLog())
+        {
+            return;
+        }
+
+        if(null != fileOutputStream)
+            writeErrorToLogFile(msg);
+
+        logger.error(msg);
+        cache.append(msg);
+
+        if(Settings.getEnableDebug()) System.out.print(msg);
+    }
+
+    private static FileOutputStream createLogFile() {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        String currentDate =  dateFormatter.format(new Date());
+        String logPath = "./logs/error_log_" + currentDate + ".txt";
+        try {
+            Files.createFile(Paths.get(logPath));
+            FileOutputStream fos = new FileOutputStream(logPath);
+            String logBanner = "##################################\n" +
+                    "##                              ##\n" +
+                    "##                              ##\n" +
+                    "##        jFTP Error Log        ##\n" +
+                    "##                              ##\n" +
+                    "##   Date: " + currentDate + "  ##\n" +
+                    "##                              ##\n" +
+                    "##                              ##\n" +
+                    "##################################\n";
+            fos.write(logBanner.getBytes());
+            return fos;
+        } catch (IOException e) {
+            System.out.println("Failed to write to log file - " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    private static void writeErrorToLogFile(String msg) {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:ms");
+        String currentDate =  dateFormatter.format(new Date());
+        StringBuilder logLine = new StringBuilder();
+        logLine.append("[")
+                .append(currentDate)
+                .append("] -- ")
+                .append("[")
+                .append(loggerName)
+                .append("] -- ")
+                .append(msg)
+                .append("\n");
+        try {
+            fileOutputStream.write(logLine.toString().getBytes());
+        }catch (IOException e) {
+            System.out.println("Error writing to log: - " + e.getMessage());
+        }
+    }
+
 
     public static String getCache()
     {
@@ -83,5 +155,11 @@ public class Log
     public static void clearCache()
     {
         cache = new StringBuffer();
+
+        try {
+            fileOutputStream.flush();
+        } catch (IOException e) {
+            System.out.println("Failed to flush log - " + e.getMessage());
+        }
     }
 }

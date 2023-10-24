@@ -19,20 +19,13 @@
 package net.sf.jftp.gui.tasks;
 
 import net.sf.jftp.JFtp;
+import net.sf.jftp.config.Settings;
 
-//***
-import net.sf.jftp.config.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import java.io.*;
-
-import java.lang.*;
-
-import java.util.*;
-
-import javax.swing.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.io.RandomAccessFile;
+import java.util.StringTokenizer;
 
 
 public class LastConnections

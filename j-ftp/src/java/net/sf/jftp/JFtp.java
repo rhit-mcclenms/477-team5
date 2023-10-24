@@ -15,87 +15,38 @@
  */
 package net.sf.jftp;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.Hashtable;
-
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.event.InternalFrameListener;
-
+import com.sun.org.apache.xml.internal.utils.UnImplNode;
 import net.sf.jftp.config.Settings;
-import net.sf.jftp.gui.base.AppMenuBar;
-import net.sf.jftp.gui.base.DownloadList;
-import net.sf.jftp.gui.base.DownloadQueue;
-import net.sf.jftp.gui.base.LocalDir;
-import net.sf.jftp.gui.base.LogFlusher;
-import net.sf.jftp.gui.base.RemoteDir;
-import net.sf.jftp.gui.base.StatusPanel;
+import net.sf.jftp.gui.base.*;
 import net.sf.jftp.gui.base.dir.Dir;
 import net.sf.jftp.gui.base.dir.DirEntry;
-import net.sf.jftp.gui.framework.FileTransferable;
-import net.sf.jftp.gui.framework.GUIDefaults;
-import net.sf.jftp.gui.framework.HDesktopBackground;
-import net.sf.jftp.gui.framework.HImage;
-import net.sf.jftp.gui.framework.HImageButton;
+import net.sf.jftp.gui.framework.*;
 import net.sf.jftp.gui.hostchooser.HostChooser;
 import net.sf.jftp.gui.hostchooser.SftpHostChooser;
 import net.sf.jftp.gui.tasks.HostInfo;
-import net.sf.jftp.net.BasicConnection;
-import net.sf.jftp.net.ConnectionHandler;
-import net.sf.jftp.net.ConnectionListener;
-import net.sf.jftp.net.FilesystemConnection;
-import net.sf.jftp.net.FtpConnection;
+import net.sf.jftp.net.*;
 import net.sf.jftp.system.LocalIO;
 import net.sf.jftp.system.UpdateDaemon;
 import net.sf.jftp.system.logging.Log;
 import net.sf.jftp.system.logging.Logger;
 import net.sf.jftp.tools.RSSFeeder;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
+import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.*;
+import java.awt.event.*;
+import java.io.*;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 
 public class JFtp extends JPanel implements WindowListener, ComponentListener,
@@ -112,6 +63,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
     public static DownloadQueue dQueue = new DownloadQueue();
     public static boolean uiBlocked = false;
     public static HostInfo hostinfo = new HostInfo();
+    public static Locale locale = Locale.ENGLISH;
 
     //public static BasicConnection controlConnection = null;
     private static ConnectionHandler defaultConnectionHandler = new ConnectionHandler();
@@ -155,7 +107,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
     //***    
     public JFtp()
     {
-        Log.setLogger(this);
+        Log.setLogger(this, "JFtp");
 
         // we have jesktop-environment
         if(statusP != null)
@@ -169,7 +121,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
 
     public JFtp(boolean mainUsed)
     {
-        Log.setLogger(this);
+        Log.setLogger(this, "JFtp");
         this.mainUsed = mainUsed;
         init();
         displayGUI();
@@ -212,7 +164,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
         desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
         addBackgroundImage();
 
-        j1 = new JInternalFrame("Local filesystem", true, false, true, true);
+        j1 = new JInternalFrame(JFtp.getMessage("jftp", "j1"), true, false, true, true);
         j1.setMinimumSize(new Dimension(300, 300));
         j1.setLocation(5, 5);
         localConnectionPanel.addTab("file://", null, (Component) localDir,
@@ -228,7 +180,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
         j1.setSize(new Dimension(460, 480));
         j1.show();
 
-        j2 = new JInternalFrame("Remote connections", true, false, true, true);
+        j2 = new JInternalFrame(JFtp.getMessage("jftp", "j2"), true, false, true, true);
         j2.setLocation(470, 5);
         remoteConnectionPanel.addTab("file://", null, (Component) remoteDir,
                                      "Filesystem");
@@ -249,7 +201,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
         logSp = new JScrollPane(log);
         logSp.setSize(new Dimension(428, 148));
 
-        j5 = new JInternalFrame("Queue System", true, false, true, true);
+        j5 = new JInternalFrame(JFtp.getMessage("jftp", "j5"), true, false, true, true);
         j5.setLocation(5, 500);
         j5.getContentPane().add(dQueue, BorderLayout.CENTER);
         desktop.add(j5);
@@ -259,14 +211,14 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
 
         j3 = new JInternalFrame("Log", true, false, true, true);
 
-        HImageButton clearButton = new HImageButton(Settings.clearLogImage, "clearLog", "Clear Log", new ActionListener() {
+        HImageButton clearButton = new HImageButton(Settings.clearLogImage, "clearLog", JFtp.getMessage("jftp", "clearLog"), new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {				
 				JFtp.clearLog();
 			}
 		});
-        HImageButton lockButton = new HImageButton(Settings.scrollLockImage, "scrollLock", "Toggle Scroll Lock", new ActionListener() {
+        HImageButton lockButton = new HImageButton(Settings.scrollLockImage, "scrollLock", JFtp.getMessage("jftp", "scrollLock"), new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -293,7 +245,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
         j3.setSize(new Dimension(440, 150));
         j3.show();
 
-        j4 = new JInternalFrame("Download Manager", true, false, true, true);
+        j4 = new JInternalFrame(JFtp.getMessage("jftp", "j4"), true, false, true, true);
         j4.setLocation(450, 500);
         j4.getContentPane().add(dList, BorderLayout.CENTER);
         desktop.add(j4);
@@ -381,8 +333,46 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
     {
         remoteDir.fresh();
     }
-    
-    
+
+    public static void showRemoteUnavailable() {
+        // Close the remote tab
+        statusP.jftp.closeCurrentTab();
+        JOptionPane.showMessageDialog(mainFrame, "ERROR: Remote connection no longer available\n" +
+                "Check to ensure your server is currently accepting connections and reconnect",
+                "Remote Unavailable", JOptionPane.ERROR_MESSAGE);
+
+        Log.debug("Remote server has been identified as no longer being available.\n" +
+                "It has been removed from service to prevent any further errors.\n" +
+                "Check to ensure the remote server is avaiable and currently accepting connections before reconnecting.");
+    }
+
+    public static void showWatchdogWarning() {
+        // Close the remote tab
+        JOptionPane.showMessageDialog(mainFrame, "ERROR: Remote connection took too long to respond\n" +
+                        "Check to ensure your server is currently accepting connections and is responsive",
+                "Long Response", JOptionPane.WARNING_MESSAGE);
+
+        Log.debug("ERROR: Remote connection took too long to respond\n" +
+                "Check to ensure your server is currently accepting connections and is responsive");
+    }
+
+    public static String getMessage(String packageName, String propName) {
+        try {
+            locale = Settings.getLocale();
+
+            if(null == locale)
+                locale = Locale.ENGLISH;
+
+            File file = new File("src/resources");
+            URL[] urls = new URL[]{file.toURI().toURL()};
+            ClassLoader loader = new URLClassLoader(urls);
+            ResourceBundle rb = ResourceBundle.getBundle(packageName, locale, loader);
+            return rb.getString(propName);
+        } catch (final Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     private void saveInternalPositions() {
     	saveInternalPosition(j1, "local");
@@ -435,6 +425,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
     
     public void windowClosing(WindowEvent e)
     {
+    	try {
     	saveInternalPositions();
     	
         Settings.setProperty("jftp.window.width", this.getWidth());
@@ -457,6 +448,11 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
 
         Settings.save();
         safeDisconnect();
+    	}
+    	catch (Exception ex) 
+    	{
+    		log("Error closing window");
+    	}
 
         if(Settings.isStandalone)
         {
@@ -654,7 +650,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
     	}
     }
 
-    protected void displayGUI() {
+    public void displayGUI() {
 		UIManager.getLookAndFeelDefaults().put("ClassLoader",
 				getClass().getClassLoader());
 
@@ -753,7 +749,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
 		mainFrame.pack();
 		mainFrame.validate();
 		mainFrame.setVisible(true);
-		JOptionPane.showMessageDialog(mainFrame, "Welcome to jFTP!");
+		JOptionPane.showMessageDialog(mainFrame, JFtp.getMessage("jftp", "welcome") + " jFTP!");
 	}
     
     private void log(String msg)
@@ -885,6 +881,17 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
     {
     }
 
+    public void resetUI() {
+        remoteConnectionPanel = new JTabbedPane();
+        localConnectionPanel = new JTabbedPane();
+        bottomBar = new JToolBar();
+        mainFrame.removeAll();
+        mainFrame.dispose();
+        init();
+        displayGUI();
+        updateMenuBar();
+    }
+
     public static String getVersion()
     {
         try
@@ -992,7 +999,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
         }
         catch(Exception ex)
         {
-            Log.debug("Error setting look and feel: " + ex);
+            Log.error("Error setting look and feel: " + ex);
         }
     }
 
@@ -1007,7 +1014,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
 
         int x = remoteConnectionPanel.getSelectedIndex();
         remoteConnectionPanel.addTab(parse(name), null, (Component) tmp,
-                                     "Switch to: " + parse(name));
+                JFtp.getMessage("jftp", "switch") + " " + parse(name));
         remoteConnectionPanel.setSelectedIndex(x + 1);
         j2.setClosable(true);
     }
@@ -1023,7 +1030,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
 
         int x = localConnectionPanel.getSelectedIndex();
         localConnectionPanel.addTab(parse(name), null, (Component) tmp,
-                                    "Switch to: " + parse(name));
+                JFtp.getMessage("jftp", "switch") + " " + parse(name));
         localConnectionPanel.setSelectedIndex(x + 1);
         j1.setClosable(true);
     }
@@ -1130,7 +1137,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
         }
         else
         {
-            Log.debug("ERROR: " + component + " not found in Hashtable!");
+            Log.error("ERROR: " + component + " not found in Hashtable!");
         }
     }
     
@@ -1174,7 +1181,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
         }
         else
         {
-            Log.debug("ERROR: " + component + " not found in Hashtable!");
+            Log.error("ERROR: " + component + " not found in Hashtable!");
         }
     }
 
@@ -1188,7 +1195,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
         }
         else
         {
-            Log.debug("ERROR: " + component + " not found in Hashtable!");
+            Log.error("ERROR: " + component + " not found in Hashtable!");
         }
     }
 
@@ -1393,7 +1400,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
         }
         else
         {
-            Log.debug("Dragging multiple files or dirs is not yet supported.");
+            Log.error("Dragging multiple files or dirs is not yet supported.");
         }
     }
 

@@ -115,7 +115,7 @@ public class SmbConnection extends NtlmAuthenticator implements BasicConnection
         }
         catch(Exception ex)
         {
-            Log.debug("Error logging in: " + ex);
+            Log.error("Error logging in: " + ex);
             ex.printStackTrace();
 
             return null;
@@ -146,7 +146,7 @@ public class SmbConnection extends NtlmAuthenticator implements BasicConnection
         }
         catch(Exception ex)
         {
-            Log.debug("Removal failed (" + ex + ").");
+            Log.error("Removal failed (" + ex + ").");
 
             return -1;
         }
@@ -235,7 +235,7 @@ public class SmbConnection extends NtlmAuthenticator implements BasicConnection
         }
         catch(Exception ex)
         {
-            Log.debug("Failed to create directory (" + ex + ").");
+            Log.error("Failed to create directory (" + ex + ").");
 
             return false;
         }
@@ -288,21 +288,21 @@ public class SmbConnection extends NtlmAuthenticator implements BasicConnection
         {
             if(ex.getMessage() != null && (ex.getMessage().indexOf("MSBROWSE") > 0) && !dummy) // MSBROWSE is not in the message (anymore)
             {
-                Log.debug("\nCould not find a master server.");
-                Log.debug("Please make sure you have the local IP set to the interface you want to use, netbios enabled, and if");
-                Log.debug("that does not work try \"<default>\"...");
-                Log.debug("If you still can not find a master make sure that there is one your LAN and submit a bug report.");
+                Log.error("\nCould not find a master server.");
+                Log.error("Please make sure you have the local IP set to the interface you want to use, netbios enabled, and if");
+                Log.error("that does not work try \"<default>\"...");
+                Log.error("If you still can not find a master make sure that there is one your LAN and submit a bug report.");
                 dummy = true;
             }
             else if(ex.toString().contains("MSBROWSE"))
             {
-                Log.debug("\nCould not find a master server.");
-                Log.debug("Please make sure you have the local IP set to the interface you want to use, netbios enabled");
+                Log.error("\nCould not find a master server.");
+                Log.error("Please make sure you have the local IP set to the interface you want to use, netbios enabled");
             }            
             else
             {
             	ex.printStackTrace();
-                Log.debug("Could not change directory (" + ex + ").");
+                Log.error("Could not change directory (" + ex + ").");
             }
 
             return false;

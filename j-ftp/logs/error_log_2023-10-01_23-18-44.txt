@@ -1,0 +1,17 @@
+##################################
+##                              ##
+##                              ##
+##        jFTP Error Log        ##
+##                              ##
+##   Date: 2023-10-01_23-18-44  ##
+##                              ##
+##                              ##
+##################################
+[2023-10-01 23:18:53:1853] -- [JFtp] -- Wrong password!
+[2023-10-01 23:27:59:2759] -- [JFtp] -- Remote file must be downloaded to be viewed and
+ you already have a local copy present, pleasen rename it
+ and try again.
+[2023-10-01 23:27:59:2759] -- [JFtp] -- Remote file must be downloaded to be viewed and
+ you already have a local copy present, pleasen rename it
+ and try again.
+[2023-10-01 23:28:49:2849] -- [JFtp] -- Action is not supported for this connection[2023-10-01 23:30:41:3041] -- [JFtp] -- Action is not supported for this connection.

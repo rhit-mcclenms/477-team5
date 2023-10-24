@@ -66,7 +66,7 @@ public class WebdavConnection implements BasicConnection
 
     public int removeFileOrDir(String file)
     {
-        Log.debug("Feature is not implemented yet");
+        Log.error("Feature is not implemented yet");
 
         if(true)
         {
@@ -108,14 +108,14 @@ public class WebdavConnection implements BasicConnection
             //System.out.println(tmp);
             if(!f.delete())
             {
-                Log.debug("Removal failed.");
+                Log.error("Removal failed.");
 
                 return -1;
             }
         }
         catch(Exception ex)
         {
-            Log.debug("Error: " + ex.toString());
+            Log.error("Error: " + ex.toString());
             ex.printStackTrace();
         }
 

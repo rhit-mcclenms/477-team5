@@ -55,7 +55,7 @@ public class HImage
         }
         catch(Exception ex)
         {
-            Log.debug("\n\n\nError fetching image!");
+            Log.error("\n\n\nError fetching image!");
             ex.printStackTrace();
 
             //System.exit(1);

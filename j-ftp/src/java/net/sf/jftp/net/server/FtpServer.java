@@ -55,7 +55,7 @@ public class FtpServer extends Thread
         }
         catch(IOException ioe)
         {
-            Log.debug("ServerSocket error: " + ioe);
+            Log.error("ServerSocket error: " + ioe);
         }
     }
 

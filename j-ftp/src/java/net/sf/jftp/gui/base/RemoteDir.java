@@ -15,46 +15,10 @@
  */
 package net.sf.jftp.gui.base;
 
-import java.awt.BorderLayout;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.event.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
-import java.lang.reflect.Array;
-import java.util.Date;
-
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
-import javax.swing.JEditorPane;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ListSelectionListener;
-
 import net.sf.jftp.JFtp;
 import net.sf.jftp.config.SaveSet;
 import net.sf.jftp.config.Settings;
-import net.sf.jftp.gui.base.dir.DirCanvas;
-import net.sf.jftp.gui.base.dir.DirCellRenderer;
-import net.sf.jftp.gui.base.dir.DirComponent;
-import net.sf.jftp.gui.base.dir.DirEntry;
-import net.sf.jftp.gui.base.dir.DirLister;
-import net.sf.jftp.gui.base.dir.DirPanel;
-import net.sf.jftp.gui.base.dir.TableUtils;
+import net.sf.jftp.gui.base.dir.*;
 import net.sf.jftp.gui.framework.HFrame;
 import net.sf.jftp.gui.framework.HImage;
 import net.sf.jftp.gui.framework.HImageButton;
@@ -73,6 +37,17 @@ import net.sf.jftp.system.StringUtils;
 import net.sf.jftp.system.UpdateDaemon;
 import net.sf.jftp.system.logging.Log;
 import net.sf.jftp.tools.Shell;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.lang.reflect.Array;
+import java.util.Date;
 
 
 public class RemoteDir extends DirComponent implements ListSelectionListener,
@@ -129,17 +104,13 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
     private JScrollPane jsp = new JScrollPane(jl);
     private int tmpindex = -1;
     private HImageButton list = new HImageButton(Settings.listImage, "list",
-                                                 "Show remote listing...", this);
+            JFtp.getMessage("base", "list"), this);
     private HImageButton transferType = new HImageButton(Settings.typeImage,
                                                          "type",
-                                                         "Toggle transfer type...",
+            JFtp.getMessage("base", "transferType"),
                                                          this);
     private JPopupMenu popupMenu = new JPopupMenu();
-    private JMenuItem props = new JMenuItem("Properties");
-    private JMenuItem downloadFile = new JMenuItem("Download File");
-    private JMenuItem queueFile = new JMenuItem("Queue File");
-    private JMenuItem renameFile = new JMenuItem("Rename File");
-    private JMenuItem deleteFile = new JMenuItem("Delete File");
+    private JMenuItem props = new JMenuItem(JFtp.getMessage("base", "props"));
     private DirEntry currentPopup = null;
     private String sortMode = null;
     String[] sortTypes = new String[] { "Normal", "Reverse", "Size", "Size/Re" };
@@ -194,57 +165,49 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         buttonPanel.setMargin(new Insets(0, 0, 0, 0));
 
         props.addActionListener(this);
-        downloadFile.addActionListener(this);
-        queueFile.addActionListener(this);
-        renameFile.addActionListener(this);
-        deleteFile.addActionListener(this);
-        popupMenu.add(deleteFile);
-        popupMenu.add(renameFile);
-        popupMenu.add(queueFile);
-        popupMenu.add(downloadFile);
         popupMenu.add(props);
 
         rnButton = new HImageButton(Settings.textFileImage, rnString,
-                                    "Rename selected file or directory", this);
-        rnButton.setToolTipText("Rename selected");
+                JFtp.getMessage("base", "rnButton"), this);
+        rnButton.setToolTipText(JFtp.getMessage("base", "rnSelected"));
 
-        list.setToolTipText("Show remote listing...");
-        transferType.setToolTipText("Toggle transfer type...");
+        list.setToolTipText(JFtp.getMessage("base", "list"));
+        transferType.setToolTipText(JFtp.getMessage("base", "transferType"));
 
         deleteButton = new HImageButton(Settings.deleteImage, deleteString,
-                                        "Delete  selected", this);
-        deleteButton.setToolTipText("Delete selected");
+                JFtp.getMessage("base", "deleteSelected"), this);
+        deleteButton.setToolTipText(JFtp.getMessage("base", "deleteSelected"));
 
         mkdirButton = new HImageButton(Settings.mkdirImage, mkdirString,
-                                       "Create a new directory", this);
-        mkdirButton.setToolTipText("Create directory");
+                JFtp.getMessage("base", "mkdirButton"), this);
+        mkdirButton.setToolTipText(JFtp.getMessage("base", "mkdirButton"));
 
         refreshButton = new HImageButton(Settings.refreshImage, refreshString,
-                                         "Refresh current directory", this);
-        refreshButton.setToolTipText("Refresh directory");
+                JFtp.getMessage("base", "refreshButton"), this);
+        refreshButton.setToolTipText(JFtp.getMessage("base", "refreshButton"));
 		refreshButton.setRolloverIcon(new ImageIcon(HImage.getImage(this, Settings.refreshImage2)));
 		refreshButton.setRolloverEnabled(true);
 
         cdButton = new HImageButton(Settings.cdImage, cdString,
-                                    "Change directory", this);
-        cdButton.setToolTipText("Change directory");
+                JFtp.getMessage("base", "cdButton"), this);
+        cdButton.setToolTipText(JFtp.getMessage("base", "cdButton"));
 
         cmdButton = new HImageButton(Settings.cmdImage, cmdString,
-                                     "Execute remote command", this);
-        cmdButton.setToolTipText("Execute remote command");
+                JFtp.getMessage("base", "cmdButton"), this);
+        cmdButton.setToolTipText(JFtp.getMessage("base", "cmdButton"));
 
         downloadButton = new HImageButton(Settings.downloadImage,
-                                          downloadString, "Download selected",
+                                          downloadString, JFtp.getMessage("base", "downloadString"),
                                           this);
-        downloadButton.setToolTipText("Download selected");
+        downloadButton.setToolTipText(JFtp.getMessage("base", "downloadString"));
 
         queueButton = new HImageButton(Settings.queueImage, queueString,
-                                       "Queue selected", this);
-        queueButton.setToolTipText("Queue selected");
+                JFtp.getMessage("base", "queueButton"), this);
+        queueButton.setToolTipText(JFtp.getMessage("base", "queueButton"));
 
         cdUpButton = new HImageButton(Settings.cdUpImage, cdUpString,
-                                      "Go to Parent Directory", this);
-        cdUpButton.setToolTipText("Go to Parent Directory"); 
+                JFtp.getMessage("base", "cdUpButton"), this);
+        cdUpButton.setToolTipText(JFtp.getMessage("base", "cdUpButton"));
 
         //openButton = new HImageButton(Settings.openImage,openString,"Connect to server",this);
         //openButton.setToolTipText("Connect");   
@@ -444,7 +407,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
     {
         if(con instanceof FilesystemConnection)
         {
-            label.setText("Filesystem: " + StringUtils.cutPath(path));
+            label.setText( JFtp.getMessage("base", "filesystem") + StringUtils.cutPath(path));
         }
         else if(con instanceof FtpConnection)
         {
@@ -541,7 +504,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
                         if((files == null) || (files[i] == null))
                         {
                             //System.out.println("Critical error, files or files[i] is null!\nPlease report when and how this happened...");
-                            System.out.println("skipping setDirList, files or files[i] is null!");
+                            Log.error("skipping setDirList, files or files[i] is null!");
 
                             return;
                         }
@@ -551,14 +514,14 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
 
                         if(dirEntry[i] == null)
                         {
-                            System.out.println("\nskipping setDirList, dirEntry[i] is null!");
+                            Log.error("\nskipping setDirList, dirEntry[i] is null!");
 
                             return;
                         }
 
                         if(dirEntry[i].file == null)
                         {
-                            System.out.println("\nskipping setDirList, dirEntry[i].file is null!");
+                            Log.error("\nskipping setDirList, dirEntry[i].file is null!");
 
                             return;
                         }
@@ -634,7 +597,28 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
 
         if(e.getActionCommand().equals("rm"))
         {
-            deleteFile();
+            lock(false);
+
+            if(Settings.getAskToDelete())
+            {
+                if(!UITool.askToDelete(this))
+                {
+                    unlock(false);
+
+                    return;
+                }
+            }
+
+            for(int i = 0; i < length; i++)
+            {
+                if(dirEntry[i].selected)
+                {
+                    con.removeFileOrDir(dirEntry[i].file);
+                }
+            }
+
+            unlock(false);
+            fresh();
         }
         else if(e.getActionCommand().equals("mkdir"))
         {
@@ -647,13 +631,13 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         {
             if(!(con instanceof FtpConnection))
             {
-                Log.debug("This feature is for ftp only.");
+                Log.error("This feature is for ftp only.");
 
                 return;
             }
 
            
-            int opt = JOptionPane.showOptionDialog(this, "Would you like to type one command or to open a shell?","Question", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, 
+            int opt = JOptionPane.showOptionDialog(this,  JFtp.getMessage("base", "openShell"),"Question", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
             		new ImageIcon(HImage.getImage(this, Settings.helpImage)), new String[] {"Shell","Command", "Cancel"}, "Command");
             
             if(opt == 1) {
@@ -682,7 +666,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         {
             blockedTransfer(-2);
         }
-        else if(e.getActionCommand().equals("<-") || e.getSource() == downloadFile)
+        else if(e.getActionCommand().equals("<-"))
         {
             blockedTransfer(-2);
         }
@@ -691,7 +675,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
             try
             {
             	if(!(con instanceof FtpConnection)) {
-            		 Log.debug("Can only list FtpConnection output!");
+            		 Log.error("Can only list FtpConnection output!");
             	}
             	
             	PrintStream out = new PrintStream(Settings.ls_out);
@@ -708,19 +692,19 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
             catch(java.net.MalformedURLException ex)
             {
                 ex.printStackTrace();
-                Log.debug("ERROR: Malformed URL!");
+                Log.error("ERROR: Malformed URL!");
             }
             catch(FileNotFoundException ex2)
             {
                 ex2.printStackTrace();
-                Log.debug("ERROR: File not found!");
+                Log.error("ERROR: File not found!");
             }
         }
         else if(e.getActionCommand().equals("type") && (!JFtp.uiBlocked))
         {
             if(!(con instanceof FtpConnection))
             {
-                Log.debug("You can only set the transfer type for ftp connections.");
+                Log.error("You can only set the transfer type for ftp connections.");
 
                 return;
             }
@@ -755,7 +739,21 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
 
         else if(e.getActionCommand().equals("que")) /*&& (!JFtp.uiBlocked))*/
         {
-           queueFile();
+            if(!(con instanceof FtpConnection))
+            {
+                Log.error("Queue supported only for FTP");
+
+                return;
+            }
+
+            Object[] o = jl.getSelectedValues();
+            DirEntry[] tmp = new DirEntry[Array.getLength(o)];
+
+            for(int i = 0; i < Array.getLength(o); i++)
+            {
+                tmp[i] = (DirEntry) o[i];
+                JFtp.dQueue.addFtp(tmp[i].toString());
+            }
         }
         else if(e.getSource() == props)
         {
@@ -789,18 +787,6 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
                          tmp + "\n";
             Log.debug(msg);
         }
-        else if (e.getSource() == queueFile)
-        {
-        	queueFile();
-        }
-        else if (e.getSource() == renameFile)
-        {
-        	renameFile();
-        }
-        else if (e.getSource() == deleteFile) 
-        {
-        	deleteFile();
-        }
         else if(e.getSource() == sorter)
         {
             sortMode = (String) sorter.getSelectedItem();
@@ -822,68 +808,39 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         }
         else if(e.getActionCommand().equals("rn"))
         {
-            renameFile();
-        }
-    }
-    
-    public void deleteFile() {
-    	lock(false);
+            Object[] target = jl.getSelectedValues();
 
-        if(Settings.getAskToDelete())
-        {
-            if(!UITool.askToDelete(this))
+            if((target == null) || (target.length == 0))
             {
-                unlock(false);
+                Log.debug("No file selected");
 
                 return;
             }
-        }
-
-        for(int i = 0; i < length; i++)
-        {
-            if(dirEntry[i].selected)
+            else if(target.length > 1)
             {
-                con.removeFileOrDir(dirEntry[i].file);
+                Log.debug("Too many files selected");
+
+                return;
             }
-        }
 
-        unlock(false);
-        fresh();
-    }
+            String val = JOptionPane.showInternalInputDialog(this,
+                                                             "Choose a name...");
 
-    public void renameFile() {
-    	Object[] target = jl.getSelectedValues();
-
-        if((target == null) || (target.length == 0))
-        {
-            Log.debug("No file selected");
-
-            return;
-        }
-        else if(target.length > 1)
-        {
-            Log.debug("Too many files selected");
-
-            return;
-        }
-
-        String val = JOptionPane.showInternalInputDialog(this,
-                                                         "Choose a name...");
-
-        if(val != null)
-        {
-            if(!con.rename(target[0].toString(), val))
+            if(val != null)
             {
-                Log.debug("Rename failed.");
-            }
-            else
-            {
-                Log.debug("Successfully renamed.");
-                fresh();
+                if(!con.rename(target[0].toString(), val))
+                {
+                    Log.debug("Rename failed.");
+                }
+                else
+                {
+                    Log.debug("Successfully renamed.");
+                    fresh();
+                }
             }
         }
     }
-    
+
     /**
     * Initiate a tranfer with ui locking enabled
     */
@@ -1067,24 +1024,6 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
 
         dList.updateList(file, type, bytes, s);
     }
-    
-    public void queueFile() {
-    	 if(!(con instanceof FtpConnection))
-         {
-             Log.debug("Queue supported only for FTP");
-
-             return;
-         }
-
-         Object[] o = jl.getSelectedValues();
-         DirEntry[] tmp = new DirEntry[Array.getLength(o)];
-
-         for(int i = 0; i < Array.getLength(o); i++)
-         {
-             tmp[i] = (DirEntry) o[i];
-             JFtp.dQueue.addFtp(tmp[i].toString());
-         }
-    }
 
     /**
     * Called by FtpConnection
@@ -1117,7 +1056,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         //this.con = con;
         HFrame h = new HFrame();
         h.getContentPane().setLayout(new BorderLayout(10, 10));
-        h.setTitle("Connection failed!");
+        h.setTitle( JFtp.getMessage("base", "conFailed"));
         //h.setLocation(150, 200);
         h.setMinimumSize(new Dimension(400,250));
         h.setLocation((int)JFtp.mainFrame.getLocation().getX()+300, (int)JFtp.mainFrame.getLocation().getY()+300);
@@ -1294,7 +1233,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         {
             if(entry.isDirectory())
             {
-                Log.debug("Directory transfer between remote connections is not supported yet!");
+                Log.error("Directory transfer between remote connections is not supported yet!");
 
                 return;
             }
@@ -1360,7 +1299,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
             }
             catch(FileNotFoundException ex)
             {
-                Log.debug("Error: File not found: " + path + entry.file);
+                Log.error("Error: File not found: " + path + entry.file);
             }
         }
         else if(con instanceof FilesystemConnection &&
@@ -1379,7 +1318,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         {
             if(entry.isDirectory())
             {
-                Log.debug("Directory transfer between remote connections is not supported yet!");
+                Log.error("Directory transfer between remote connections is not supported yet!");
 
                 return;
             }
@@ -1491,7 +1430,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         {
             if(d.getRawSize() > 200000)
             {
-                Log.debug("File is too big - 200kb is the maximum, sorry.");
+                Log.error("File is too big - 200kb is the maximum, sorry.");
 
                 return;
             }
@@ -1512,7 +1451,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
 	            }
 	            else 
 	            {
-	                Log.debug("\nRemote file must be downloaded to be viewed and\n" +
+	                Log.error("\nRemote file must be downloaded to be viewed and\n" +
 	                          " you already have a local copy present, pleasen rename it\n" +
 	                          " and try again.");
 	
@@ -1524,7 +1463,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
 	
 	            if(!file.exists())
 	            {
-	                Log.debug("File not found: " + JFtp.localDir.getPath() +
+	                Log.error("File not found: " + JFtp.localDir.getPath() +
 	                          StringUtils.getFile(url));
 	            }
         	}
@@ -1571,7 +1510,7 @@ public class RemoteDir extends DirComponent implements ListSelectionListener,
         }
         catch(Exception ex)
         {
-            Log.debug("File error: " + ex);
+            Log.error("File error: " + ex);
         }
     }
 

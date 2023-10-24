@@ -143,8 +143,8 @@ public class NfsConnection implements BasicConnection
 
             if(!f.getAbsolutePath().equals(f.getCanonicalPath()))
             {
-                Log.debug("WARNING: Skipping symlink, remove failed.");
-                Log.debug("This is necessary to prevent possible data loss when removing those symlinks.");
+                Log.error("WARNING: Skipping symlink, remove failed.");
+                Log.error("This is necessary to prevent possible data loss when removing those symlinks.");
 
                 return -1;
             }
@@ -166,7 +166,7 @@ public class NfsConnection implements BasicConnection
         }
         catch(IOException ex)
         {
-            Log.debug("Error: " + ex.toString());
+            Log.error("Error: " + ex.toString());
             ex.printStackTrace();
         }
 
@@ -391,7 +391,7 @@ public class NfsConnection implements BasicConnection
             }
             catch(IOException ex)
             {
-                Log.debug("Error: can not get pathname (local)!");
+                Log.error("Error: can not get pathname (local)!");
 
                 return false;
             }

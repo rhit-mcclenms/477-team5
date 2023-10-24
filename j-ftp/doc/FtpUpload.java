@@ -21,7 +21,7 @@ public class FtpUpload implements Logger, ConnectionListener
 
  public FtpUpload(String host, String dir, String file)
  {
- 	Log.setLogger(this);
+ 	Log.setLogger(this, "FtpUpload");
 
  	FtpConnection con = new FtpConnection(host);
 
@@ -68,7 +68,9 @@ public class FtpUpload implements Logger, ConnectionListener
  
  public void updateProgress(String file, String type, long bytes) {}
  
- public void connectionFailed(BasicConnection con, String why) {System.out.println("connection failed!");}
+ public void connectionFailed(BasicConnection con, String why) {
+     Log.error("connection failed!");
+ }
 
  public void actionFinished(BasicConnection con) {}
 
@@ -82,7 +84,7 @@ public class FtpUpload implements Logger, ConnectionListener
 
     public void warn(String msg, Throwable throwable) {}
 
-    public void error(String msg) {}
+    public void error(String msg) {System.out.println(msg);}
 
     public void error(String msg, Throwable throwable) {}
 

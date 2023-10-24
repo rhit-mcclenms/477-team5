@@ -61,7 +61,7 @@ public class DirCellRenderer extends DefaultListCellRenderer
 
         if(i == null)
         {
-            System.out.println("Img null: " + ((DirEntry) value).toString() +
+            Log.error("Img null: " + ((DirEntry) value).toString() +
                                "/" + ((DirEntry) value).getImage());
         }
         else

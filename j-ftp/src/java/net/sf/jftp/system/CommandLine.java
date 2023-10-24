@@ -33,7 +33,7 @@ public class CommandLine implements Runnable, EventHandler, FtpEventConstants
 
     public CommandLine()
     {
-        Log.setLogger(new SystemLogger());
+        Log.setLogger(new SystemLogger(), "SystemLogger");
         eventCollector = new EventCollector();
         EventProcessor.addHandler(FTPCommand, new FtpEventHandler());
         EventProcessor.addHandler(FTPPrompt, this);

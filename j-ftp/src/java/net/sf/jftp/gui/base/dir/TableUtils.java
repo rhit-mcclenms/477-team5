@@ -20,6 +20,7 @@ import javax.swing.table.TableRowSorter;
 
 import net.sf.jftp.JFtp;
 import net.sf.jftp.config.Settings;
+import net.sf.jftp.system.logging.Log;
 
 
 public class TableUtils {
@@ -284,7 +285,7 @@ public class TableUtils {
 		TableColumnModel m = head.getColumnModel();
 		
 		if(m.getColumnCount() != columnNames.size()) {
-			System.out.println("Column mismatch: "+m.getColumnCount()+"/"+columnNames.size());
+			Log.error("Column mismatch: "+m.getColumnCount()+"/"+columnNames.size());
 			return;
 		}
 		

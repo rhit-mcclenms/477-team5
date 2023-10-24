@@ -92,14 +92,14 @@ public class FilesystemConnection implements BasicConnection
             //System.out.println(tmp);
             if(!f.delete())
             {
-                Log.debug("Removal failed.");
+                Log.error("Removal failed.");
 
                 return -1;
             }
         }
         catch(IOException ex)
         {
-            Log.debug("Error: " + ex.toString());
+            Log.error("Error: " + ex.toString());
             ex.printStackTrace();
         }
 
@@ -155,7 +155,7 @@ public class FilesystemConnection implements BasicConnection
         }
         catch(IOException ex)
         {
-            Log.debug("Error: " + ex.toString());
+            Log.error("Error: " + ex.toString());
             ex.printStackTrace();
         }
     }
@@ -215,7 +215,7 @@ public class FilesystemConnection implements BasicConnection
 
         if(!f.exists() || !f.isDirectory() || !f.canRead())
         {
-            Log.debug("Access denied.");
+            Log.error("Access denied.");
 
             return false;
         }
@@ -280,7 +280,7 @@ public class FilesystemConnection implements BasicConnection
             }
             catch(IOException ex)
             {
-                Log.debug("Error: can not get pathname (processPath)!");
+                Log.error("Error: can not get pathname (processPath)!");
 
                 return null;
             }
@@ -324,7 +324,7 @@ public class FilesystemConnection implements BasicConnection
             }
             catch(IOException ex)
             {
-                Log.debug("Error: can not get pathname (local)!");
+                Log.error("Error: can not get pathname (local)!");
 
                 return false;
             }
@@ -448,7 +448,7 @@ public class FilesystemConnection implements BasicConnection
 
         if(!fx.mkdir())
         {
-            Log.debug("Can not create directory: " + out +
+            Log.error("Can not create directory: " + out +
                       " - already exist or permission denied?");
         }
 
@@ -503,7 +503,12 @@ public class FilesystemConnection implements BasicConnection
         }
         else
         {
-            work(file, getLocalPath() + outfile);
+        	try {
+        		work(file, getLocalPath() + outfile);
+        	}
+        	catch (Exception ex) {
+        		Log.error("Error: " + ex.toString());
+        	}
         }
     }
 
@@ -542,7 +547,7 @@ public class FilesystemConnection implements BasicConnection
         }
         catch(IOException ex)
         {
-            Log.debug("Error with file IO (" + ex + ")!");
+            Log.error("Error with file IO (" + ex + ")!");
             fireProgressUpdate(file, DataConnection.FAILED, -1);
         }
     }
@@ -564,7 +569,7 @@ public class FilesystemConnection implements BasicConnection
         }
         catch(Exception ex)
         {
-            Log.debug("Error: " + ex.toString());
+            Log.error("Error: " + ex.toString());
             ex.printStackTrace();
 
             return -1;
@@ -604,7 +609,7 @@ public class FilesystemConnection implements BasicConnection
         }
         catch(IOException ex)
         {
-            Log.debug("Error with file IO (" + ex + ")!");
+            Log.error("Error with file IO (" + ex + ")!");
             fireProgressUpdate(file, DataConnection.FAILED, -1);
         }
     }
@@ -625,7 +630,7 @@ public class FilesystemConnection implements BasicConnection
         catch(Exception ex)
         {
             ex.printStackTrace();
-            Log.debug(ex.toString() +
+            Log.error(ex.toString() +
                       " @Filesystemconnection::getDownloadInputStream");
 
             return null;

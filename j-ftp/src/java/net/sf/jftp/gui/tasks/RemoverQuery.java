@@ -15,11 +15,12 @@
  */
 package net.sf.jftp.gui.tasks;
 
-import net.sf.jftp.gui.framework.*;
-import net.sf.jftp.util.*;
+import net.sf.jftp.gui.framework.HButton;
+import net.sf.jftp.gui.framework.HFrame;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class RemoverQuery extends HFrame implements ActionListener

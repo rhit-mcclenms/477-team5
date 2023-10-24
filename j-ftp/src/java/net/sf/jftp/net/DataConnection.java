@@ -197,7 +197,7 @@ public class DataConnection implements Runnable
                 {
                     ok = false;
                     ex.printStackTrace();
-                    Log.debug("Can't open ServerSocket on port " + port);
+                    Log.error("Can't open ServerSocket on port " + port);
                 }
             }
         }
@@ -562,7 +562,7 @@ public class DataConnection implements Runnable
         }
         catch(IOException ex)
         {
-        	Log.debug("Can't connect socket to ServerSocket");
+        	Log.error("Can't connect socket to ServerSocket");
         	ex.printStackTrace();
         }
         finally

@@ -15,9 +15,10 @@
  */
 package net.sf.jftp.gui.base;
 
-import java.io.*;
+import net.sf.jftp.JFtp;
 
 import javax.swing.*;
+import java.io.File;
 
 
 public class UITool
@@ -25,7 +26,7 @@ public class UITool
     public static boolean askToDelete(JComponent parent)
     {
         int res = JOptionPane.showConfirmDialog(parent,
-                                                "Do you really want to continue?");
+                JFtp.getMessage("base", "continue"));
 
         if((res == JOptionPane.OK_OPTION))
         {
@@ -40,7 +41,7 @@ public class UITool
     public static boolean askToRun(JComponent parent)
     {
         int res = JOptionPane.showConfirmDialog(parent,
-                                                "Do you want to launch this file?");
+                JFtp.getMessage("base", "res"));
 
         if((res == JOptionPane.OK_OPTION))
         {
@@ -55,7 +56,7 @@ public class UITool
     public static String getPathFromDialog(String path)
     {
         JFileChooser chooser = new JFileChooser(path);
-        chooser.setDialogTitle("Choose directory");
+        chooser.setDialogTitle(JFtp.getMessage("base", "chooseDir"));
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         int returnVal = chooser.showOpenDialog(new JDialog());

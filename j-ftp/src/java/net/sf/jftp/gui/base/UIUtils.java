@@ -15,17 +15,13 @@
  */
 package net.sf.jftp.gui.base;
 
-import java.awt.Desktop;
+import net.sf.jftp.JFtp;
+import net.sf.jftp.tools.Shell;
 
-
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-
-import javax.swing.JComponent;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-
-import net.sf.jftp.tools.Shell;
 
 
 public class UIUtils
@@ -35,7 +31,7 @@ public class UIUtils
         JOptionPane j = new JOptionPane();
         JPasswordField pField = new JPasswordField();
 
-        int ret = j.showOptionDialog(parent, pField, "Password required",
+        int ret = j.showOptionDialog(parent, pField, JFtp.getMessage("base", "passwordReq"),
                                      JOptionPane.YES_NO_OPTION,
                                      JOptionPane.QUESTION_MESSAGE, null, null,
                                      null);

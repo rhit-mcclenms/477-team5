@@ -77,6 +77,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	//***       with LIST -laL as the default
 	public static String LIST_DEFAULT = "LIST -laL";
 	public static String LIST = "default";
+	public static FtpWatchdog watchdog = new FtpWatchdog();
 
 	private static boolean useStream = true;
 	private static boolean useBlocked = true;
@@ -220,6 +221,8 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		{
 			Log.debug("Connecting to " + host);
 		}
+		
+		try {
 
 		jcon = new JConnection(host, port);
 
@@ -230,7 +233,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 			if(getLine(POSITIVE) == null)//FTP220_SERVICE_READY) == null)
 			{
 				ok = false;
-				Log.debug("Server closed Connection, maybe too many users...");
+				Log.error("Server closed Connection, maybe too many users...");
 				status = OFFLINE;
 			}
 
@@ -254,7 +257,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 				}
 				else
 				{
-					Log.debug("Wrong password!");
+					Log.error("Wrong password!");
 					ok = false;
 					status = WRONG_LOGIN_DATA;
 				}
@@ -266,7 +269,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		{
 			if(msg)
 			{
-				Log.debug("FTP not available!");
+				Log.error("FTP not available!");
 				ok = false;
 				status = GENERIC_FAILED;
 			}
@@ -344,6 +347,11 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		else
 		{
 			fireConnectionFailed(this, new Integer(status).toString());
+		}
+		}
+		catch (Exception ex)
+		{
+			Log.error("Error with login " + ex.toString());
 		}
 
 		return status;
@@ -1154,6 +1162,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	 */
 	public int handleDownload(String file)
 	{
+		try {
 		if(Settings.getEnableMultiThreading())
 		{
 			Log.out("spawning new thread for this download.");
@@ -1171,6 +1180,12 @@ public class FtpConnection implements BasicConnection, FtpConstants
 			Log.out("multithreading is completely disabled.");
 
 			return download(file);
+		}
+		}
+		catch(Exception ex)
+		{
+			Log.error("Error with download " + ex.toString());
+			return 1;
 		}
 	}
 
@@ -1277,6 +1292,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 
 	private int rawDownload(String file)
 	{
+		watchdog.beginFtpAction();
 		file = parse(file);
 
 		//String path = file;
@@ -1351,15 +1367,15 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		{
 			ex.printStackTrace();
 			Log.debug(ex.toString() + " @FtpConnection::download");
-
 			return TRANSFER_FAILED;
 		}
-
+		watchdog.endFtpAction();
 		return TRANSFER_SUCCESSFUL;
 	}
 
 	private int downloadDir(String dir)
 	{
+		watchdog.beginFtpAction();
 		if(!dir.endsWith("/"))
 		{
 			dir = dir + "/";
@@ -1452,7 +1468,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 
 		chdirNoRefresh(oldPwd);
 		setLocalPath(oldDir);
-
+		watchdog.endFtpAction();
 		return TRANSFER_SUCCESSFUL;
 	}
 
@@ -1464,7 +1480,15 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	 */
 	public int handleUpload(String file)
 	{
-		return handleUpload(file, null);
+		try {
+			return handleUpload(file, null);
+		}
+		catch (Exception e)
+		{
+			Log.error("Error Uploading File" + e.toString());
+			return 1;
+		}
+		
 	}
 
 	/** Upload a file or directory.
@@ -1482,23 +1506,31 @@ public class FtpConnection implements BasicConnection, FtpConstants
 			Log.out("spawning new thread for this upload.");
 
 			FtpTransfer t;
+			try {
+				if(realName != null)
+				{
+					t = new FtpTransfer(host, port, getLocalPath(), getCachedPWD(),
+							file, username, password, Transfer.UPLOAD,
+							handler, listeners, realName, crlf);
+				}
+				else
+				{
+					t = new FtpTransfer(host, port, getLocalPath(), getCachedPWD(),
+							file, username, password, Transfer.UPLOAD,
+							handler, listeners, crlf);
+				}
 
-			if(realName != null)
-			{
-				t = new FtpTransfer(host, port, getLocalPath(), getCachedPWD(),
-						file, username, password, Transfer.UPLOAD,
-						handler, listeners, realName, crlf);
+				transfers.add(t);
+				return NEW_TRANSFER_SPAWNED;
 			}
-			else
+		
+			catch (Exception ex)
 			{
-				t = new FtpTransfer(host, port, getLocalPath(), getCachedPWD(),
-						file, username, password, Transfer.UPLOAD,
-						handler, listeners, crlf);
+				Log.error("Error uploading file " + ex.toString());
+				return 1;
 			}
 
-			transfers.add(t);
-
-			return NEW_TRANSFER_SPAWNED;
+			
 		}
 		else
 		{
@@ -1562,6 +1594,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	 */
 	public int upload(String file, String realName, InputStream in)
 	{
+		watchdog.beginFtpAction();
 		hasUploaded = true;
 		Log.out("ftp upload started: " + this);
 
@@ -1768,15 +1801,15 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		{
 			ex.printStackTrace();
 			Log.debug(ex.toString() + " @FtpConnection::upload");
-
 			return TRANSFER_FAILED;
 		}
-
+		watchdog.endFtpAction();
 		return TRANSFER_SUCCESSFUL;
 	}
 
 	private int uploadDir(String dir)
 	{
+		watchdog.beginFtpAction();
 		//System.out.println("up");
 		if(dir.endsWith("\\"))
 		{
@@ -1792,7 +1825,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		{
 			dir = getLocalPath() + dir;
 		}
-
+		try {
 		String single = StringUtils.getDir(dir);
 		//String path = dir.substring(0, dir.indexOf(single));
 
@@ -1854,8 +1887,14 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		}
 
 		chdirNoRefresh(oldDir);
-
+		watchdog.endFtpAction();
 		return TRANSFER_SUCCESSFUL;
+		}
+		catch (Exception ex)
+		{
+			Log.error("Error uploading directory");
+			return TRANSFER_STOPPED;
+		}
 	}
 
 	private String parse(String file)
@@ -1868,6 +1907,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	/** recursive delete remote directory */
 	private int cleanDir(String dir, String path)
 	{
+		watchdog.beginFtpAction();
 		if(dir.equals(""))
 		{
 			return 0;
@@ -1900,7 +1940,8 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		{
 			return GENERIC_FAILED;
 		}
-
+		try {
+			
 		for(int i = 0; i < tmp.length; i++)
 		{
 			Log.out("cleanDir: " + tmp);
@@ -1949,8 +1990,15 @@ public class FtpConnection implements BasicConnection, FtpConstants
 				}
 			}
 		}
-
+		watchdog.endFtpAction();
 		return REMOVE_SUCCESSFUL;
+		}
+		catch (Exception ex)
+		{
+			Log.error("Error with deleting directory");
+
+			return GENERIC_FAILED;
+		}
 	}
 
 	/**
@@ -1961,6 +2009,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	 */
 	public int removeFileOrDir(String file)
 	{
+		watchdog.beginFtpAction();
 		if(file == null)
 		{
 			return 0;
@@ -2001,6 +2050,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 
 		if(success(POSITIVE))//FTP250_COMPLETED))
 		{
+			watchdog.endFtpAction();
 			return REMOVE_SUCCESSFUL;
 		}
 		else
@@ -2017,9 +2067,15 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	 */
 	public void disconnect()
 	{
+		try {
 		jcon.send(QUIT);
 		getLine(POSITIVE);//FTP221_SERVICE_CLOSING);
 		connected = false;
+		}
+		catch (Exception ex)
+		{
+			Log.error("Error occured while disconnecting " + ex.toString());
+		}
 	}
 
 	/**
@@ -2030,10 +2086,12 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	 */
 	public void sendRawCommand(String cmd)
 	{
+		watchdog.beginFtpAction();
 		noop();
 		Log.clearCache();
 		jcon.send(cmd);
 		noop();
+		watchdog.endFtpAction();
 	}
 
 	/**
@@ -2115,11 +2173,21 @@ public class FtpConnection implements BasicConnection, FtpConstants
 
 	/**
 	 * Check if login() was successful.
+	 * Check if we are still connected to the server using a ping/pong approach
 	 *
 	 * @return True if connected, false otherwise
 	 */
 	public boolean isConnected()
 	{
+		try {
+			watchdog.beginFtpAction();
+			jcon.ping();
+			watchdog.endFtpAction();
+		}
+		catch (Exception ex)
+		{
+			Log.error("Error checking connection status");
+		}
 		return connected;
 	}
 
@@ -2132,7 +2200,13 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	{
 		if(connected)
 		{
-			updatePWD();
+			try {
+				updatePWD();
+			}
+			catch (Exception ex)
+			{
+				Log.error("Error getting remote directory " + ex.toString());
+			}
 		}
 
 		if(TESTMODE)
@@ -2204,8 +2278,9 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	 */
 	public boolean chdirRaw(String dirName)
 	{
+		watchdog.beginFtpAction();
 		jcon.send(CWD + " " + dirName);
-
+		watchdog.endFtpAction();
 		return success(POSITIVE);//FTP250_COMPLETED);
 	}
 
@@ -2247,7 +2322,10 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	 */
 	public boolean mkdir(String dirName)
 	{
-		jcon.send(MKD + " " + dirName);
+		try {
+			watchdog.beginFtpAction();
+			jcon.send(MKD + " " + dirName);
+			watchdog.endFtpAction();
 
 		boolean ret = success(POSITIVE); // Filezille server bugfix, was: FTP257_PATH_CREATED);
 		Log.out("mkdir(" + dirName + ")  returned: " + ret);
@@ -2257,11 +2335,19 @@ public class FtpConnection implements BasicConnection, FtpConstants
 
 		//***	
 		return ret;
+		}
+		catch (Exception ex)
+		{
+			Log.error("Error creating directory " + ex.toString());
+			return false;
+		}
 	}
 
 	private int negotiatePort() throws IOException
 	{
 		String tmp = "";
+		
+		try {
 
 		if(Settings.getFtpPasvMode())
 		{
@@ -2280,6 +2366,12 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		getLine(FTP200_OK);
 
 		return getActivePort();
+		}
+		catch (Exception ex)
+		{
+			Log.error("Error getting active port " + ex.toString());
+			return 0;
+		}
 	}
 
 	/**
@@ -2629,16 +2721,27 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	 */
 	public boolean rename(String from, String to)
 	{
-		jcon.send("RNFR " + from);
+		try {
+			watchdog.beginFtpAction();
+			jcon.send("RNFR " + from);
+			watchdog.endFtpAction();
 
 		if(success(RC350))
 		{
+			watchdog.beginFtpAction();
 			jcon.send("RNTO " + to);
+			watchdog.endFtpAction();
 
 			if(success(POSITIVE))//FTP250_COMPLETED))
 			{
 				return true;
 			}
+		}
+		}
+		catch(Exception ex)
+		{
+			Log.error("Error renaming file " + ex.toString());
+			return false;
 		}
 
 		return false;
@@ -2688,8 +2791,9 @@ public class FtpConnection implements BasicConnection, FtpConstants
     }
 	 */
 
-	private String getActivePortCmd() throws UnknownHostException, IOException 
+	private String getActivePortCmd()
 	{ 
+		try {
 		InetAddress ipaddr = jcon.getLocalAddress(); 
 		String ip = ipaddr.getHostAddress().replace('.', ','); 
 
@@ -2699,9 +2803,19 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		porta = availPort/256; 
 		portb = availPort%256; 
 		String ret = "PORT " + ip + "," + porta + "," + portb; 
-
-		//    System.out.println(ret); 
 		return ret; 
+		} 
+		catch (UnknownHostException ex)
+		{
+			Log.error("Error Unknown Host");
+			return "";
+		}
+		catch (IOException ex)
+		{
+			Log.error("Error finding active port");
+			return "";
+		}
+		
 	} 
 
 	/**
@@ -2727,7 +2841,10 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	 */
 	public boolean type(String code)
 	{
+		try {
+			watchdog.beginFtpAction();
 		jcon.send(TYPE + " " + code);
+		watchdog.endFtpAction();
 
 		String tmp = getLine(POSITIVE);//FTP200_OK);
 
@@ -2736,6 +2853,11 @@ public class FtpConnection implements BasicConnection, FtpConstants
 			typeNow = code;
 
 			return true;
+		}
+		}
+		catch (Exception ex)
+		{
+			Log.error("Error sending type " + ex.toString());
 		}
 
 		return false;
@@ -2756,8 +2878,14 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	 */
 	public void noop()
 	{
+		try {
 		jcon.send(NOOP);
 		getLine(POSITIVE);//FTP200_OK);
+		}
+		catch (Exception ex)
+		{
+			Log.error("Error connecting to output");
+		}
 	}
 
 	/**
@@ -2765,8 +2893,16 @@ public class FtpConnection implements BasicConnection, FtpConstants
 	 */
 	public void abort()
 	{
+		try {
+			watchdog.beginFtpAction();
 		jcon.send(ABOR);
+		watchdog.endFtpAction();
 		getLine(POSITIVE); // 226
+		}
+		catch (Exception ex)
+		{
+			Log.error("Error connecting to output");
+		}
 	}
 
 	/**
@@ -2975,6 +3111,7 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		}
 		else
 		{
+			try {
 			for(int i = 0; i < listeners.size(); i++)
 			{
 				ConnectionListener listener = (ConnectionListener) listeners.elementAt(i);
@@ -3004,6 +3141,11 @@ public class FtpConnection implements BasicConnection, FtpConstants
 				{
 					listener.updateProgress(file, type, bytes);
 				}
+			}
+			}
+			catch(Exception ex)
+			{
+				Log.error("Transfer failed");
 			}
 		}
 	}
@@ -3063,9 +3205,15 @@ public class FtpConnection implements BasicConnection, FtpConstants
 		}
 		else
 		{
+			try {
 			for(int i = 0; i < listeners.size(); i++)
 			{
 				((ConnectionListener) listeners.elementAt(i)).actionFinished(con);
+			}
+			}
+			catch (Exception ex)
+			{
+				Log.error("Error with finishing transfer " + ex.toString());
 			}
 		}
 	}

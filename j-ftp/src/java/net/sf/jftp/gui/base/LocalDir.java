@@ -15,6 +15,7 @@
  */
 package net.sf.jftp.gui.base;
 
+
 import java.awt.BorderLayout;
 
 import java.awt.Color;
@@ -56,21 +57,15 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+
 import net.sf.jftp.JFtp;
 import net.sf.jftp.config.SaveSet;
 import net.sf.jftp.config.Settings;
-import net.sf.jftp.gui.base.dir.DirCanvas;
-import net.sf.jftp.gui.base.dir.DirCellRenderer;
-import net.sf.jftp.gui.base.dir.DirComponent;
-import net.sf.jftp.gui.base.dir.DirEntry;
-import net.sf.jftp.gui.base.dir.DirLister;
-import net.sf.jftp.gui.base.dir.DirPanel;
-import net.sf.jftp.gui.base.dir.TableUtils;
+import net.sf.jftp.gui.base.dir.*;
 import net.sf.jftp.gui.framework.HImage;
 import net.sf.jftp.gui.framework.HImageButton;
 import net.sf.jftp.gui.framework.HPanel;
 import net.sf.jftp.gui.tasks.Creator;
-import net.sf.jftp.gui.tasks.ImageViewer;
 import net.sf.jftp.gui.tasks.NameChooser;
 import net.sf.jftp.gui.tasks.RemoteCommand;
 import net.sf.jftp.net.BasicConnection;
@@ -84,10 +79,23 @@ import net.sf.jftp.system.UpdateDaemon;
 import net.sf.jftp.system.logging.Log;
 import net.sf.jftp.util.ZipFileCreator;
 
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 
 
 public class LocalDir extends DirComponent implements ListSelectionListener,
@@ -141,14 +149,9 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
     private int tmpindex = -1;
     private Hashtable dummy = new Hashtable();
     private JPopupMenu popupMenu = new JPopupMenu();
-    private JMenuItem uploadFile = new JMenuItem("Upload File");
-    private JMenuItem renameFile = new JMenuItem("Rename file");
-    private JMenuItem copyFile = new JMenuItem("Copy file to...");
-    private JMenuItem zipFile = new JMenuItem("Zip File");
-    private JMenuItem deleteFile = new JMenuItem("Delete file");
-    private JMenuItem runFile = new JMenuItem("Launch file");
-    private JMenuItem viewFile = new JMenuItem("View file");
-    private JMenuItem props = new JMenuItem("Properties");
+    private JMenuItem runFile = new JMenuItem(JFtp.getMessage("base", "runFile"));
+    private JMenuItem viewFile = new JMenuItem(JFtp.getMessage("base", "viewFile"));
+    private JMenuItem props = new JMenuItem(JFtp.getMessage("base", "props"));
     private DirEntry currentPopup = null;
     private String sortMode = null;
     String[] sortTypes = new String[] { "Normal", "Reverse", "Size", "Size/Re" };
@@ -207,16 +210,6 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         runFile.addActionListener(this);
         viewFile.addActionListener(this);
         props.addActionListener(this);
-        deleteFile.addActionListener(this);
-        zipFile.addActionListener(this);
-        copyFile.addActionListener(this);
-        renameFile.addActionListener(this);
-        uploadFile.addActionListener(this);
-        popupMenu.add(uploadFile);
-        popupMenu.add(renameFile);
-        popupMenu.add(copyFile);
-        popupMenu.add(zipFile);
-        popupMenu.add(deleteFile);
         popupMenu.add(runFile);
         popupMenu.add(viewFile);
         popupMenu.add(props);
@@ -254,46 +247,48 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         
 
         deleteButton = new HImageButton(Settings.deleteImage, deleteString,
-                                        "Delete selected", this);
-        deleteButton.setToolTipText("Delete selected");
+                                        JFtp.getMessage("base", "deleteSelected"), this);
+        deleteButton.setToolTipText(JFtp.getMessage("base", "deleteSelected"));
 
         mkdirButton = new HImageButton(Settings.mkdirImage, mkdirString,
-                                       "Create a new directory", this);
-        mkdirButton.setToolTipText("Create directory");
+                JFtp.getMessage("base", "mkdirButton"), this);
+        mkdirButton.setToolTipText(JFtp.getMessage("base", "mkdirButton"));
 
         refreshButton = new HImageButton(Settings.refreshImage, refreshString,
-                                         "Refresh current directory", this);
-        refreshButton.setToolTipText("Refresh directory");    
+                                         JFtp.getMessage("base", "refreshButton"),
+                this);
+        refreshButton.setToolTipText(JFtp.getMessage("base", "refreshButton"));
 		refreshButton.setRolloverIcon(new ImageIcon(HImage.getImage(this, Settings.refreshImage2)));
 		refreshButton.setRolloverEnabled(true);
 
         cdButton = new HImageButton(Settings.cdImage, cdString,
-                                    "Change directory", this);
-        cdButton.setToolTipText("Change directory");
+                JFtp.getMessage("base", "cdButton"),
+                this);
+        cdButton.setToolTipText(JFtp.getMessage("base", "cdButton"));
 
         uploadButton = new HImageButton(Settings.uploadImage, uploadString,
-                                        "Upload selected", this);
-        uploadButton.setToolTipText("Upload selected");               
+                JFtp.getMessage("base", "uploadButton"), this);
+        uploadButton.setToolTipText(JFtp.getMessage("base", "uploadButton"));
         //uploadButton.setBackground(new Color(192,192,192));
 
         zipButton = new HImageButton(Settings.zipFileImage, zipString,
-                                     "Add selected to new zip file", this);
-        zipButton.setToolTipText("Create zip");
+                JFtp.getMessage("base", "zipButton"), this);
+        zipButton.setToolTipText(JFtp.getMessage("base", "createZip"));
 
         cpButton = new HImageButton(Settings.copyImage, cpString,
-                                    "Copy selected files to another local dir",
+                JFtp.getMessage("base", "cpButton"),
                                     this);
-        cpButton.setToolTipText("Local copy selected");
+        cpButton.setToolTipText(JFtp.getMessage("base", "localCopy"));
 
         rnButton = new HImageButton(Settings.textFileImage, rnString,
-                                    "Rename selected file or directory", this);
-        rnButton.setToolTipText("Rename selected");
+                JFtp.getMessage("base", "rnButton"), this);
+        rnButton.setToolTipText(JFtp.getMessage("base", "rnSelected"));
 
         cdUpButton = new HImageButton(Settings.cdUpImage, cdUpString,
-                                      "Go to Parent Directory", this);
-        cdUpButton.setToolTipText("Go to Parent Directory");
+                JFtp.getMessage("base", "cdUpButton"), this);
+        cdUpButton.setToolTipText(JFtp.getMessage("base", "cdUpButton"));
 
-        label.setText("Filesystem: " + StringUtils.cutPath(path));
+        label.setText(JFtp.getMessage("base", "filesystem") + StringUtils.cutPath(path));
         label.setSize(getSize().width - 10, 24);
         currDirPanel.add(label);
         currDirPanel.setSize(getSize().width - 10, 32);
@@ -599,7 +594,7 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
                         if((files == null) || (files[i] == null))
                         {
                             //System.out.println("Critical error, files or files[i] is null!\nPlease report when and how this happened...");
-                            System.out.println("skipping setDirList, files or files[i] is null!");
+                            Log.error("skipping setDirList, files or files[i] is null!");
 
                             return;
 
@@ -610,7 +605,7 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
 
                         if(dirEntry[i] == null)
                         {
-                            System.out.println("\nskipping setDirList, dirEntry[i] is null!");
+                            Log.error("\nskipping setDirList, dirEntry[i] is null!");
 
                             return;
                         }
@@ -657,7 +652,7 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
                 }
                 else
                 {
-                    Log.debug("Not a directory: " + path);
+                    Log.error("Not a directory: " + path);
                 }
             }
 
@@ -729,7 +724,28 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
 
         if(e.getActionCommand().equals("rm"))
         {
-            deleteFile();
+            lock(false);
+
+            if(Settings.getAskToDelete())
+            {
+                if(!UITool.askToDelete(this))
+                {
+                    unlock(false);
+
+                    return;
+                }
+            }
+
+            for(int i = 0; i < length; i++)
+            {
+                if(dirEntry[i].selected)
+                {
+                    con.removeFileOrDir(dirEntry[i].file);
+                }
+            }
+
+            unlock(false);
+            fresh();
         }
         else if(e.getActionCommand().equals("mkdir"))
         {
@@ -754,13 +770,67 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         }
         else if(e.getActionCommand().equals("cp"))
         {
-        	copyFile();
+            Object[] o = jl.getSelectedValues();
+
+            if(o == null)
+            {
+                return;
+            }
+
+            String tmp = UITool.getPathFromDialog(path);
+
+            if(tmp == null)
+            {
+                return;
+            }
+
+            if(!tmp.endsWith("/"))
+            {
+                tmp = tmp + "/";
+            }
+
+            try
+            {
+                copy(o, path, "", tmp);
+
+                //fresh();
+                Log.debug("Copy finished...");
+            }
+            catch(Exception ex)
+            {
+                ex.printStackTrace();
+                Log.error("Copy failed!");
+            }
         }
         else if(e.getActionCommand().equals("zip"))
         {
-            zipFile();
+            try
+            {
+                Object[] entry = jl.getSelectedValues();
+
+                if(entry == null)
+                {
+                    return;
+                }
+
+                String[] tmp = new String[entry.length];
+
+                for(int i = 0; i < tmp.length; i++)
+                {
+                    tmp[i] = entry[i].toString();
+                }
+
+                NameChooser n = new NameChooser();
+                String name = n.text.getText();
+                ZipFileCreator z = new ZipFileCreator(tmp, path, name);
+                fresh();
+            }
+            catch(Exception ex)
+            {
+                ex.printStackTrace();
+            }
         }
-        else if(e.getActionCommand().equals("->") || e.getSource() == uploadFile)
+        else if(e.getActionCommand().equals("->"))
         {
             blockedTransfer(-2);
         }
@@ -770,7 +840,38 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         }
         else if(e.getActionCommand().equals("rn"))
         {
-            renameFile();
+            Object[] target = jl.getSelectedValues();
+
+            if((target == null) || (target.length == 0))
+            {
+                Log.debug("No file selected");
+
+                return;
+            }
+            else if(target.length > 1)
+            {
+                Log.error("Too many files selected");
+
+                return;
+            }
+
+            //Renamer r = new Renamer(target[0].toString(), path);
+            //fresh();
+            String val = JOptionPane.showInternalInputDialog(JFtp.desktop,
+                                                             "Choose a name...");
+
+            if(val != null)
+            {
+                if(!con.rename(target[0].toString(), val))
+                {
+                    Log.error("Rename failed.");
+                }
+                else
+                {
+                    Log.debug("Successfully renamed.");
+                    fresh();
+                }
+            }
         }
         else if(e.getSource() == props)
         {
@@ -828,50 +929,6 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
             String url = JFtp.localDir.getPath() + currentPopup.toString();
             showContentWindow("popup-run@"+url, currentPopup);
         }
-        else if(e.getSource() == deleteFile)
-        {
-            if(currentPopup.isDirectory())
-            {
-                Log.debug("This is a directory, not a file.");
-
-                return;
-            }
-
-            deleteFile();
-        }
-        else if(e.getSource() == zipFile)
-        {
-            if(currentPopup.isDirectory())
-            {
-                Log.debug("This is a directory, not a file.");
-
-                return;
-            }
-
-            zipFile();
-        }
-        else if(e.getSource() == copyFile)
-        {
-            if(currentPopup.isDirectory())
-            {
-                Log.debug("This is a directory, not a file.");
-
-                return;
-            }
-
-            copyFile();
-        }
-        else if(e.getSource() == renameFile)
-        {
-            if(currentPopup.isDirectory())
-            {
-                Log.debug("This is a directory, not a file.");
-
-                return;
-            }
-
-            renameFile();
-        }
         else if(e.getSource() == sorter)
         {
             sortMode = (String) sorter.getSelectedItem();
@@ -892,6 +949,7 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
             chdir("..");
         }
     }
+
     public void copyFile() {
     	Object[] o = jl.getSelectedValues();
 
@@ -1050,14 +1108,6 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         }
     }
 
-
-
-
-
-
-
-    
-    
 
     private void copy(Object[] fRaw, String path, String offset, String target)
                throws Exception
@@ -1288,7 +1338,7 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
             // local: ftp, remote: ftp
             if(entry.isDirectory())
             {
-                Log.debug("Directory transfer between remote connections is not supported yet!");
+                Log.error("Directory transfer between remote connections is not supported yet!");
 
                 return;
             }
@@ -1320,7 +1370,7 @@ public class LocalDir extends DirComponent implements ListSelectionListener,
         {
             if(entry.isDirectory())
             {
-                Log.debug("Directory transfer between remote connections is not supported yet!");
+                Log.error("Directory transfer between remote connections is not supported yet!");
 
                 return;
             }

@@ -323,22 +323,28 @@ public class FtpServerSocket extends Thread
         {
             arg = addTrailingSlash(currentDir) + arg;
         }
+        try 
+        {
+        	File f = new File(arg);
+        	MessageFormat fmt = null;
+        	Object[] args = { f.getAbsolutePath() };
 
-        File f = new File(arg);
-        MessageFormat fmt = null;
-        Object[] args = { f.getAbsolutePath() };
-
-        if(f.exists())
-        {
-            send("521mkd", args);
+        	if(f.exists())
+        	{
+        		send("521mkd", args);
+        	}
+        	else if(f.mkdirs())
+        	{
+        		send("257mkd", args);
+        	}
+        	else
+        	{
+        		send("550mkd", args);
+        	}
         }
-        else if(f.mkdirs())
+        catch (Exception e)
         {
-            send("257mkd", args);
-        }
-        else
-        {
-            send("550mkd", args);
+        	Log.error("Issue finding file");
         }
     }
 

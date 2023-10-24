@@ -15,35 +15,35 @@
  */
 package net.sf.jftp.gui.tasks;
 
-import net.sf.jftp.config.*;
+import net.sf.jftp.JFtp;
+import net.sf.jftp.config.LoadSet;
+import net.sf.jftp.config.SaveSet;
+import net.sf.jftp.config.Settings;
 import net.sf.jftp.gui.base.FtpHost;
-import net.sf.jftp.gui.framework.*;
 import net.sf.jftp.system.StringUtils;
-import net.sf.jftp.util.*;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import java.io.File;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 
 public class HostList extends JDialog
 {
-    private String promptHost = " Host : ";
-    private String promptUser = " User : ";
-    private String promptPass = " Password : ";
-    private String promptName = " Name : ";
-    private String promptPort = " Port : ";
-    private String promptButtonCancel = "Cancel";
-    private String promptButtonOk = "  Ok  ";
-    private String promptButtonSave = " Apply ";
-    private String promptButtonNew = " New  ";
-    private String promptButtonDelete = "Delete";
-    private String promptDialogTitle = " J-FTP Host Selection ";
+    private String promptHost = JFtp.getMessage("tasks", "promptHost");
+    private String promptUser = JFtp.getMessage("tasks", "promptUser");
+    private String promptPass = JFtp.getMessage("tasks", "promptPass");
+    private String promptName = JFtp.getMessage("tasks", "promptName");
+    private String promptPort = JFtp.getMessage("tasks", "promptPort");
+    private String promptButtonCancel = JFtp.getMessage("tasks", "promptButtonCancel");
+    private String promptButtonOk = JFtp.getMessage("tasks", "promptButtonOk");
+    private String promptButtonSave = JFtp.getMessage("tasks", "promptButtonSave");
+    private String promptButtonNew = JFtp.getMessage("tasks", "promptButtonNew");
+    private String promptButtonDelete = JFtp.getMessage("tasks", "promptButtonDelete");
+    private String promptDialogTitle = JFtp.getMessage("tasks", "promptDialogTitle");
 
     // has an ok, cancel button, and a save
     // needs to load itself too.

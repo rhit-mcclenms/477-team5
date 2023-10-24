@@ -37,7 +37,7 @@ public class FtpDownload implements Logger, ConnectionListener
 
  	// register app as Logger, debug() and debugRaw below are from now on called by
 	// FtpConnection
- 	Log.setLogger(this);
+ 	Log.setLogger(this, "FtpDownload");
 
 	// create a FtpConnection - note that it does *not* connect instantly
  	FtpConnection con = new FtpConnection(host);
@@ -113,7 +113,9 @@ public class FtpDownload implements Logger, ConnectionListener
  public void updateProgress(String file, String type, long bytes) {}
 
  // called if connection fails
- public void connectionFailed(BasicConnection con, String why) {System.out.println("connection failed!");}
+ public void connectionFailed(BasicConnection con, String why) {
+	 Log.error("connection failed!");
+ }
 
  // up- or download has finished
  public void actionFinished(BasicConnection con) {}
@@ -135,7 +137,7 @@ public class FtpDownload implements Logger, ConnectionListener
 
     	public void warn(String msg, Throwable throwable) {}
 
-    	public void error(String msg) {}
+    	public void error(String msg) {System.out.println(msg);}
 
     	public void error(String msg, Throwable throwable) {}
 

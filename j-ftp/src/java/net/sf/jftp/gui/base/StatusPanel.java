@@ -60,7 +60,7 @@ public class StatusPanel extends HPanel implements ActionListener
     private JTextField address = new JTextField("http://www.xkcd.com", 30);
     public JFtp jftp;
 
-    public StatusPanel(JFtp jftp)
+    public StatusPanel(JFtp jftp, long userSeverity)
     {
         this.jftp = jftp;
         setLayout(new BorderLayout());
@@ -108,11 +108,13 @@ public class StatusPanel extends HPanel implements ActionListener
         close.setToolTipText(JFtp.getMessage("base", "closeRemoteTab"));
         bar.add(new JLabel("    "));
 
-        address.addActionListener(this);
-        bar.add(new JLabel("URL: "));
-        bar.add(address);
-        bar.add(new JLabel(" "));
-        bar.add(go);
+        if(userSeverity > 0) {
+            address.addActionListener(this);
+            bar.add(new JLabel("URL: "));
+            bar.add(address);
+            bar.add(new JLabel(" "));
+            bar.add(go);
+        }
 
         //***
         go.setToolTipText(JFtp.getMessage("base", "dwnld"));

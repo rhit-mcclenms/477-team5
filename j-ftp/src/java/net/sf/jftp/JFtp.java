@@ -30,6 +30,7 @@ import net.sf.jftp.system.UpdateDaemon;
 import net.sf.jftp.system.logging.Log;
 import net.sf.jftp.system.logging.Logger;
 import net.sf.jftp.tools.RSSFeeder;
+import org.json.simple.JSONArray;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -44,9 +45,8 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Hashtable;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.security.SecureRandom;
+import java.util.*;
 
 
 public class JFtp extends JPanel implements WindowListener, ComponentListener,
@@ -79,6 +79,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
     public static DropTarget dropTarget;
     public static DropTargetListener dtListener;
     public static int acceptableActions = DnDConstants.ACTION_COPY;
+
     private LogFlusher flusher;
     private boolean initSize = true;
     public JTabbedPane remoteConnectionPanel = new JTabbedPane();
@@ -103,6 +104,8 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
     private long oldtime = 0;
     private UpdateDaemon daemon;
     public RSSFeeder feeder;
+    private LoginPanel lp;
+    private static long userSeverity;
 
     //***    
     public JFtp()
@@ -115,14 +118,33 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
             statusP.remove(statusP.close);
         }
 
-        init();
-        displayGUI();
+
+        lp = new LoginPanel(this);
     }
 
     public JFtp(boolean mainUsed)
     {
         Log.setLogger(this, "JFtp");
         this.mainUsed = mainUsed;
+
+        lp = new LoginPanel(this);
+    }
+
+    public JSONArray getUsers() {
+        if(userSeverity > 2) {
+            return lp.getUsersArray();
+        }
+
+        return null;
+    }
+
+    public void saveUsers() {
+        lp.saveUsers();
+    }
+
+    public void loginSuccessful(long userSeverity) {
+        // TODO: Have user severity affect functions available
+        JFtp.userSeverity = userSeverity;
         init();
         displayGUI();
     }
@@ -138,7 +160,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
         setBackground(GUIDefaults.mainBack);
         setForeground(GUIDefaults.front);
 
-        statusP = new StatusPanel(this);
+        statusP = new StatusPanel(this, userSeverity);
         add("North", statusP);
 
         localDir = (Dir) new LocalDir(Settings.defaultWorkDir);
@@ -299,8 +321,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
         feeder = new RSSFeeder();
         bottomBar.add(feeder);
         bottomBar.validate();
-        
-        System.out.println("dfdfsgsd");
+
         //add("South", bottomBar);
     }
 
@@ -740,7 +761,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
 		mainFrame.setIconImage(icon);
 		mainFrame.setFont(GUIDefaults.font);
 
-		menuBar = new AppMenuBar(this);
+		menuBar = new AppMenuBar(this, userSeverity);
 		mainFrame.setJMenuBar(menuBar);
 
 		mainFrame.getContentPane().setLayout(new BorderLayout());
@@ -748,8 +769,10 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
 		SwingUtilities.updateComponentTreeUI(mainFrame);
 		mainFrame.pack();
 		mainFrame.validate();
-		mainFrame.setVisible(true);
+        mainFrame.setVisible(true);
 		JOptionPane.showMessageDialog(mainFrame, JFtp.getMessage("jftp", "welcome") + " jFTP!");
+
+
 	}
     
     private void log(String msg)

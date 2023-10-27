@@ -131,7 +131,7 @@ public class JFtp extends JPanel implements WindowListener, ComponentListener,
     }
 
     public JSONArray getUsers() {
-        if(userSeverity > 2) {
+        if(userSeverity == 2) {
             return lp.getUsersArray();
         }
 

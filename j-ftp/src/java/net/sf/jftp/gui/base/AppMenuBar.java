@@ -686,7 +686,6 @@ public class AppMenuBar extends JMenuBar implements ActionListener
 	        }
             else if(e.getSource() == manageUsers)
             {
-                System.out.println("MU CLICKED");
                 ManageUsers mu = new ManageUsers(jftp);
             }
 	        else if(e.getSource() == loadAudio)

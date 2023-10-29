@@ -92,6 +92,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
     JMenuItem raw = new JMenuItem(JFtp.getMessage("base", "raw"));
     JMenuItem spider = new JMenuItem(JFtp.getMessage("base", "spider"));
     JMenuItem shell = new JMenuItem(JFtp.getMessage("base", "shell"));
+    JMenuItem manageUsers = new JMenuItem(JFtp.getMessage("base", "manageUsers"));
     JMenuItem loadAudio = new JMenuItem(JFtp.getMessage("base", "loadAudio"));
     JCheckBoxMenuItem rssDisabled = new JCheckBoxMenuItem(JFtp.getMessage("base", "rssDisabled"),
                                                           Settings.getEnableRSS());
@@ -141,14 +142,17 @@ public class AppMenuBar extends JMenuBar implements ActionListener
     JMenu current = bookmarks;
     JMenu last = bookmarks;
 
+    private long userSeverity;
+
     /*
     String[] lastProtocols;
     String[] lastHosts;
     String[] lastUnames;
     */
-    public AppMenuBar(JFtp jftp)
+    public AppMenuBar(JFtp jftp, long userSeverity)
     {
         this.jftp = jftp;
+        this.userSeverity = userSeverity;
 
         ftpCon.addActionListener(this);
         close.addActionListener(this);
@@ -177,6 +181,7 @@ public class AppMenuBar extends JMenuBar implements ActionListener
         opts.addActionListener(this);
         webdavCon.addActionListener(this);
         shell.addActionListener(this);
+        manageUsers.addActionListener(this);
         nl.addActionListener(this);
 
         localFtpCon.addActionListener(this);
@@ -226,8 +231,13 @@ public class AppMenuBar extends JMenuBar implements ActionListener
         smb.add(smbThreads);
         sftp.add(sftpThreads);
         sftp.add(sshKeys);
-        security.add(askToDelete);
-        security.add(storePasswords);
+
+        if(userSeverity > 0) {
+            security.add(askToDelete);
+            security.add(storePasswords);
+            opt.add(security);
+            opt.addSeparator();
+        }
 
         cnn.add(loadCNN1);
         cnn.add(loadCNN2);
@@ -238,14 +248,14 @@ public class AppMenuBar extends JMenuBar implements ActionListener
         rss.add(cnn);
         rss.add(loadRss);
 
-        opt.add(security);
-        opt.addSeparator();
         opt.add(ftp);
         opt.add(smb);
         opt.add(sftp);
         opt.addSeparator();
         opt.add(proxy);
-        opt.add(opts);
+
+        if(userSeverity > 0)
+            opt.add(opts);
 
         tools.add(http);
         tools.add(spider);
@@ -253,6 +263,11 @@ public class AppMenuBar extends JMenuBar implements ActionListener
         tools.add(raw);
         tools.addSeparator();
         tools.add(shell);
+
+        if(userSeverity > 1) {
+            tools.addSeparator();
+            tools.add(manageUsers);
+        }
 
         view.add(hideHidden);
         view.addSeparator();
@@ -264,9 +279,11 @@ public class AppMenuBar extends JMenuBar implements ActionListener
         view.addSeparator();
         view.add(debug);
         view.add(disableLog);
-        view.addSeparator();
-        view.add(rss);
-        view.addSeparator();
+        if(userSeverity > 0) {
+            view.addSeparator();
+            view.add(rss);
+            view.addSeparator();
+        }
 
         info.add(readme);
         info.add(changelog);
@@ -338,7 +355,9 @@ public class AppMenuBar extends JMenuBar implements ActionListener
         add(file);
         add(opt);
         add(view);
-        add(tools);
+        if(userSeverity > 0) {
+            add(tools);
+        }
         add(bookmarks);
         add(info);
 
@@ -449,7 +468,11 @@ public class AppMenuBar extends JMenuBar implements ActionListener
         file.add(sftpCon);
         file.add(smbCon);
         file.add(nfsCon);
-        file.add(webdavCon);
+
+        if(userSeverity > 0) {
+            file.add(webdavCon);
+        }
+
         file.addSeparator();
         file.add(close);
         file.addSeparator();
@@ -661,6 +684,10 @@ public class AppMenuBar extends JMenuBar implements ActionListener
 	        {
 	        	UIUtils.runCommand("/bin/bash");
 	        }
+            else if(e.getSource() == manageUsers)
+            {
+                ManageUsers mu = new ManageUsers(jftp);
+            }
 	        else if(e.getSource() == loadAudio)
 	        {
 	            try
